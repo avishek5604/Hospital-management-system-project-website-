@@ -1,0 +1,4304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MediCore HMS - OPD Management</title>
+
+<link rel="stylesheet" href="../assets/css/style.css">
+
+<style>
+.page-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+    margin-bottom:20px;
+}
+.page-header h1{font-size:26px;margin-bottom:5px}
+.page-header p{font-size:12px;color:var(--muted)}
+
+.header-actions{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+}
+
+.opd-stats{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:15px;
+    margin-bottom:18px;
+}
+
+.stat-card{
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:16px;
+    box-shadow:var(--shadow);
+}
+
+.stat-card label{
+    display:block;
+    color:var(--muted);
+    font-size:9px;
+    font-weight:700;
+    text-transform:uppercase;
+}
+
+.stat-number{
+    font-size:24px;
+    font-weight:800;
+    margin-top:7px;
+}
+
+.stat-icon{
+    float:right;
+    width:38px;
+    height:38px;
+    display:grid;
+    place-items:center;
+    border-radius:9px;
+}
+
+.opd-layout{
+    display:grid;
+    grid-template-columns:1.6fr 1fr;
+    gap:18px;
+    margin-bottom:18px;
+}
+
+.card{
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:14px;
+    box-shadow:var(--shadow);
+    overflow:hidden;
+}
+
+.card-header{
+    padding:15px 17px;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+}
+
+.card-header h2{
+    font-size:14px;
+}
+
+.card-header small{
+    color:var(--muted);
+    font-size:9px;
+}
+
+.card-body{
+    padding:17px;
+}
+
+.queue-list{
+    max-height:430px;
+    overflow:auto;
+}
+
+.queue-item{
+    display:flex;
+    align-items:center;
+    gap:11px;
+    padding:12px;
+    border-bottom:1px solid var(--border);
+    cursor:pointer;
+    transition:.15s;
+}
+
+.queue-item:hover{
+    background:#f8fafc;
+}
+
+.queue-item.active{
+    background:#eff6ff;
+}
+
+.token{
+    width:42px;
+    height:42px;
+    border-radius:10px;
+    background:#dbeafe;
+    color:#1d4ed8;
+    display:grid;
+    place-items:center;
+    font-size:12px;
+    font-weight:900;
+    flex-shrink:0;
+}
+
+.queue-info{
+    flex:1;
+    min-width:0;
+}
+
+.queue-name{
+    font-weight:800;
+    font-size:11px;
+}
+
+.queue-meta{
+    font-size:8px;
+    color:var(--muted);
+    margin-top:3px;
+}
+
+.queue-status{
+    text-align:right;
+}
+
+.badge{
+    display:inline-block;
+    padding:5px 8px;
+    border-radius:20px;
+    font-size:8px;
+    font-weight:800;
+}
+
+.badge.green{background:#dcfce7;color:#15803d}
+.badge.yellow{background:#fef3c7;color:#92400e}
+.badge.red{background:#fee2e2;color:#b91c1c}
+.badge.blue{background:#dbeafe;color:#1d4ed8}
+.badge.gray{background:#f1f5f9;color:#475569}
+.badge.purple{background:#ede9fe;color:#6d28d9}
+
+.doctor-card{
+    display:flex;
+    gap:12px;
+    align-items:center;
+    padding:12px;
+    border:1px solid var(--border);
+    border-radius:10px;
+    margin-bottom:10px;
+}
+
+.doctor-avatar{
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    display:grid;
+    place-items:center;
+    background:#e0f2fe;
+    color:#0369a1;
+    font-weight:900;
+}
+
+.doctor-info{
+    flex:1;
+}
+
+.doctor-name{
+    font-size:11px;
+    font-weight:800;
+}
+
+.doctor-dept{
+    color:var(--muted);
+    font-size:8px;
+    margin-top:3px;
+}
+
+.progress{
+    height:6px;
+    background:#e5e7eb;
+    border-radius:20px;
+    overflow:hidden;
+    margin-top:7px;
+}
+
+.progress-bar{
+    height:100%;
+    background:#2563eb;
+}
+
+.search-filter{
+    padding:15px 17px;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+}
+
+.search-control,
+.form-control{
+    width:100%;
+    padding:10px 11px;
+    border:1px solid var(--border);
+    border-radius:8px;
+    outline:none;
+    background:#fff;
+    font-size:12px;
+}
+
+.search-control{
+    flex:1;
+    min-width:180px;
+}
+
+.form-control:focus,
+.search-control:focus{
+    border-color:#60a5fa;
+}
+
+.table-wrapper{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:1050px;
+}
+
+th{
+    background:#f8fafc;
+    color:var(--muted);
+    font-size:9px;
+    text-transform:uppercase;
+    text-align:left;
+    padding:12px;
+    border-bottom:1px solid var(--border);
+}
+
+td{
+    padding:12px;
+    border-bottom:1px solid var(--border);
+    font-size:10px;
+}
+
+tr:hover td{
+    background:#fafcff;
+}
+
+.patient-cell{
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.patient-avatar{
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    background:#dbeafe;
+    color:#1d4ed8;
+    display:grid;
+    place-items:center;
+    font-size:10px;
+    font-weight:800;
+}
+
+.patient-name{
+    font-weight:700;
+}
+
+.patient-id{
+    color:var(--muted);
+    font-size:8px;
+    margin-top:2px;
+}
+
+.action-buttons{
+    display:flex;
+    gap:5px;
+}
+
+.icon-btn{
+    width:29px;
+    height:29px;
+    border:1px solid var(--border);
+    border-radius:7px;
+    background:#fff;
+    cursor:pointer;
+}
+
+.icon-btn:hover{
+    background:#eff6ff;
+}
+
+.empty-state{
+    padding:45px 20px;
+    text-align:center;
+    color:var(--muted);
+}
+
+.empty-state-icon{
+    font-size:38px;
+    margin-bottom:8px;
+}
+
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(15,23,42,.58);
+    z-index:9999;
+    padding:20px;
+    overflow-y:auto;
+}
+
+.modal.show{
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+}
+
+.modal-box{
+    width:100%;
+    max-width:950px;
+    background:#fff;
+    border-radius:16px;
+    margin:20px auto;
+    overflow:hidden;
+    box-shadow:0 25px 70px rgba(0,0,0,.2);
+}
+
+.modal-header{
+    padding:18px 20px;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.modal-header h2{
+    font-size:18px;
+}
+
+.modal-header p{
+    color:var(--muted);
+    font-size:10px;
+    margin-top:3px;
+}
+
+.close-btn{
+    width:34px;
+    height:34px;
+    border:0;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:20px;
+}
+
+.modal-body{
+    padding:20px;
+}
+
+.modal-footer{
+    padding:15px 20px;
+    border-top:1px solid var(--border);
+    display:flex;
+    justify-content:flex-end;
+    gap:8px;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+}
+
+.field-group label{
+    display:block;
+    color:var(--muted);
+    font-size:9px;
+    font-weight:700;
+    text-transform:uppercase;
+    margin-bottom:5px;
+}
+
+.section-title{
+    font-size:12px;
+    font-weight:800;
+    padding-bottom:7px;
+    border-bottom:1px solid var(--border);
+    margin:20px 0 12px;
+}
+
+.section-title:first-child{
+    margin-top:0;
+}
+
+.full-width{
+    grid-column:1/-1;
+}
+
+.vitals-grid{
+    display:grid;
+    grid-template-columns:repeat(6,1fr);
+    gap:8px;
+}
+
+.vital-box{
+    background:#f8fafc;
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:9px;
+}
+
+.vital-box label{
+    display:block;
+    font-size:8px;
+    color:var(--muted);
+    margin-bottom:4px;
+}
+
+.vital-box input{
+    width:100%;
+    border:0;
+    background:transparent;
+    outline:none;
+    font-weight:800;
+    font-size:11px;
+}
+
+.consultation-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+}
+
+.prescription-row{
+    display:grid;
+    grid-template-columns:1.3fr .7fr .7fr .7fr 40px;
+    gap:7px;
+    margin-bottom:7px;
+}
+
+.remove-med{
+    border:1px solid var(--border);
+    background:#fff;
+    border-radius:7px;
+    cursor:pointer;
+}
+
+.summary-box{
+    background:#f8fafc;
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:14px;
+}
+
+.summary-row{
+    display:flex;
+    justify-content:space-between;
+    padding:6px 0;
+    font-size:10px;
+}
+
+.summary-row.total{
+    border-top:1px solid var(--border);
+    margin-top:6px;
+    padding-top:10px;
+    font-weight:900;
+    font-size:12px;
+}
+
+@media(max-width:1200px){
+    .opd-stats{
+        grid-template-columns:repeat(3,1fr);
+    }
+
+    .opd-layout{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:800px){
+    .opd-stats{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .form-grid{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .vitals-grid{
+        grid-template-columns:repeat(3,1fr);
+    }
+
+    .consultation-grid{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:600px){
+    .page-header{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .opd-stats{
+        grid-template-columns:1fr;
+    }
+
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+    .full-width{
+        grid-column:auto;
+    }
+
+    .vitals-grid{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .prescription-row{
+        grid-template-columns:1fr 1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<!-- =====================================================
+     SIDEBAR
+===================================================== -->
+
+<aside class="sidebar">
+
+    <div class="brand">
+        Medi<span>Core</span> HMS
+    </div>
+
+    <nav class="nav">
+
+        <div class="nav-title">Main</div>
+
+        <a href="../dashboard.html">
+            📊 <span>Dashboard</span>
+        </a>
+
+        <div class="nav-title">Clinical</div>
+
+        <a href="patients.html">
+            👤 <span>Patients</span>
+        </a>
+
+        <a href="doctors.html">
+            ⚕ <span>Doctors</span>
+        </a>
+
+        <a href="appointments.html">
+            📅 <span>Appointments</span>
+        </a>
+
+        <a href="opd.html" class="active">
+            🏥 <span>OPD</span>
+        </a>
+
+        <a href="ipd.html">
+            🛏 <span>IPD / Admission</span>
+        </a>
+
+        <a href="emergency.html">
+            🚑 <span>Emergency</span>
+        </a>
+
+        <a href="nursing.html">
+            ❤️ <span>Nursing</span>
+        </a>
+
+        <div class="nav-title">Diagnostics</div>
+
+        <a href="laboratory.html">
+            🧪 <span>Laboratory</span>
+        </a>
+
+        <a href="radiology.html">
+            🩻 <span>Radiology</span>
+        </a>
+
+        <a href="blood-bank.html">
+            🩸 <span>Blood Bank</span>
+        </a>
+
+        <div class="nav-title">Operations</div>
+
+        <a href="pharmacy.html">
+            💊 <span>Pharmacy</span>
+        </a>
+
+        <a href="billing.html">
+            💰 <span>Billing & Finance</span>
+        </a>
+
+        <a href="insurance.html">
+            📄 <span>Insurance / TPA</span>
+        </a>
+
+        <a href="inventory.html">
+            📦 <span>Inventory</span>
+        </a>
+
+        <a href="ambulance.html">
+            🚐 <span>Ambulance</span>
+        </a>
+
+        <div class="nav-title">Administration</div>
+
+        <a href="hr.html">
+            👥 <span>HR & Staff</span>
+        </a>
+
+        <a href="reports.html">
+            📈 <span>Reports</span>
+        </a>
+
+        <a href="communication.html">
+            ✉ <span>Communication</span>
+        </a>
+
+        <a href="settings.html">
+            ⚙ <span>Settings</span>
+        </a>
+
+        <div class="nav-title">Account</div>
+
+        <a href="#" data-logout>
+            🚪 <span>Logout</span>
+        </a>
+
+    </nav>
+
+</aside>
+
+
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
+<main class="main">
+
+<header class="topbar">
+
+    <button class="hamb" aria-label="Open menu">
+        ☰
+    </button>
+
+    <input
+        type="search"
+        class="search"
+        id="globalSearch"
+        placeholder="Search OPD patients..."
+    >
+
+    <div class="user">
+
+        <span
+            style="font-size:20px;cursor:pointer"
+            onclick="showNotifications()"
+        >
+            🔔
+        </span>
+
+        <div class="avatar">AK</div>
+
+        <div>
+            <strong data-user>Administrator</strong>
+
+            <small
+                class="muted"
+                style="display:block"
+            >
+                Hospital Administrator
+            </small>
+        </div>
+
+    </div>
+
+</header>
+
+
+<section class="content">
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
+<div class="page-header">
+
+    <div>
+
+        <h1>OPD Management</h1>
+
+        <p>
+            Manage outpatient registration, token queue, consultation,
+            vitals, diagnosis and prescriptions.
+        </p>
+
+    </div>
+
+    <div class="header-actions">
+
+        <button
+            class="btn secondary"
+            onclick="callNextPatient()"
+        >
+            📢 Call Next
+        </button>
+
+        <button
+            class="btn primary"
+            onclick="openOPDModal()"
+        >
+            + Register OPD
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     STATISTICS
+===================================================== -->
+
+<div class="opd-stats">
+
+    <div class="stat-card">
+
+        <div
+            class="stat-icon"
+            style="background:#dbeafe;color:#1d4ed8"
+        >
+            👥
+        </div>
+
+        <label>Today's OPD</label>
+
+        <div
+            class="stat-number"
+            id="totalOPD"
+        >
+            0
+        </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div
+            class="stat-icon"
+            style="background:#fef3c7;color:#92400e"
+        >
+            ⏳
+        </div>
+
+        <label>Waiting</label>
+
+        <div
+            class="stat-number"
+            id="waitingOPD"
+        >
+            0
+        </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div
+            class="stat-icon"
+            style="background:#dcfce7;color:#15803d"
+        >
+            ✓
+        </div>
+
+        <label>Completed</label>
+
+        <div
+            class="stat-number"
+            id="completedOPD"
+        >
+            0
+        </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div
+            class="stat-icon"
+            style="background:#ede9fe;color:#6d28d9"
+        >
+            ⚕
+        </div>
+
+        <label>Doctors On Duty</label>
+
+        <div
+            class="stat-number"
+            id="doctorsOnDuty"
+        >
+            0
+        </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div
+            class="stat-icon"
+            style="background:#fee2e2;color:#b91c1c"
+        >
+            ₹
+        </div>
+
+        <label>OPD Revenue</label>
+
+        <div
+            class="stat-number"
+            id="opdRevenue"
+        >
+            ₹0
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     QUEUE + DOCTORS
+===================================================== -->
+
+<div class="opd-layout">
+
+    <div class="card">
+
+        <div class="card-header">
+
+            <div>
+
+                <h2>Live OPD Queue</h2>
+
+                <small>
+                    Today's patient token queue
+                </small>
+
+            </div>
+
+            <span
+                class="badge blue"
+                id="queueCount"
+            >
+                0 Patients
+            </span>
+
+        </div>
+
+
+        <div class="search-filter">
+
+            <input
+                type="search"
+                id="queueSearch"
+                class="search-control"
+                placeholder="Search patient or token..."
+                oninput="renderQueue()"
+            >
+
+            <select
+                id="queueDepartment"
+                class="form-control"
+                style="max-width:180px"
+                onchange="renderQueue()"
+            >
+
+                <option value="">
+                    All Departments
+                </option>
+
+                <option>Cardiology</option>
+                <option>Orthopedics</option>
+                <option>Neurology</option>
+                <option>General Medicine</option>
+                <option>Gynecology</option>
+                <option>Pediatrics</option>
+                <option>Dermatology</option>
+
+            </select>
+
+        </div>
+
+
+        <div
+            class="queue-list"
+            id="queueList"
+        ></div>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="card-header">
+
+            <div>
+
+                <h2>Doctors On Duty</h2>
+
+                <small>
+                    Current OPD workload
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <div class="card-body">
+
+            <div id="doctorDutyList"></div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     OPD TABLE
+===================================================== -->
+
+<div class="card">
+
+    <div class="card-header">
+
+        <div>
+
+            <h2>OPD Registrations</h2>
+
+            <small>
+                Patient consultation records
+            </small>
+
+        </div>
+
+        <span id="registrationCount">
+            0 Records
+        </span>
+
+    </div>
+
+
+    <div class="search-filter">
+
+        <input
+            type="search"
+            id="opdSearch"
+            class="search-control"
+            placeholder="Search patient, OPD ID, doctor..."
+            oninput="renderOPDTable()"
+        >
+
+        <select
+            id="opdStatus"
+            class="form-control"
+            style="max-width:170px"
+            onchange="renderOPDTable()"
+        >
+
+            <option value="">
+                All Status
+            </option>
+
+            <option value="Waiting">
+                Waiting
+            </option>
+
+            <option value="In Consultation">
+                In Consultation
+            </option>
+
+            <option value="Completed">
+                Completed
+            </option>
+
+            <option value="Cancelled">
+                Cancelled
+            </option>
+
+        </select>
+
+        <button
+            class="btn secondary"
+            onclick="exportOPD()"
+        >
+            ⬇ Export CSV
+        </button>
+
+    </div>
+
+
+    <div class="table-wrapper">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>Token</th>
+                    <th>Patient</th>
+                    <th>Doctor</th>
+                    <th>Department</th>
+                    <th>Visit Type</th>
+                    <th>Vitals</th>
+                    <th>Status</th>
+                    <th>Payment</th>
+                    <th>Actions</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody
+                id="opdTableBody"
+            ></tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+<footer class="footer">
+
+    MediCore Hospital Management System
+    © 2026. All Rights Reserved.
+
+</footer>
+
+</section>
+
+</main>
+
+</div>
+
+
+<!-- =====================================================
+     OPD REGISTRATION / CONSULTATION MODAL
+===================================================== -->
+
+<div
+    class="modal"
+    id="opdModal"
+>
+
+<div class="modal-box">
+
+    <div class="modal-header">
+
+        <div>
+
+            <h2 id="opdModalTitle">
+                OPD Registration
+            </h2>
+
+            <p>
+                Register patient and create outpatient consultation.
+            </p>
+
+        </div>
+
+        <button
+            class="close-btn"
+            onclick="closeOPDModal()"
+        >
+            ×
+        </button>
+
+    </div>
+
+
+    <form
+        id="opdForm"
+        onsubmit="saveOPD(event)"
+    >
+
+    <div class="modal-body">
+
+        <!-- PATIENT -->
+
+        <div class="section-title">
+            Patient Information
+        </div>
+
+        <div class="form-grid">
+
+            <div class="field-group">
+
+                <label>Patient *</label>
+
+                <select
+                    id="opdPatient"
+                    class="form-control"
+                    required
+                ></select>
+
+            </div>
+
+
+            <div class="field-group">
+
+                <label>Patient Phone</label>
+
+                <input
+                    id="opdPhone"
+                    class="form-control"
+                    readonly
+                >
+
+            </div>
+
+
+            <div class="field-group">
+
+                <label>Visit Type</label>
+
+                <select
+                    id="visitType"
+                    class="form-control"
+                >
+
+                    <option>New Patient</option>
+                    <option>Follow-up</option>
+                    <option>Review</option>
+                    <option>Emergency OPD</option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <!-- DOCTOR -->
+
+        <div class="section-title">
+            Doctor & Consultation
+        </div>
+
+        <div class="form-grid">
+
+            <div class="field-group">
+
+                <label>Doctor *</label>
+
+                <select
+                    id="opdDoctor"
+                    class="form-control"
+                    required
+                ></select>
+
+            </div>
+
+
+            <div class="field-group">
+
+                <label>Department</label>
+
+                <input
+                    id="opdDepartment"
+                    class="form-control"
+                    readonly
+                >
+
+            </div>
+
+
+            <div class="field-group">
+
+                <label>Consultation Fee</label>
+
+                <input
+                    id="opdFee"
+                    type="number"
+                    min="0"
+                    class="form-control"
+                    value="500"
+                >
+
+            </div>
+
+        </div>
+
+
+        <!-- VITALS -->
+
+        <div class="section-title">
+            Patient Vitals
+        </div>
+
+        <div class="vitals-grid">
+
+            <div class="vital-box">
+
+                <label>Temperature °F</label>
+
+                <input
+                    id="temperature"
+                    type="number"
+                    step="0.1"
+                    placeholder="98.6"
+                >
+
+            </div>
+
+
+            <div class="vital-box">
+
+                <label>Pulse /min</label>
+
+                <input
+                    id="pulse"
+                    type="number"
+                    placeholder="72"
+                >
+
+            </div>
+
+
+            <div class="vital-box">
+
+                <label>BP</label>
+
+                <input
+                    id="bloodPressure"
+                    placeholder="120/80"
+                >
+
+            </div>
+
+
+            <div class="vital-box">
+
+                <label>SpO₂ %</label>
+
+                <input
+                    id="spo2"
+                    type="number"
+                    placeholder="98"
+                >
+
+            </div>
+
+
+            <div class="vital-box">
+
+                <label>Weight kg</label>
+
+                <input
+                    id="weight"
+                    type="number"
+                    step="0.1"
+                    placeholder="65"
+                >
+
+            </div>
+
+
+            <div class="vital-box">
+
+                <label>Height cm</label>
+
+                <input
+                    id="height"
+                    type="number"
+                    step="0.1"
+                    placeholder="170"
+                >
+
+            </div>
+
+        </div>
+
+
+        <!-- CLINICAL -->
+
+        <div class="section-title">
+            Clinical Assessment
+        </div>
+
+        <div class="consultation-grid">
+
+            <div class="field-group">
+
+                <label>Chief Complaint</label>
+
+                <textarea
+                    id="complaint"
+                    class="form-control"
+                    style="min-height:80px"
+                    placeholder="Patient's main complaint..."
+                ></textarea>
+
+            </div>
+
+
+            <div class="field-group">
+
+                <label>Symptoms / History</label>
+
+                <textarea
+                    id="symptoms"
+                    class="form-control"
+                    style="min-height:80px"
+                    placeholder="Symptoms and relevant history..."
+                ></textarea>
+
+            </div>
+
+
+            <div class="field-group">
+
+                <label>Diagnosis</label>
+
+                <textarea
+                    id="diagnosis"
+                    class="form-control"
+                    style="min-height:80px"
+                    placeholder="Clinical diagnosis..."
+                ></textarea>
+
+            </div>
+
+
+            <div class="field-group">
+
+                <label>Doctor Notes</label>
+
+                <textarea
+                    id="doctorNotes"
+                    class="form-control"
+                    style="min-height:80px"
+                    placeholder="Consultation notes..."
+                ></textarea>
+
+            </div>
+
+        </div>
+
+
+        <!-- PRESCRIPTION -->
+
+        <div class="section-title">
+
+            Prescription
+
+            <button
+                type="button"
+                class="btn secondary"
+                style="float:right;padding:5px 9px;font-size:9px"
+                onclick="addMedicineRow()"
+            >
+                + Add Medicine
+            </button>
+
+        </div>
+
+        <div id="medicineContainer"></div>
+
+
+        <!-- INVESTIGATION -->
+
+        <div class="section-title">
+            Investigations
+        </div>
+
+        <div class="form-grid">
+
+            <div class="field-group full-width">
+
+                <label>Recommended Tests</label>
+
+                <input
+                    id="investigations"
+                    class="form-control"
+                    placeholder="CBC, LFT, ECG, X-Ray..."
+                >
+
+            </div>
+
+
+            <div class="field-group">
+
+                <label>Follow-up Date</label>
+
+                <input
+                    id="followUpDate"
+                    type="date"
+                    class="form-control"
+                >
+
+            </div>
+
+
+            <div class="field-group">
+
+                <label>Status</label>
+
+                <select
+                    id="opdRecordStatus"
+                    class="form-control"
+                >
+
+                    <option>Waiting</option>
+                    <option>In Consultation</option>
+                    <option>Completed</option>
+                    <option>Cancelled</option>
+
+                </select>
+
+            </div>
+
+
+            <div class="field-group">
+
+                <label>Payment</label>
+
+                <select
+                    id="opdPayment"
+                    class="form-control"
+                >
+
+                    <option>Paid</option>
+                    <option>Pending</option>
+                    <option>Partially Paid</option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="modal-footer">
+
+        <button
+            type="button"
+            class="btn secondary"
+            onclick="closeOPDModal()"
+        >
+            Cancel
+        </button>
+
+        <button
+            type="submit"
+            class="btn primary"
+        >
+            Save OPD Record
+        </button>
+
+    </div>
+
+    </form>
+
+</div>
+
+</div>
+
+
+<!-- =====================================================
+     VIEW OPD MODAL
+===================================================== -->
+
+<div
+    class="modal"
+    id="viewOPDModal"
+>
+
+<div class="modal-box">
+
+    <div class="modal-header">
+
+        <div>
+
+            <h2>OPD Consultation Record</h2>
+
+            <p>
+                Patient clinical and consultation information
+            </p>
+
+        </div>
+
+        <button
+            class="close-btn"
+            onclick="closeViewOPD()"
+        >
+            ×
+        </button>
+
+    </div>
+
+
+    <div
+        class="modal-body"
+        id="opdDetails"
+    ></div>
+
+</div>
+
+</div>
+
+
+<script src="../assets/js/app.js"></script>
+
+<script>
+
+/* =====================================================
+   GLOBAL STATE
+===================================================== */
+
+let editingOPDId = null;
+
+
+/* =====================================================
+   HELPERS
+===================================================== */
+
+function safe(value){
+
+    return String(value ?? "")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
+
+
+function formatDate(date){
+
+    const y =
+        date.getFullYear();
+
+    const m =
+        String(
+            date.getMonth()+1
+        ).padStart(2,"0");
+
+    const d =
+        String(
+            date.getDate()
+        ).padStart(2,"0");
+
+    return `${y}-${m}-${d}`;
+
+}
+
+
+function displayDate(date){
+
+    if(!date) return "—";
+
+    return new Date(
+        date + "T00:00:00"
+    ).toLocaleDateString(
+        "en-IN",
+        {
+            day:"2-digit",
+            month:"short",
+            year:"numeric"
+        }
+    );
+
+}
+
+
+function initials(name){
+
+    return String(name || "")
+        .split(" ")
+        .filter(Boolean)
+        .slice(0,2)
+        .map(
+            x =>
+                x.charAt(0)
+                .toUpperCase()
+        )
+        .join("");
+
+}
+
+
+function statusClass(status){
+
+    if(status === "Completed")
+        return "green";
+
+    if(status === "Waiting")
+        return "yellow";
+
+    if(status === "In Consultation")
+        return "blue";
+
+    if(status === "Cancelled")
+        return "red";
+
+    return "gray";
+
+}
+
+
+/* =====================================================
+   PATIENTS
+===================================================== */
+
+function getPatients(){
+
+    let patients = [];
+
+    try{
+
+        patients =
+            JSON.parse(
+                localStorage.getItem(
+                    "hms_patients"
+                )
+            ) || [];
+
+    }catch(e){
+
+        patients = [];
+
+    }
+
+
+    if(!patients.length){
+
+        patients = [
+
+            {
+                id:"P-1001",
+                name:"Rahul Kumar",
+                phone:"9876500001"
+            },
+
+            {
+                id:"P-1002",
+                name:"Sunita Devi",
+                phone:"9876500002"
+            },
+
+            {
+                id:"P-1003",
+                name:"Amit Singh",
+                phone:"9876500003"
+            },
+
+            {
+                id:"P-1004",
+                name:"Priya Kumari",
+                phone:"9876500004"
+            },
+
+            {
+                id:"P-1005",
+                name:"Ramesh Prasad",
+                phone:"9876500005"
+            }
+
+        ];
+
+    }
+
+
+    return patients;
+
+}
+
+
+/* =====================================================
+   DOCTORS
+===================================================== */
+
+function getDoctors(){
+
+    let doctors = [];
+
+    try{
+
+        doctors =
+            JSON.parse(
+                localStorage.getItem(
+                    "hms_doctors"
+                )
+            ) || [];
+
+    }catch(e){
+
+        doctors = [];
+
+    }
+
+
+    if(!doctors.length){
+
+        doctors = [
+
+            {
+                id:"D-1001",
+                name:"Dr. Ananya Sharma",
+                department:"Cardiology",
+                fee:1200
+            },
+
+            {
+                id:"D-1002",
+                name:"Dr. Raj Verma",
+                department:"Orthopedics",
+                fee:1000
+            },
+
+            {
+                id:"D-1003",
+                name:"Dr. Neha Gupta",
+                department:"Neurology",
+                fee:1500
+            },
+
+            {
+                id:"D-1004",
+                name:"Dr. Vikash Kumar",
+                department:"General Medicine",
+                fee:800
+            },
+
+            {
+                id:"D-1005",
+                name:"Dr. Priyanka Singh",
+                department:"Gynecology",
+                fee:1000
+            },
+
+            {
+                id:"D-1006",
+                name:"Dr. Arjun Mehta",
+                department:"General Surgery",
+                fee:1300
+            }
+
+        ];
+
+    }
+
+
+    return doctors;
+
+}
+
+
+/* =====================================================
+   OPD DATA
+===================================================== */
+
+function getOPD(){
+
+    let records = [];
+
+    try{
+
+        records =
+            JSON.parse(
+                localStorage.getItem(
+                    "hms_opd"
+                )
+            ) || [];
+
+    }catch(e){
+
+        records = [];
+
+    }
+
+
+    if(!records.length){
+
+        const today =
+            formatDate(
+                new Date()
+            );
+
+
+        records = [
+
+            {
+                id:"OPD-1001",
+                token:"OPD-001",
+                patientId:"P-1001",
+                patientName:"Rahul Kumar",
+                phone:"9876500001",
+                doctorId:"D-1001",
+                doctorName:"Dr. Ananya Sharma",
+                department:"Cardiology",
+                visitType:"New Patient",
+                date:today,
+                time:"09:10",
+                fee:1200,
+                payment:"Paid",
+                status:"In Consultation",
+
+                vitals:{
+                    temperature:"98.6",
+                    pulse:"78",
+                    bloodPressure:"130/85",
+                    spo2:"98",
+                    weight:"72",
+                    height:"174"
+                },
+
+                complaint:"Chest discomfort",
+                symptoms:"Occasional chest pain for two days.",
+                diagnosis:"Under evaluation",
+                doctorNotes:"ECG advised.",
+
+                prescription:[
+                    {
+                        medicine:"Aspirin",
+                        dose:"75 mg",
+                        frequency:"OD",
+                        duration:"5 days"
+                    }
+                ],
+
+                investigations:"ECG",
+                followUpDate:"",
+                createdAt:new Date().toISOString()
+
+            },
+
+            {
+                id:"OPD-1002",
+                token:"OPD-002",
+                patientId:"P-1002",
+                patientName:"Sunita Devi",
+                phone:"9876500002",
+                doctorId:"D-1002",
+                doctorName:"Dr. Raj Verma",
+                department:"Orthopedics",
+                visitType:"Follow-up",
+                date:today,
+                time:"09:25",
+                fee:1000,
+                payment:"Paid",
+                status:"Waiting",
+
+                vitals:{
+                    temperature:"98.4",
+                    pulse:"74",
+                    bloodPressure:"125/80",
+                    spo2:"99",
+                    weight:"61",
+                    height:"160"
+                },
+
+                complaint:"Knee pain",
+                symptoms:"Pain while walking.",
+                diagnosis:"",
+                doctorNotes:"",
+
+                prescription:[],
+
+                investigations:"",
+                followUpDate:"",
+                createdAt:new Date().toISOString()
+
+            },
+
+            {
+                id:"OPD-1003",
+                token:"OPD-003",
+                patientId:"P-1003",
+                patientName:"Amit Singh",
+                phone:"9876500003",
+                doctorId:"D-1003",
+                doctorName:"Dr. Neha Gupta",
+                department:"Neurology",
+                visitType:"New Patient",
+                date:today,
+                time:"10:00",
+                fee:1500,
+                payment:"Pending",
+                status:"Waiting",
+
+                vitals:{
+                    temperature:"98.8",
+                    pulse:"80",
+                    bloodPressure:"128/82",
+                    spo2:"97",
+                    weight:"68",
+                    height:"172"
+                },
+
+                complaint:"Headache",
+                symptoms:"Recurring headache and dizziness.",
+                diagnosis:"",
+                doctorNotes:"",
+
+                prescription:[],
+
+                investigations:"",
+                followUpDate:"",
+                createdAt:new Date().toISOString()
+
+            }
+
+        ];
+
+
+        saveOPD(records);
+
+    }
+
+
+    return records;
+
+}
+
+
+function saveOPD(records){
+
+    localStorage.setItem(
+        "hms_opd",
+        JSON.stringify(records)
+    );
+
+}
+
+
+/* =====================================================
+   INITIALIZE
+===================================================== */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function(){
+
+        populatePatients();
+
+        populateDoctors();
+
+        renderQueue();
+
+        renderOPDTable();
+
+        renderDoctorDuty();
+
+        updateStats();
+
+        addMedicineRow();
+
+    }
+);
+
+
+/* =====================================================
+   PATIENT SELECT
+===================================================== */
+
+function populatePatients(){
+
+    const select =
+        document.getElementById(
+            "opdPatient"
+        );
+
+
+    select.innerHTML =
+        `<option value="">
+            Select Patient
+        </option>`;
+
+
+    getPatients()
+        .forEach(
+            patient => {
+
+                select.innerHTML += `
+                    <option value="${safe(patient.id)}">
+                        ${safe(patient.name)}
+                        (${safe(patient.id)})
+                    </option>
+                `;
+
+            }
+        );
+
+
+    select.addEventListener(
+        "change",
+        updateOPDPatient
+    );
+
+}
+
+
+function updateOPDPatient(){
+
+    const id =
+        document.getElementById(
+            "opdPatient"
+        ).value;
+
+
+    const patient =
+        getPatients()
+        .find(
+            p =>
+                p.id === id
+        );
+
+
+    document.getElementById(
+        "opdPhone"
+    ).value =
+        patient?.phone || "";
+
+}
+
+
+/* =====================================================
+   DOCTOR SELECT
+===================================================== */
+
+function populateDoctors(){
+
+    const select =
+        document.getElementById(
+            "opdDoctor"
+        );
+
+
+    select.innerHTML =
+        `<option value="">
+            Select Doctor
+        </option>`;
+
+
+    getDoctors()
+        .forEach(
+            doctor => {
+
+                select.innerHTML += `
+                    <option value="${safe(doctor.id)}">
+                        ${safe(doctor.name)}
+                    </option>
+                `;
+
+            }
+        );
+
+
+    select.addEventListener(
+        "change",
+        updateOPDDoctor
+    );
+
+}
+
+
+function updateOPDDoctor(){
+
+    const id =
+        document.getElementById(
+            "opdDoctor"
+        ).value;
+
+
+    const doctor =
+        getDoctors()
+        .find(
+            d =>
+                d.id === id
+        );
+
+
+    document.getElementById(
+        "opdDepartment"
+    ).value =
+        doctor?.department || "";
+
+
+    document.getElementById(
+        "opdFee"
+    ).value =
+        doctor?.fee || 0;
+
+}
+
+
+/* =====================================================
+   OPEN OPD MODAL
+===================================================== */
+
+function openOPDModal(record = null){
+
+    editingOPDId =
+        record?.id || null;
+
+
+    document.getElementById(
+        "opdForm"
+    ).reset();
+
+
+    document.getElementById(
+        "opdModalTitle"
+    ).textContent =
+        record
+            ? "Edit OPD Record"
+            : "OPD Registration";
+
+
+    if(!record){
+
+        document.getElementById(
+            "opdRecordStatus"
+        ).value =
+            "Waiting";
+
+
+        document.getElementById(
+            "opdPayment"
+        ).value =
+            "Paid";
+
+    }
+
+
+    document.getElementById(
+        "medicineContainer"
+    ).innerHTML = "";
+
+
+    addMedicineRow();
+
+
+    if(record){
+
+        fillOPDForm(
+            record
+        );
+
+    }
+
+
+    document.getElementById(
+        "opdModal"
+    )
+    .classList.add(
+        "show"
+    );
+
+}
+
+
+/* =====================================================
+   FILL OPD FORM
+===================================================== */
+
+function fillOPDForm(r){
+
+    document.getElementById(
+        "opdPatient"
+    ).value =
+        r.patientId || "";
+
+
+    updateOPDPatient();
+
+
+    document.getElementById(
+        "opdDoctor"
+    ).value =
+        r.doctorId || "";
+
+
+    updateOPDDoctor();
+
+
+    document.getElementById(
+        "visitType"
+    ).value =
+        r.visitType || "New Patient";
+
+
+    document.getElementById(
+        "opdFee"
+    ).value =
+        r.fee || 0;
+
+
+    document.getElementById(
+        "temperature"
+    ).value =
+        r.vitals?.temperature || "";
+
+
+    document.getElementById(
+        "pulse"
+    ).value =
+        r.vitals?.pulse || "";
+
+
+    document.getElementById(
+        "bloodPressure"
+    ).value =
+        r.vitals?.bloodPressure || "";
+
+
+    document.getElementById(
+        "spo2"
+    ).value =
+        r.vitals?.spo2 || "";
+
+
+    document.getElementById(
+        "weight"
+    ).value =
+        r.vitals?.weight || "";
+
+
+    document.getElementById(
+        "height"
+    ).value =
+        r.vitals?.height || "";
+
+
+    document.getElementById(
+        "complaint"
+    ).value =
+        r.complaint || "";
+
+
+    document.getElementById(
+        "symptoms"
+    ).value =
+        r.symptoms || "";
+
+
+    document.getElementById(
+        "diagnosis"
+    ).value =
+        r.diagnosis || "";
+
+
+    document.getElementById(
+        "doctorNotes"
+    ).value =
+        r.doctorNotes || "";
+
+
+    document.getElementById(
+        "investigations"
+    ).value =
+        r.investigations || "";
+
+
+    document.getElementById(
+        "followUpDate"
+    ).value =
+        r.followUpDate || "";
+
+
+    document.getElementById(
+        "opdRecordStatus"
+    ).value =
+        r.status || "Waiting";
+
+
+    document.getElementById(
+        "opdPayment"
+    ).value =
+        r.payment || "Pending";
+
+
+    document.getElementById(
+        "medicineContainer"
+    ).innerHTML = "";
+
+
+    if(
+        r.prescription &&
+        r.prescription.length
+    ){
+
+        r.prescription.forEach(
+            medicine =>
+                addMedicineRow(
+                    medicine
+                )
+        );
+
+    }else{
+
+        addMedicineRow();
+
+    }
+
+}
+
+
+/* =====================================================
+   ADD MEDICINE
+===================================================== */
+
+function addMedicineRow(
+    medicine = {}
+){
+
+    const container =
+        document.getElementById(
+            "medicineContainer"
+        );
+
+
+    const row =
+        document.createElement(
+            "div"
+        );
+
+
+    row.className =
+        "prescription-row";
+
+
+    row.innerHTML = `
+
+        <input
+            class="form-control medicine-name"
+            placeholder="Medicine"
+            value="${safe(
+                medicine.medicine || ""
+            )}"
+        >
+
+        <input
+            class="form-control medicine-dose"
+            placeholder="Dose"
+            value="${safe(
+                medicine.dose || ""
+            )}"
+        >
+
+        <select class="form-control medicine-frequency">
+
+            <option value="">Frequency</option>
+            <option ${medicine.frequency==="OD" ? "selected" : ""}>
+                OD
+            </option>
+            <option ${medicine.frequency==="BD" ? "selected" : ""}>
+                BD
+            </option>
+            <option ${medicine.frequency==="TDS" ? "selected" : ""}>
+                TDS
+            </option>
+            <option ${medicine.frequency==="QID" ? "selected" : ""}>
+                QID
+            </option>
+            <option ${medicine.frequency==="SOS" ? "selected" : ""}>
+                SOS
+            </option>
+
+        </select>
+
+        <input
+            class="form-control medicine-duration"
+            placeholder="Duration"
+            value="${safe(
+                medicine.duration || ""
+            )}"
+        >
+
+        <button
+            type="button"
+            class="remove-med"
+            onclick="this.parentElement.remove()"
+        >
+            ×
+        </button>
+
+    `;
+
+
+    container.appendChild(
+        row
+    );
+
+}
+
+
+/* =====================================================
+   SAVE OPD
+===================================================== */
+
+function saveOPD(event){
+
+    event.preventDefault();
+
+
+    const patientId =
+        document.getElementById(
+            "opdPatient"
+        ).value;
+
+
+    const doctorId =
+        document.getElementById(
+            "opdDoctor"
+        ).value;
+
+
+    if(
+        !patientId ||
+        !doctorId
+    ){
+
+        alert(
+            "Please select patient and doctor."
+        );
+
+        return;
+
+    }
+
+
+    const patient =
+        getPatients()
+        .find(
+            p =>
+                p.id === patientId
+        );
+
+
+    const doctor =
+        getDoctors()
+        .find(
+            d =>
+                d.id === doctorId
+        );
+
+
+    if(!patient || !doctor){
+
+        alert(
+            "Invalid patient or doctor."
+        );
+
+        return;
+
+    }
+
+
+    const medicineRows =
+        document.querySelectorAll(
+            "#medicineContainer .prescription-row"
+        );
+
+
+    const prescription =
+        Array.from(
+            medicineRows
+        )
+        .map(
+            row => {
+
+                return {
+
+                    medicine:
+                        row.querySelector(
+                            ".medicine-name"
+                        ).value.trim(),
+
+                    dose:
+                        row.querySelector(
+                            ".medicine-dose"
+                        ).value.trim(),
+
+                    frequency:
+                        row.querySelector(
+                            ".medicine-frequency"
+                        ).value,
+
+                    duration:
+                        row.querySelector(
+                            ".medicine-duration"
+                        ).value.trim()
+
+                };
+
+            }
+        )
+        .filter(
+            m =>
+                m.medicine
+        );
+
+
+    const records =
+        getOPD();
+
+
+    const data = {
+
+        patientId,
+
+        patientName:
+            patient.name,
+
+        phone:
+            patient.phone || "",
+
+        doctorId,
+
+        doctorName:
+            doctor.name,
+
+        department:
+            doctor.department,
+
+        visitType:
+            document.getElementById(
+                "visitType"
+            ).value,
+
+        date:
+            formatDate(
+                new Date()
+            ),
+
+        time:
+            new Date()
+            .toLocaleTimeString(
+                "en-IN",
+                {
+                    hour:"2-digit",
+                    minute:"2-digit"
+                }
+            ),
+
+        fee:
+            Number(
+                document.getElementById(
+                    "opdFee"
+                ).value
+            ) || 0,
+
+        payment:
+            document.getElementById(
+                "opdPayment"
+            ).value,
+
+        status:
+            document.getElementById(
+                "opdRecordStatus"
+            ).value,
+
+        vitals:{
+
+            temperature:
+                document.getElementById(
+                    "temperature"
+                ).value,
+
+            pulse:
+                document.getElementById(
+                    "pulse"
+                ).value,
+
+            bloodPressure:
+                document.getElementById(
+                    "bloodPressure"
+                ).value,
+
+            spo2:
+                document.getElementById(
+                    "spo2"
+                ).value,
+
+            weight:
+                document.getElementById(
+                    "weight"
+                ).value,
+
+            height:
+                document.getElementById(
+                    "height"
+                ).value
+
+        },
+
+        complaint:
+            document.getElementById(
+                "complaint"
+            ).value.trim(),
+
+        symptoms:
+            document.getElementById(
+                "symptoms"
+            ).value.trim(),
+
+        diagnosis:
+            document.getElementById(
+                "diagnosis"
+            ).value.trim(),
+
+        doctorNotes:
+            document.getElementById(
+                "doctorNotes"
+            ).value.trim(),
+
+        prescription,
+
+        investigations:
+            document.getElementById(
+                "investigations"
+            ).value.trim(),
+
+        followUpDate:
+            document.getElementById(
+                "followUpDate"
+            ).value
+
+    };
+
+
+    if(editingOPDId){
+
+        const index =
+            records.findIndex(
+                r =>
+                    r.id ===
+                    editingOPDId
+            );
+
+
+        if(index !== -1){
+
+            records[index] = {
+
+                ...records[index],
+
+                ...data,
+
+                updatedAt:
+                    new Date()
+                    .toISOString()
+
+            };
+
+        }
+
+    }else{
+
+        records.push({
+
+            id:
+                generateOPDId(
+                    records
+                ),
+
+            token:
+                generateToken(
+                    records
+                ),
+
+            ...data,
+
+            createdAt:
+                new Date()
+                .toISOString()
+
+        });
+
+    }
+
+
+    saveOPD(records);
+
+
+    closeOPDModal();
+
+
+    renderQueue();
+
+    renderOPDTable();
+
+    renderDoctorDuty();
+
+    updateStats();
+
+
+    alert(
+        editingOPDId
+            ? "OPD record updated successfully."
+            : "OPD patient registered successfully."
+    );
+
+
+    editingOPDId =
+        null;
+
+}
+
+
+/* =====================================================
+   ID GENERATORS
+===================================================== */
+
+function generateOPDId(records){
+
+    let highest =
+        1000;
+
+
+    records.forEach(
+        r => {
+
+            const n =
+                parseInt(
+                    String(
+                        r.id || ""
+                    )
+                    .replace(
+                        "OPD-",
+                        ""
+                    )
+                );
+
+
+            if(
+                !isNaN(n) &&
+                n > highest
+            ){
+
+                highest = n;
+
+            }
+
+        }
+    );
+
+
+    return `OPD-${highest + 1}`;
+
+}
+
+
+function generateToken(records){
+
+    const today =
+        formatDate(
+            new Date()
+        );
+
+
+    const count =
+        records.filter(
+            r =>
+                r.date === today
+        ).length + 1;
+
+
+    return `OPD-${String(
+        count
+    ).padStart(3,"0")}`;
+
+}
+
+
+/* =====================================================
+   QUEUE
+===================================================== */
+
+function renderQueue(){
+
+    const records =
+        getOPD();
+
+
+    const today =
+        formatDate(
+            new Date()
+        );
+
+
+    const search =
+        (
+            document.getElementById(
+                "queueSearch"
+            )?.value || ""
+        )
+        .toLowerCase();
+
+
+    const department =
+        document.getElementById(
+            "queueDepartment"
+        )?.value || "";
+
+
+    const queue =
+        records
+        .filter(
+            r =>
+                r.date === today &&
+                r.status !== "Completed" &&
+                r.status !== "Cancelled"
+        )
+        .filter(
+            r => {
+
+                const matchesSearch =
+                    !search ||
+                    r.patientName
+                        .toLowerCase()
+                        .includes(search) ||
+                    r.token
+                        .toLowerCase()
+                        .includes(search);
+
+
+                const matchesDepartment =
+                    !department ||
+                    r.department === department;
+
+
+                return (
+                    matchesSearch &&
+                    matchesDepartment
+                );
+
+            }
+        );
+
+
+    document.getElementById(
+        "queueCount"
+    ).textContent =
+        `${queue.length} Patient${queue.length === 1 ? "" : "s"}`;
+
+
+    const container =
+        document.getElementById(
+            "queueList"
+        );
+
+
+    if(!queue.length){
+
+        container.innerHTML = `
+            <div class="empty-state">
+
+                <div class="empty-state-icon">
+                    🏥
+                </div>
+
+                <strong>
+                    OPD queue is empty
+                </strong>
+
+                <p>
+                    No patients are currently waiting.
+                </p>
+
+            </div>
+        `;
+
+        return;
+
+    }
+
+
+    container.innerHTML =
+        queue
+        .map(
+            r => `
+
+                <div
+                    class="queue-item"
+                    onclick="viewOPD('${safe(r.id)}')"
+                >
+
+                    <div class="token">
+                        ${safe(r.token.replace("OPD-",""))}
+                    </div>
+
+                    <div class="queue-info">
+
+                        <div class="queue-name">
+                            ${safe(r.patientName)}
+                        </div>
+
+                        <div class="queue-meta">
+                            ${safe(r.department)}
+                            ·
+                            ${safe(r.doctorName)}
+                            ·
+                            ${safe(r.time)}
+                        </div>
+
+                    </div>
+
+                    <div class="queue-status">
+
+                        <span
+                            class="badge ${statusClass(r.status)}"
+                        >
+                            ${safe(r.status)}
+                        </span>
+
+                    </div>
+
+                </div>
+
+            `
+        )
+        .join("");
+
+}
+
+
+/* =====================================================
+   CALL NEXT PATIENT
+===================================================== */
+
+function callNextPatient(){
+
+    const records =
+        getOPD();
+
+
+    const today =
+        formatDate(
+            new Date()
+        );
+
+
+    const next =
+        records
+        .filter(
+            r =>
+                r.date === today &&
+                r.status === "Waiting"
+        )
+        .sort(
+            (a,b) =>
+                a.token.localeCompare(
+                    b.token
+                )
+        )[0];
+
+
+    if(!next){
+
+        alert(
+            "There are no waiting patients in the OPD queue."
+        );
+
+        return;
+
+    }
+
+
+    const index =
+        records.findIndex(
+            r =>
+                r.id === next.id
+        );
+
+
+    records[index].status =
+        "In Consultation";
+
+
+    saveOPD(records);
+
+
+    renderQueue();
+
+    renderOPDTable();
+
+    updateStats();
+
+    renderDoctorDuty();
+
+
+    alert(
+        `Now Calling: Token ${next.token}\n\nPatient: ${next.patientName}\nDoctor: ${next.doctorName}`
+    );
+
+}
+
+
+/* =====================================================
+   DOCTOR DUTY
+===================================================== */
+
+function renderDoctorDuty(){
+
+    const doctors =
+        getDoctors();
+
+
+    const records =
+        getOPD();
+
+
+    const today =
+        formatDate(
+            new Date()
+        );
+
+
+    const container =
+        document.getElementById(
+            "doctorDutyList"
+        );
+
+
+    container.innerHTML =
+        doctors
+        .map(
+            doctor => {
+
+                const doctorRecords =
+                    records.filter(
+                        r =>
+                            r.date === today &&
+                            r.doctorId === doctor.id
+                    );
+
+
+                const waiting =
+                    doctorRecords.filter(
+                        r =>
+                            r.status === "Waiting"
+                    ).length;
+
+
+                const completed =
+                    doctorRecords.filter(
+                        r =>
+                            r.status === "Completed"
+                    ).length;
+
+
+                const total =
+                    doctorRecords.length;
+
+
+                const percentage =
+                    total
+                        ? Math.min(
+                            100,
+                            Math.round(
+                                completed /
+                                total *
+                                100
+                            )
+                        )
+                        : 0;
+
+
+                return `
+
+                    <div class="doctor-card">
+
+                        <div class="doctor-avatar">
+                            ${safe(
+                                initials(
+                                    doctor.name
+                                )
+                            )}
+                        </div>
+
+                        <div class="doctor-info">
+
+                            <div class="doctor-name">
+                                ${safe(doctor.name)}
+                            </div>
+
+                            <div class="doctor-dept">
+                                ${safe(doctor.department)}
+                            </div>
+
+                            <div class="progress">
+
+                                <div
+                                    class="progress-bar"
+                                    style="width:${percentage}%"
+                                ></div>
+
+                            </div>
+
+                            <div
+                                style="
+                                    font-size:8px;
+                                    color:var(--muted);
+                                    margin-top:4px
+                                "
+                            >
+                                ${completed}/${total}
+                                completed ·
+                                ${waiting} waiting
+                            </div>
+
+                        </div>
+
+                        <span
+                            class="badge ${
+                                waiting
+                                    ? "yellow"
+                                    : "green"
+                            }"
+                        >
+                            ${
+                                waiting
+                                    ? "Busy"
+                                    : "Available"
+                            }
+                        </span>
+
+                    </div>
+
+                `;
+
+            }
+        )
+        .join("");
+
+}
+
+
+/* =====================================================
+   OPD TABLE
+===================================================== */
+
+function renderOPDTable(){
+
+    const records =
+        getOPD();
+
+
+    const search =
+        (
+            document.getElementById(
+                "opdSearch"
+            )?.value || ""
+        )
+        .toLowerCase();
+
+
+    const status =
+        document.getElementById(
+            "opdStatus"
+        )?.value || "";
+
+
+    const filtered =
+        records
+        .filter(
+            r => {
+
+                const matchesSearch =
+                    !search ||
+                    r.id
+                        .toLowerCase()
+                        .includes(search) ||
+                    r.token
+                        .toLowerCase()
+                        .includes(search) ||
+                    r.patientName
+                        .toLowerCase()
+                        .includes(search) ||
+                    r.doctorName
+                        .toLowerCase()
+                        .includes(search);
+
+
+                const matchesStatus =
+                    !status ||
+                    r.status === status;
+
+
+                return (
+                    matchesSearch &&
+                    matchesStatus
+                );
+
+            }
+        )
+        .sort(
+            (a,b) =>
+                (
+                    b.date + " " + b.time
+                )
+                .localeCompare(
+                    a.date + " " + a.time
+                )
+        );
+
+
+    document.getElementById(
+        "registrationCount"
+    ).textContent =
+        `${filtered.length} Record${filtered.length === 1 ? "" : "s"}`;
+
+
+    const tbody =
+        document.getElementById(
+            "opdTableBody"
+        );
+
+
+    if(!filtered.length){
+
+        tbody.innerHTML = `
+            <tr>
+
+                <td colspan="9">
+
+                    <div class="empty-state">
+
+                        <div class="empty-state-icon">
+                            🏥
+                        </div>
+
+                        <strong>
+                            No OPD records found
+                        </strong>
+
+                    </div>
+
+                </td>
+
+            </tr>
+        `;
+
+        return;
+
+    }
+
+
+    tbody.innerHTML =
+        filtered
+        .map(
+            r => {
+
+                const vitalsAvailable =
+                    Object.values(
+                        r.vitals || {}
+                    )
+                    .some(
+                        value =>
+                            value
+                    );
+
+
+                const paymentClass =
+                    r.payment === "Paid"
+                        ? "green"
+                        : "yellow";
+
+
+                return `
+
+                    <tr>
+
+                        <td>
+
+                            <span
+                                class="badge blue"
+                            >
+                                ${safe(r.token)}
+                            </span>
+
+                            <div
+                                style="
+                                    color:var(--muted);
+                                    font-size:8px;
+                                    margin-top:3px
+                                "
+                            >
+                                ${safe(displayDate(r.date))}
+                            </div>
+
+                        </td>
+
+
+                        <td>
+
+                            <div class="patient-cell">
+
+                                <div class="patient-avatar">
+                                    ${safe(
+                                        initials(
+                                            r.patientName
+                                        )
+                                    )}
+                                </div>
+
+                                <div>
+
+                                    <div class="patient-name">
+                                        ${safe(r.patientName)}
+                                    </div>
+
+                                    <div class="patient-id">
+                                        ${safe(r.patientId)}
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+
+                        <td>
+                            ${safe(r.doctorName)}
+                        </td>
+
+
+                        <td>
+                            ${safe(r.department)}
+                        </td>
+
+
+                        <td>
+                            ${safe(r.visitType)}
+                        </td>
+
+
+                        <td>
+
+                            <span
+                                class="badge ${
+                                    vitalsAvailable
+                                        ? "green"
+                                        : "gray"
+                                }"
+                            >
+                                ${
+                                    vitalsAvailable
+                                        ? "Recorded"
+                                        : "Pending"
+                                }
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <span
+                                class="badge ${statusClass(r.status)}"
+                            >
+                                ${safe(r.status)}
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <span
+                                class="badge ${paymentClass}"
+                            >
+                                ${safe(r.payment)}
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <div class="action-buttons">
+
+                                <button
+                                    class="icon-btn"
+                                    title="View"
+                                    onclick="viewOPD('${safe(r.id)}')"
+                                >
+                                    👁
+                                </button>
+
+                                <button
+                                    class="icon-btn"
+                                    title="Edit"
+                                    onclick="editOPD('${safe(r.id)}')"
+                                >
+                                    ✏
+                                </button>
+
+                                ${
+                                    r.status !== "Completed"
+                                    ? `
+                                        <button
+                                            class="icon-btn"
+                                            title="Complete"
+                                            onclick="completeOPD('${safe(r.id)}')"
+                                        >
+                                            ✓
+                                        </button>
+                                    `
+                                    : ""
+                                }
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                `;
+
+            }
+        )
+        .join("");
+
+}
+
+
+/* =====================================================
+   VIEW OPD
+===================================================== */
+
+function viewOPD(id){
+
+    const record =
+        getOPD()
+        .find(
+            r =>
+                r.id === id
+        );
+
+
+    if(!record){
+        return;
+    }
+
+
+    const prescription =
+        record.prescription || [];
+
+
+    document.getElementById(
+        "opdDetails"
+    ).innerHTML = `
+
+        <div class="summary-box">
+
+            <div
+                style="
+                    display:flex;
+                    justify-content:space-between;
+                    align-items:center
+                "
+            >
+
+                <div>
+
+                    <h2
+                        style="font-size:18px"
+                    >
+                        ${safe(record.patientName)}
+                    </h2>
+
+                    <div
+                        style="
+                            color:var(--muted);
+                            font-size:9px;
+                            margin-top:4px
+                        "
+                    >
+                        ${safe(record.id)}
+                        ·
+                        ${safe(record.token)}
+                    </div>
+
+                </div>
+
+                <span
+                    class="badge ${statusClass(record.status)}"
+                >
+                    ${safe(record.status)}
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="section-title">
+            Patient & Doctor
+        </div>
+
+        <div class="form-grid">
+
+            <div class="field-group">
+
+                <label>Patient ID</label>
+
+                <input
+                    class="form-control"
+                    readonly
+                    value="${safe(record.patientId)}"
+                >
+
+            </div>
+
+            <div class="field-group">
+
+                <label>Phone</label>
+
+                <input
+                    class="form-control"
+                    readonly
+                    value="${safe(record.phone)}"
+                >
+
+            </div>
+
+            <div class="field-group">
+
+                <label>Doctor</label>
+
+                <input
+                    class="form-control"
+                    readonly
+                    value="${safe(record.doctorName)}"
+                >
+
+            </div>
+
+            <div class="field-group">
+
+                <label>Department</label>
+
+                <input
+                    class="form-control"
+                    readonly
+                    value="${safe(record.department)}"
+                >
+
+            </div>
+
+            <div class="field-group">
+
+                <label>Visit Type</label>
+
+                <input
+                    class="form-control"
+                    readonly
+                    value="${safe(record.visitType)}"
+                >
+
+            </div>
+
+            <div class="field-group">
+
+                <label>Consultation Fee</label>
+
+                <input
+                    class="form-control"
+                    readonly
+                    value="₹${safe(record.fee)}"
+                >
+
+            </div>
+
+        </div>
+
+
+        <div class="section-title">
+            Vitals
+        </div>
+
+        <div class="vitals-grid">
+
+            ${vitalView(
+                "Temperature",
+                record.vitals?.temperature,
+                "°F"
+            )}
+
+            ${vitalView(
+                "Pulse",
+                record.vitals?.pulse,
+                "/min"
+            )}
+
+            ${vitalView(
+                "Blood Pressure",
+                record.vitals?.bloodPressure,
+                ""
+            )}
+
+            ${vitalView(
+                "SpO₂",
+                record.vitals?.spo2,
+                "%"
+            )}
+
+            ${vitalView(
+                "Weight",
+                record.vitals?.weight,
+                "kg"
+            )}
+
+            ${vitalView(
+                "Height",
+                record.vitals?.height,
+                "cm"
+            )}
+
+        </div>
+
+
+        <div class="section-title">
+            Clinical Information
+        </div>
+
+        <div class="consultation-grid">
+
+            ${textBox(
+                "Chief Complaint",
+                record.complaint
+            )}
+
+            ${textBox(
+                "Symptoms / History",
+                record.symptoms
+            )}
+
+            ${textBox(
+                "Diagnosis",
+                record.diagnosis
+            )}
+
+            ${textBox(
+                "Doctor Notes",
+                record.doctorNotes
+            )}
+
+        </div>
+
+
+        <div class="section-title">
+            Prescription
+        </div>
+
+        ${
+            prescription.length
+                ? `
+                    <div
+                        class="table-wrapper"
+                    >
+
+                        <table
+                            style="min-width:500px"
+                        >
+
+                            <thead>
+
+                                <tr>
+                                    <th>Medicine</th>
+                                    <th>Dose</th>
+                                    <th>Frequency</th>
+                                    <th>Duration</th>
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                                ${
+                                    prescription
+                                    .map(
+                                        m => `
+                                            <tr>
+
+                                                <td>
+                                                    ${safe(m.medicine)}
+                                                </td>
+
+                                                <td>
+                                                    ${safe(m.dose)}
+                                                </td>
+
+                                                <td>
+                                                    ${safe(m.frequency)}
+                                                </td>
+
+                                                <td>
+                                                    ${safe(m.duration)}
+                                                </td>
+
+                                            </tr>
+                                        `
+                                    )
+                                    .join("")
+                                }
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+                `
+                : `
+                    <p
+                        style="
+                            color:var(--muted);
+                            font-size:10px
+                        "
+                    >
+                        No medicines prescribed.
+                    </p>
+                `
+        }
+
+
+        <div class="section-title">
+            Investigations & Follow-up
+        </div>
+
+        <div class="form-grid">
+
+            <div class="field-group">
+
+                <label>Investigations</label>
+
+                <input
+                    class="form-control"
+                    readonly
+                    value="${safe(record.investigations || "None")}"
+                >
+
+            </div>
+
+            <div class="field-group">
+
+                <label>Follow-up Date</label>
+
+                <input
+                    class="form-control"
+                    readonly
+                    value="${safe(
+                        record.followUpDate
+                            ? displayDate(
+                                record.followUpDate
+                            )
+                            : "Not scheduled"
+                    )}"
+                >
+
+            </div>
+
+            <div class="field-group">
+
+                <label>Payment</label>
+
+                <input
+                    class="form-control"
+                    readonly
+                    value="${safe(record.payment)}"
+                >
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    document.getElementById(
+        "viewOPDModal"
+    )
+    .classList.add(
+        "show"
+    );
+
+}
+
+
+function vitalView(label,value,unit){
+
+    return `
+
+        <div class="vital-box">
+
+            <label>
+                ${safe(label)}
+            </label>
+
+            <strong>
+                ${safe(value || "—")}
+                ${safe(unit)}
+            </strong>
+
+        </div>
+
+    `;
+
+}
+
+
+function textBox(label,value){
+
+    return `
+
+        <div class="field-group">
+
+            <label>
+                ${safe(label)}
+            </label>
+
+            <textarea
+                class="form-control"
+                readonly
+                style="min-height:80px"
+            >${safe(value || "—")}</textarea>
+
+        </div>
+
+    `;
+
+}
+
+
+/* =====================================================
+   EDIT OPD
+===================================================== */
+
+function editOPD(id){
+
+    const record =
+        getOPD()
+        .find(
+            r =>
+                r.id === id
+        );
+
+
+    if(record){
+
+        openOPDModal(
+            record
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   COMPLETE OPD
+===================================================== */
+
+function completeOPD(id){
+
+    const records =
+        getOPD();
+
+
+    const index =
+        records.findIndex(
+            r =>
+                r.id === id
+        );
+
+
+    if(index === -1){
+        return;
+    }
+
+
+    const proceed =
+        confirm(
+            "Mark this OPD consultation as completed?"
+        );
+
+
+    if(!proceed){
+        return;
+    }
+
+
+    records[index].status =
+        "Completed";
+
+
+    records[index].completedAt =
+        new Date()
+        .toISOString();
+
+
+    saveOPD(records);
+
+
+    renderQueue();
+
+    renderOPDTable();
+
+    renderDoctorDuty();
+
+    updateStats();
+
+
+    alert(
+        "OPD consultation completed."
+    );
+
+}
+
+
+/* =====================================================
+   CLOSE MODALS
+===================================================== */
+
+function closeOPDModal(){
+
+    document.getElementById(
+        "opdModal"
+    )
+    .classList.remove(
+        "show"
+    );
+
+
+    editingOPDId =
+        null;
+
+}
+
+
+function closeViewOPD(){
+
+    document.getElementById(
+        "viewOPDModal"
+    )
+    .classList.remove(
+        "show"
+    );
+
+}
+
+
+/* =====================================================
+   STATISTICS
+===================================================== */
+
+function updateStats(){
+
+    const records =
+        getOPD();
+
+
+    const today =
+        formatDate(
+            new Date()
+        );
+
+
+    const todayRecords =
+        records.filter(
+            r =>
+                r.date === today
+        );
+
+
+    document.getElementById(
+        "totalOPD"
+    ).textContent =
+        todayRecords.length;
+
+
+    document.getElementById(
+        "waitingOPD"
+    ).textContent =
+        todayRecords.filter(
+            r =>
+                r.status === "Waiting"
+        ).length;
+
+
+    document.getElementById(
+        "completedOPD"
+    ).textContent =
+        todayRecords.filter(
+            r =>
+                r.status === "Completed"
+        ).length;
+
+
+    document.getElementById(
+        "doctorsOnDuty"
+    ).textContent =
+        new Set(
+            todayRecords
+            .map(
+                r =>
+                    r.doctorId
+            )
+        ).size;
+
+
+    const revenue =
+        todayRecords
+        .filter(
+            r =>
+                r.payment === "Paid"
+        )
+        .reduce(
+            (
+                total,
+                r
+            ) =>
+                total +
+                Number(
+                    r.fee || 0
+                ),
+            0
+        );
+
+
+    document.getElementById(
+        "opdRevenue"
+    ).textContent =
+        `₹${revenue.toLocaleString("en-IN")}`;
+
+}
+
+
+/* =====================================================
+   EXPORT CSV
+===================================================== */
+
+function exportOPD(){
+
+    const records =
+        getOPD();
+
+
+    if(!records.length){
+
+        alert(
+            "No OPD records available."
+        );
+
+        return;
+
+    }
+
+
+    const headers = [
+
+        "OPD ID",
+        "Token",
+        "Patient ID",
+        "Patient Name",
+        "Doctor",
+        "Department",
+        "Visit Type",
+        "Date",
+        "Time",
+        "Fee",
+        "Status",
+        "Payment",
+        "Diagnosis"
+
+    ];
+
+
+    const rows =
+        records.map(
+            r => [
+
+                r.id,
+                r.token,
+                r.patientId,
+                r.patientName,
+                r.doctorName,
+                r.department,
+                r.visitType,
+                r.date,
+                r.time,
+                r.fee,
+                r.status,
+                r.payment,
+                r.diagnosis || ""
+
+            ]
+        );
+
+
+    const csv =
+        [headers,...rows]
+        .map(
+            row =>
+                row
+                .map(
+                    value =>
+                        `"${String(
+                            value ?? ""
+                        ).replace(
+                            /"/g,
+                            '""'
+                        )}"`
+                )
+                .join(",")
+        )
+        .join("\n");
+
+
+    const blob =
+        new Blob(
+            [csv],
+            {
+                type:
+                    "text/csv;charset=utf-8;"
+            }
+        );
+
+
+    const url =
+        URL.createObjectURL(
+            blob
+        );
+
+
+    const link =
+        document.createElement(
+            "a"
+        );
+
+
+    link.href =
+        url;
+
+
+    link.download =
+        "hospital-opd-records.csv";
+
+
+    link.click();
+
+
+    URL.revokeObjectURL(
+        url
+    );
+
+}
+
+
+/* =====================================================
+   GLOBAL SEARCH
+===================================================== */
+
+document.getElementById(
+    "globalSearch"
+)
+?.addEventListener(
+    "input",
+    function(){
+
+        document.getElementById(
+            "opdSearch"
+        ).value =
+            this.value;
+
+
+        renderOPDTable();
+
+    }
+);
+
+
+/* =====================================================
+   NOTIFICATIONS
+===================================================== */
+
+function showNotifications(){
+
+    alert(
+        "OPD Notifications\n\n" +
+        "• OPD queue is active.\n" +
+        "• Waiting patients are ready for consultation.\n" +
+        "• Doctor schedules are synchronized.\n" +
+        "• Pending OPD payments require attention."
+    );
+
+}
+
+
+/* =====================================================
+   MODAL OUTSIDE CLICK
+===================================================== */
+
+document.addEventListener(
+    "click",
+    function(event){
+
+        const modal =
+            document.getElementById(
+                "opdModal"
+            );
+
+
+        const view =
+            document.getElementById(
+                "viewOPDModal"
+            );
+
+
+        if(
+            event.target === modal
+        ){
+
+            closeOPDModal();
+
+        }
+
+
+        if(
+            event.target === view
+        ){
+
+            closeViewOPD();
+
+        }
+
+    }
+);
+
+</script>
+
+</body>
+</html>
