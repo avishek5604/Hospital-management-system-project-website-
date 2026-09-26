@@ -1,0 +1,1908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPD Management | Hospital Management System</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+
+        :root {
+            --primary: #2563eb;
+            --secondary: #0f766e;
+            --danger: #dc2626;
+            --warning: #d97706;
+            --success: #16a34a;
+            --dark: #172033;
+            --light: #f8fafc;
+            --border: #e5e7eb;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 250px;
+            height: 100vh;
+            background: var(--dark);
+            color: white;
+            padding: 20px 15px;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            margin-bottom: 25px;
+        }
+
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .logo h2 {
+            font-size: 18px;
+        }
+
+        .logo small {
+            color: #94a3b8;
+        }
+
+        .menu-title {
+            font-size: 11px;
+            color: #64748b;
+            margin: 20px 10px 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #cbd5e1;
+            text-decoration: none;
+            padding: 12px 13px;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            font-size: 14px;
+            transition: .2s;
+        }
+
+        .menu a:hover,
+        .menu a.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* MAIN */
+        .main {
+            margin-left: 250px;
+            min-height: 100vh;
+        }
+
+        .topbar {
+            height: 70px;
+            background: white;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 25px;
+            position: sticky;
+            top: 0;
+            z-index: 500;
+        }
+
+        .topbar h1 {
+            font-size: 22px;
+        }
+
+        .top-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .notification {
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .content {
+            padding: 25px;
+        }
+
+        /* BUTTONS */
+        button {
+            border: none;
+            cursor: pointer;
+            border-radius: 7px;
+            padding: 10px 15px;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #64748b;
+            color: white;
+        }
+
+        /* CARDS */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            box-shadow: 0 2px 7px rgba(0,0,0,.04);
+        }
+
+        .stat-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .stat-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 10px;
+            background: #eff6ff;
+            color: var(--primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+        }
+
+        .stat-card h2 {
+            margin-top: 12px;
+            font-size: 27px;
+        }
+
+        .stat-card p {
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        /* TOOLBAR */
+        .toolbar {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: space-between;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 8px;
+            flex: 1;
+            min-width: 250px;
+        }
+
+        input,
+        select,
+        textarea {
+            border: 1px solid #d1d5db;
+            border-radius: 7px;
+            padding: 10px 12px;
+            outline: none;
+            width: 100%;
+            background: white;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: var(--primary);
+        }
+
+        /* TABLE */
+        .table-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 25px;
+        }
+
+        .table-header {
+            padding: 18px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1000px;
+        }
+
+        th,
+        td {
+            padding: 13px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+            font-size: 13px;
+        }
+
+        th {
+            background: #f8fafc;
+            color: #475569;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 9px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .badge-green {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .badge-red {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .badge-yellow {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-blue {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .action-btn {
+            padding: 7px 9px;
+            font-size: 12px;
+        }
+
+        /* BED SECTION */
+        .bed-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            padding: 18px;
+        }
+
+        .bed {
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            text-align: center;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .bed:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,.08);
+        }
+
+        .bed.available {
+            background: #f0fdf4;
+            border-color: #86efac;
+        }
+
+        .bed.occupied {
+            background: #fef2f2;
+            border-color: #fca5a5;
+        }
+
+        .bed.cleaning {
+            background: #fffbeb;
+            border-color: #fcd34d;
+        }
+
+        .bed-number {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .bed small {
+            display: block;
+            margin-top: 5px;
+            color: #64748b;
+        }
+
+        /* MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, .6);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-box {
+            background: white;
+            width: 850px;
+            max-width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            border-radius: 12px;
+            padding: 25px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .close {
+            background: #f1f5f9;
+            font-size: 20px;
+            padding: 5px 10px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        .form-full {
+            grid-column: 1 / -1;
+        }
+
+        .modal-footer {
+            margin-top: 20px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        /* ALERT */
+        .alert {
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .alert.success {
+            display: block;
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        /* RESPONSIVE */
+        @media(max-width:1100px) {
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .bed-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        @media(max-width:800px) {
+            .sidebar {
+                width: 70px;
+                padding: 15px 8px;
+            }
+
+            .logo h2,
+            .logo small,
+            .menu-title,
+            .menu a span {
+                display: none;
+            }
+
+            .logo {
+                justify-content: center;
+            }
+
+            .menu a {
+                justify-content: center;
+            }
+
+            .main {
+                margin-left: 70px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .bed-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media(max-width:600px) {
+            .content {
+                padding: 15px;
+            }
+
+            .topbar {
+                padding: 0 15px;
+            }
+
+            .topbar h1 {
+                font-size: 17px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .bed-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-full {
+                grid-column: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+
+    <div class="logo">
+        <div class="logo-icon">H+</div>
+        <div>
+            <h2>Medicare HMS</h2>
+            <small>Hospital System</small>
+        </div>
+    </div>
+
+    <div class="menu-title">Main</div>
+
+    <nav class="menu">
+        <a href="dashboard.html">
+            🏠 <span>Dashboard</span>
+        </a>
+
+        <a href="patient.html">
+            👥 <span>Patients</span>
+        </a>
+
+        <a href="doctor.html">
+            👨‍⚕️ <span>Doctors</span>
+        </a>
+
+        <a href="appointment.html">
+            📅 <span>Appointments</span>
+        </a>
+
+        <a href="opd.html">
+            🏥 <span>OPD</span>
+        </a>
+
+        <a href="ipd.html" class="active">
+            🛏️ <span>IPD</span>
+        </a>
+
+        <a href="pharmacy.html">
+            💊 <span>Pharmacy</span>
+        </a>
+
+        <a href="laboratory.html">
+            🧪 <span>Laboratory</span>
+        </a>
+
+        <a href="billing.html">
+            💳 <span>Billing</span>
+        </a>
+
+        <a href="reports.html">
+            📊 <span>Reports</span>
+        </a>
+    </nav>
+
+    <div class="menu-title">Administration</div>
+
+    <nav class="menu">
+        <a href="staff.html">
+            👨‍💼 <span>Staff</span>
+        </a>
+
+        <a href="inventory.html">
+            📦 <span>Inventory</span>
+        </a>
+
+        <a href="settings.html">
+            ⚙️ <span>Settings</span>
+        </a>
+
+        <a href="login.html">
+            🚪 <span>Logout</span>
+        </a>
+    </nav>
+
+</aside>
+
+
+<!-- MAIN -->
+<main class="main">
+
+    <header class="topbar">
+
+        <h1>IPD Management</h1>
+
+        <div class="top-right">
+            <div class="notification">🔔</div>
+
+            <div class="profile">
+                <div class="avatar">AK</div>
+
+                <div>
+                    <strong>Admin</strong><br>
+                    <small>Administrator</small>
+                </div>
+            </div>
+        </div>
+
+    </header>
+
+
+    <section class="content">
+
+        <!-- ALERT -->
+        <div id="alert" class="alert"></div>
+
+
+        <!-- STATISTICS -->
+        <div class="stats">
+
+            <div class="stat-card">
+                <div class="stat-top">
+                    <div>
+                        <p>Total Beds</p>
+                        <h2 id="totalBeds">40</h2>
+                    </div>
+
+                    <div class="stat-icon">🛏️</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-top">
+                    <div>
+                        <p>Occupied Beds</p>
+                        <h2 id="occupiedBeds">24</h2>
+                    </div>
+
+                    <div class="stat-icon">👤</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-top">
+                    <div>
+                        <p>Available Beds</p>
+                        <h2 id="availableBeds">13</h2>
+                    </div>
+
+                    <div class="stat-icon">✅</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-top">
+                    <div>
+                        <p>Today's Admissions</p>
+                        <h2 id="todayAdmissions">3</h2>
+                    </div>
+
+                    <div class="stat-icon">🏥</div>
+                </div>
+            </div>
+
+        </div>
+
+
+        <!-- TOOLBAR -->
+        <div class="toolbar">
+
+            <div class="search-box">
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="Search patient, IPD ID, doctor or bed..."
+                    onkeyup="searchIPD()"
+                >
+
+                <button class="btn-primary" onclick="searchIPD()">
+                    Search
+                </button>
+            </div>
+
+            <button class="btn-primary" onclick="openAdmissionModal()">
+                + New Admission
+            </button>
+
+        </div>
+
+
+        <!-- CURRENT IPD PATIENTS -->
+        <div class="table-card">
+
+            <div class="table-header">
+
+                <div>
+                    <h3>Current IPD Patients</h3>
+                    <small>Admitted patients currently receiving inpatient care</small>
+                </div>
+
+                <button class="btn-secondary" onclick="printIPD()">
+                    🖨 Print
+                </button>
+
+            </div>
+
+            <div class="table-responsive">
+
+                <table id="ipdTable">
+
+                    <thead>
+
+                        <tr>
+                            <th>IPD ID</th>
+                            <th>Patient</th>
+                            <th>Age/Gender</th>
+                            <th>Doctor</th>
+                            <th>Ward</th>
+                            <th>Bed</th>
+                            <th>Admission</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        <tr>
+                            <td><strong>IPD-1001</strong></td>
+
+                            <td>
+                                Raj Kumar<br>
+                                <small>UHID-10021</small>
+                            </td>
+
+                            <td>45 / M</td>
+
+                            <td>Dr. Amit Sharma</td>
+
+                            <td>General Ward</td>
+
+                            <td>G-12</td>
+
+                            <td>26 Sep 2026</td>
+
+                            <td>
+                                <span class="badge badge-green">
+                                    Admitted
+                                </span>
+                            </td>
+
+                            <td>
+                                <div class="actions">
+
+                                    <button
+                                        class="btn-primary action-btn"
+                                        onclick="viewPatient('IPD-1001')">
+                                        View
+                                    </button>
+
+                                    <button
+                                        class="btn-warning action-btn"
+                                        onclick="transferPatient('IPD-1001')">
+                                        Transfer
+                                    </button>
+
+                                    <button
+                                        class="btn-danger action-btn"
+                                        onclick="dischargePatient('IPD-1001')">
+                                        Discharge
+                                    </button>
+
+                                </div>
+                            </td>
+                        </tr>
+
+
+                        <tr>
+                            <td><strong>IPD-1002</strong></td>
+
+                            <td>
+                                Sunita Devi<br>
+                                <small>UHID-10022</small>
+                            </td>
+
+                            <td>52 / F</td>
+
+                            <td>Dr. Priya Singh</td>
+
+                            <td>Private Ward</td>
+
+                            <td>P-05</td>
+
+                            <td>25 Sep 2026</td>
+
+                            <td>
+                                <span class="badge badge-green">
+                                    Admitted
+                                </span>
+                            </td>
+
+                            <td>
+                                <div class="actions">
+
+                                    <button
+                                        class="btn-primary action-btn"
+                                        onclick="viewPatient('IPD-1002')">
+                                        View
+                                    </button>
+
+                                    <button
+                                        class="btn-warning action-btn"
+                                        onclick="transferPatient('IPD-1002')">
+                                        Transfer
+                                    </button>
+
+                                    <button
+                                        class="btn-danger action-btn"
+                                        onclick="dischargePatient('IPD-1002')">
+                                        Discharge
+                                    </button>
+
+                                </div>
+                            </td>
+                        </tr>
+
+
+                        <tr>
+                            <td><strong>IPD-1003</strong></td>
+
+                            <td>
+                                Mohan Prasad<br>
+                                <small>UHID-10025</small>
+                            </td>
+
+                            <td>67 / M</td>
+
+                            <td>Dr. Raj Verma</td>
+
+                            <td>ICU</td>
+
+                            <td>ICU-03</td>
+
+                            <td>26 Sep 2026</td>
+
+                            <td>
+                                <span class="badge badge-red">
+                                    Critical
+                                </span>
+                            </td>
+
+                            <td>
+                                <div class="actions">
+
+                                    <button
+                                        class="btn-primary action-btn"
+                                        onclick="viewPatient('IPD-1003')">
+                                        View
+                                    </button>
+
+                                    <button
+                                        class="btn-warning action-btn"
+                                        onclick="transferPatient('IPD-1003')">
+                                        Transfer
+                                    </button>
+
+                                    <button
+                                        class="btn-danger action-btn"
+                                        onclick="dischargePatient('IPD-1003')">
+                                        Discharge
+                                    </button>
+
+                                </div>
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+        <!-- BED MANAGEMENT -->
+        <div class="table-card">
+
+            <div class="table-header">
+
+                <div>
+                    <h3>Bed Management</h3>
+                    <small>Live ward and bed availability</small>
+                </div>
+
+                <select
+                    id="wardFilter"
+                    onchange="filterBeds()"
+                    style="width:180px">
+
+                    <option value="all">All Wards</option>
+                    <option value="general">General Ward</option>
+                    <option value="private">Private Ward</option>
+                    <option value="icu">ICU</option>
+                    <option value="emergency">Emergency</option>
+
+                </select>
+
+            </div>
+
+
+            <div class="bed-grid" id="bedGrid">
+
+                <div class="bed occupied" data-ward="general">
+                    <div class="bed-number">G-01</div>
+                    <small>General</small>
+                    <span class="badge badge-red">Occupied</span>
+                </div>
+
+                <div class="bed occupied" data-ward="general">
+                    <div class="bed-number">G-02</div>
+                    <small>General</small>
+                    <span class="badge badge-red">Occupied</span>
+                </div>
+
+                <div class="bed available" data-ward="general">
+                    <div class="bed-number">G-03</div>
+                    <small>General</small>
+                    <span class="badge badge-green">Available</span>
+                </div>
+
+                <div class="bed available" data-ward="general">
+                    <div class="bed-number">G-04</div>
+                    <small>General</small>
+                    <span class="badge badge-green">Available</span>
+                </div>
+
+                <div class="bed occupied" data-ward="general">
+                    <div class="bed-number">G-05</div>
+                    <small>General</small>
+                    <span class="badge badge-red">Occupied</span>
+                </div>
+
+                <div class="bed available" data-ward="private">
+                    <div class="bed-number">P-01</div>
+                    <small>Private</small>
+                    <span class="badge badge-green">Available</span>
+                </div>
+
+                <div class="bed occupied" data-ward="private">
+                    <div class="bed-number">P-02</div>
+                    <small>Private</small>
+                    <span class="badge badge-red">Occupied</span>
+                </div>
+
+                <div class="bed cleaning" data-ward="private">
+                    <div class="bed-number">P-03</div>
+                    <small>Private</small>
+                    <span class="badge badge-yellow">Cleaning</span>
+                </div>
+
+                <div class="bed occupied" data-ward="private">
+                    <div class="bed-number">P-04</div>
+                    <small>Private</small>
+                    <span class="badge badge-red">Occupied</span>
+                </div>
+
+                <div class="bed available" data-ward="private">
+                    <div class="bed-number">P-05</div>
+                    <small>Private</small>
+                    <span class="badge badge-green">Available</span>
+                </div>
+
+                <div class="bed occupied" data-ward="icu">
+                    <div class="bed-number">ICU-01</div>
+                    <small>ICU</small>
+                    <span class="badge badge-red">Occupied</span>
+                </div>
+
+                <div class="bed occupied" data-ward="icu">
+                    <div class="bed-number">ICU-02</div>
+                    <small>ICU</small>
+                    <span class="badge badge-red">Occupied</span>
+                </div>
+
+                <div class="bed occupied" data-ward="icu">
+                    <div class="bed-number">ICU-03</div>
+                    <small>ICU</small>
+                    <span class="badge badge-red">Occupied</span>
+                </div>
+
+                <div class="bed available" data-ward="icu">
+                    <div class="bed-number">ICU-04</div>
+                    <small>ICU</small>
+                    <span class="badge badge-green">Available</span>
+                </div>
+
+                <div class="bed available" data-ward="emergency">
+                    <div class="bed-number">ER-01</div>
+                    <small>Emergency</small>
+                    <span class="badge badge-green">Available</span>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ADMISSION HISTORY -->
+        <div class="table-card">
+
+            <div class="table-header">
+
+                <div>
+                    <h3>Recent IPD Activity</h3>
+                    <small>Admission, transfer and discharge history</small>
+                </div>
+
+            </div>
+
+            <div class="table-responsive">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>IPD ID</th>
+                            <th>Patient</th>
+                            <th>Activity</th>
+                            <th>From</th>
+                            <th>To</th>
+                            <th>Staff</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        <tr>
+                            <td>26 Sep 2026 08:20</td>
+                            <td>IPD-1003</td>
+                            <td>Mohan Prasad</td>
+                            <td>
+                                <span class="badge badge-blue">
+                                    Admission
+                                </span>
+                            </td>
+                            <td>Emergency</td>
+                            <td>ICU-03</td>
+                            <td>Nurse Anita</td>
+                        </tr>
+
+                        <tr>
+                            <td>26 Sep 2026 07:45</td>
+                            <td>IPD-1001</td>
+                            <td>Raj Kumar</td>
+                            <td>
+                                <span class="badge badge-yellow">
+                                    Transfer
+                                </span>
+                            </td>
+                            <td>Emergency</td>
+                            <td>G-12</td>
+                            <td>Admin</td>
+                        </tr>
+
+                        <tr>
+                            <td>25 Sep 2026 18:30</td>
+                            <td>IPD-1002</td>
+                            <td>Sunita Devi</td>
+                            <td>
+                                <span class="badge badge-blue">
+                                    Admission
+                                </span>
+                            </td>
+                            <td>OPD</td>
+                            <td>P-05</td>
+                            <td>Dr. Priya Singh</td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<!-- NEW ADMISSION MODAL -->
+<div class="modal" id="admissionModal">
+
+    <div class="modal-box">
+
+        <div class="modal-header">
+
+            <div>
+                <h2>New IPD Admission</h2>
+                <small>Register patient for inpatient treatment</small>
+            </div>
+
+            <button class="close" onclick="closeAdmissionModal()">
+                ×
+            </button>
+
+        </div>
+
+
+        <form id="admissionForm">
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label>Patient UHID *</label>
+                    <input
+                        type="text"
+                        id="uhid"
+                        placeholder="Example: UHID-10025"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label>Patient Name *</label>
+                    <input
+                        type="text"
+                        id="patientName"
+                        placeholder="Patient full name"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label>Age *</label>
+                    <input
+                        type="number"
+                        id="age"
+                        min="0"
+                        max="120"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label>Gender *</label>
+
+                    <select id="gender" required>
+                        <option value="">Select Gender</option>
+                        <option>Male</option>
+                        <option>Female</option>
+                        <option>Other</option>
+                    </select>
+
+                </div>
+
+                <div class="form-group">
+                    <label>Attending Doctor *</label>
+
+                    <select id="doctor" required>
+                        <option value="">Select Doctor</option>
+                        <option>Dr. Amit Sharma</option>
+                        <option>Dr. Priya Singh</option>
+                        <option>Dr. Raj Verma</option>
+                        <option>Dr. Neha Gupta</option>
+                        <option>Dr. Rahul Kumar</option>
+                    </select>
+
+                </div>
+
+                <div class="form-group">
+                    <label>Admission Type *</label>
+
+                    <select id="admissionType" required>
+                        <option value="">Select Type</option>
+                        <option>Emergency</option>
+                        <option>OPD Referral</option>
+                        <option>Direct Admission</option>
+                        <option>Transfer</option>
+                    </select>
+
+                </div>
+
+                <div class="form-group">
+                    <label>Ward *</label>
+
+                    <select id="ward" required onchange="loadBeds()">
+                        <option value="">Select Ward</option>
+                        <option value="general">General Ward</option>
+                        <option value="private">Private Ward</option>
+                        <option value="icu">ICU</option>
+                        <option value="emergency">Emergency</option>
+                    </select>
+
+                </div>
+
+                <div class="form-group">
+                    <label>Bed *</label>
+
+                    <select id="bed" required>
+                        <option value="">Select Bed</option>
+                    </select>
+
+                </div>
+
+                <div class="form-group">
+                    <label>Admission Date</label>
+
+                    <input
+                        type="date"
+                        id="admissionDate"
+                    >
+
+                </div>
+
+                <div class="form-group">
+                    <label>Expected Discharge Date</label>
+
+                    <input
+                        type="date"
+                        id="expectedDischarge"
+                    >
+
+                </div>
+
+                <div class="form-group form-full">
+                    <label>Diagnosis / Reason for Admission *</label>
+
+                    <textarea
+                        id="diagnosis"
+                        rows="3"
+                        placeholder="Enter diagnosis or reason for admission"
+                        required></textarea>
+
+                </div>
+
+                <div class="form-group">
+                    <label>Insurance / Payment Type</label>
+
+                    <select id="paymentType">
+                        <option>Self Pay</option>
+                        <option>Insurance</option>
+                        <option>Government Scheme</option>
+                        <option>Corporate</option>
+                    </select>
+
+                </div>
+
+                <div class="form-group">
+                    <label>Emergency Contact</label>
+
+                    <input
+                        type="tel"
+                        id="emergencyContact"
+                        placeholder="Contact number"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    class="btn-secondary"
+                    onclick="closeAdmissionModal()">
+                    Cancel
+                </button>
+
+                <button
+                    type="submit"
+                    class="btn-primary">
+                    Admit Patient
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- PATIENT VIEW MODAL -->
+<div class="modal" id="patientModal">
+
+    <div class="modal-box">
+
+        <div class="modal-header">
+
+            <h2>IPD Patient Details</h2>
+
+            <button class="close" onclick="closePatientModal()">
+                ×
+            </button>
+
+        </div>
+
+        <div id="patientDetails"></div>
+
+        <div class="modal-footer">
+
+            <button
+                class="btn-primary"
+                onclick="printPatientDetails()">
+                🖨 Print Details
+            </button>
+
+            <button
+                class="btn-secondary"
+                onclick="closePatientModal()">
+                Close
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    /* ------------------------------
+       INITIALIZATION
+    ------------------------------ */
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const today = new Date().toISOString().split("T")[0];
+
+        document.getElementById("admissionDate").value = today;
+
+    });
+
+
+    /* ------------------------------
+       MODAL
+    ------------------------------ */
+
+    function openAdmissionModal() {
+
+        document
+            .getElementById("admissionModal")
+            .classList.add("active");
+
+    }
+
+
+    function closeAdmissionModal() {
+
+        document
+            .getElementById("admissionModal")
+            .classList.remove("active");
+
+    }
+
+
+    function closePatientModal() {
+
+        document
+            .getElementById("patientModal")
+            .classList.remove("active");
+
+    }
+
+
+    /* ------------------------------
+       LOAD AVAILABLE BEDS
+    ------------------------------ */
+
+    function loadBeds() {
+
+        const ward =
+            document.getElementById("ward").value;
+
+        const bed =
+            document.getElementById("bed");
+
+        bed.innerHTML =
+            '<option value="">Select Bed</option>';
+
+        const beds = {
+
+            general: [
+                "G-03",
+                "G-04",
+                "G-06",
+                "G-07",
+                "G-08"
+            ],
+
+            private: [
+                "P-01",
+                "P-05",
+                "P-06"
+            ],
+
+            icu: [
+                "ICU-04"
+            ],
+
+            emergency: [
+                "ER-01",
+                "ER-02",
+                "ER-03"
+            ]
+
+        };
+
+        if (beds[ward]) {
+
+            beds[ward].forEach(function (item) {
+
+                const option =
+                    document.createElement("option");
+
+                option.value = item;
+                option.textContent = item;
+
+                bed.appendChild(option);
+
+            });
+
+        }
+
+    }
+
+
+    /* ------------------------------
+       ADMISSION FORM
+    ------------------------------ */
+
+    document
+        .getElementById("admissionForm")
+        .addEventListener("submit", function (e) {
+
+            e.preventDefault();
+
+            const name =
+                document.getElementById("patientName").value;
+
+            const doctor =
+                document.getElementById("doctor").value;
+
+            const ward =
+                document.getElementById("ward").value;
+
+            const bed =
+                document.getElementById("bed").value;
+
+            if (!name || !doctor || !ward || !bed) {
+
+                showAlert(
+                    "Please fill all required fields.",
+                    "error"
+                );
+
+                return;
+
+            }
+
+            const newIPD =
+                "IPD-" +
+                Math.floor(
+                    1000 + Math.random() * 9000
+                );
+
+            showAlert(
+                "Patient admitted successfully. IPD ID: " +
+                newIPD,
+                "success"
+            );
+
+            closeAdmissionModal();
+
+            document
+                .getElementById("admissionForm")
+                .reset();
+
+            updateAdmissionCount();
+
+        });
+
+
+    /* ------------------------------
+       ALERT
+    ------------------------------ */
+
+    function showAlert(message, type) {
+
+        const alert =
+            document.getElementById("alert");
+
+        alert.textContent = message;
+
+        alert.className =
+            "alert " +
+            (type === "success"
+                ? "success"
+                : "");
+
+        setTimeout(function () {
+
+            alert.className = "alert";
+
+        }, 4000);
+
+    }
+
+
+    /* ------------------------------
+       SEARCH IPD
+    ------------------------------ */
+
+    function searchIPD() {
+
+        const search =
+            document
+                .getElementById("searchInput")
+                .value
+                .toLowerCase();
+
+        const rows =
+            document.querySelectorAll(
+                "#ipdTable tbody tr"
+            );
+
+        rows.forEach(function (row) {
+
+            const text =
+                row.textContent.toLowerCase();
+
+            row.style.display =
+                text.includes(search)
+                    ? ""
+                    : "none";
+
+        });
+
+    }
+
+
+    /* ------------------------------
+       FILTER BEDS
+    ------------------------------ */
+
+    function filterBeds() {
+
+        const filter =
+            document
+                .getElementById("wardFilter")
+                .value;
+
+        const beds =
+            document.querySelectorAll(".bed");
+
+        beds.forEach(function (bed) {
+
+            const ward =
+                bed.dataset.ward;
+
+            if (
+                filter === "all" ||
+                ward === filter
+            ) {
+
+                bed.style.display = "";
+
+            } else {
+
+                bed.style.display = "none";
+
+            }
+
+        });
+
+    }
+
+
+    /* ------------------------------
+       VIEW PATIENT
+    ------------------------------ */
+
+    function viewPatient(ipdId) {
+
+        const details = `
+
+            <div style="
+                display:grid;
+                grid-template-columns:repeat(2,1fr);
+                gap:15px;
+            ">
+
+                <div>
+                    <strong>IPD ID</strong>
+                    <p>${ipdId}</p>
+                </div>
+
+                <div>
+                    <strong>Patient Name</strong>
+                    <p>Raj Kumar</p>
+                </div>
+
+                <div>
+                    <strong>UHID</strong>
+                    <p>UHID-10021</p>
+                </div>
+
+                <div>
+                    <strong>Age / Gender</strong>
+                    <p>45 / Male</p>
+                </div>
+
+                <div>
+                    <strong>Doctor</strong>
+                    <p>Dr. Amit Sharma</p>
+                </div>
+
+                <div>
+                    <strong>Ward / Bed</strong>
+                    <p>General Ward / G-12</p>
+                </div>
+
+                <div>
+                    <strong>Admission Date</strong>
+                    <p>26 Sep 2026</p>
+                </div>
+
+                <div>
+                    <strong>Payment Type</strong>
+                    <p>Self Pay</p>
+                </div>
+
+                <div style="grid-column:1/-1">
+                    <strong>Diagnosis</strong>
+                    <p>
+                        Patient admitted for observation
+                        and inpatient treatment.
+                    </p>
+                </div>
+
+            </div>
+
+        `;
+
+        document
+            .getElementById("patientDetails")
+            .innerHTML = details;
+
+        document
+            .getElementById("patientModal")
+            .classList.add("active");
+
+    }
+
+
+    /* ------------------------------
+       TRANSFER PATIENT
+    ------------------------------ */
+
+    function transferPatient(ipdId) {
+
+        const newWard =
+            prompt(
+                "Enter destination ward:",
+                "General Ward"
+            );
+
+        if (!newWard) return;
+
+        const newBed =
+            prompt(
+                "Enter destination bed:",
+                "G-10"
+            );
+
+        if (!newBed) return;
+
+        showAlert(
+            ipdId +
+            " transferred to " +
+            newWard +
+            " / " +
+            newBed,
+            "success"
+        );
+
+    }
+
+
+    /* ------------------------------
+       DISCHARGE
+    ------------------------------ */
+
+    function dischargePatient(ipdId) {
+
+        const confirmDischarge =
+            confirm(
+                "Are you sure you want to discharge " +
+                ipdId +
+                "?"
+            );
+
+        if (!confirmDischarge) return;
+
+        const reason =
+            prompt(
+                "Enter discharge remarks:",
+                "Patient recovered"
+            );
+
+        if (reason === null) return;
+
+        showAlert(
+            ipdId +
+            " discharged successfully.",
+            "success"
+        );
+
+    }
+
+
+    /* ------------------------------
+       UPDATE ADMISSION COUNT
+    ------------------------------ */
+
+    function updateAdmissionCount() {
+
+        const element =
+            document.getElementById(
+                "todayAdmissions"
+            );
+
+        const current =
+            parseInt(element.textContent);
+
+        element.textContent =
+            current + 1;
+
+    }
+
+
+    /* ------------------------------
+       PRINT IPD
+    ------------------------------ */
+
+    function printIPD() {
+
+        window.print();
+
+    }
+
+
+    /* ------------------------------
+       PRINT PATIENT DETAILS
+    ------------------------------ */
+
+    function printPatientDetails() {
+
+        const content =
+            document.getElementById(
+                "patientDetails"
+            ).innerHTML;
+
+        const printWindow =
+            window.open(
+                "",
+                "",
+                "width=900,height=700"
+            );
+
+        printWindow.document.write(`
+
+            <html>
+
+            <head>
+
+                <title>IPD Patient Details</title>
+
+                <style>
+
+                    body {
+                        font-family: Arial;
+                        padding: 40px;
+                    }
+
+                    h1 {
+                        text-align:center;
+                    }
+
+                    div {
+                        margin-bottom:15px;
+                    }
+
+                </style>
+
+            </head>
+
+            <body>
+
+                <h1>Hospital IPD Patient Details</h1>
+
+                ${content}
+
+            </body>
+
+            </html>
+
+        `);
+
+        printWindow.document.close();
+
+        printWindow.print();
+
+    }
+
+
+    /* ------------------------------
+       CLOSE MODAL OUTSIDE CLICK
+    ------------------------------ */
+
+    window.onclick = function (event) {
+
+        const admissionModal =
+            document.getElementById(
+                "admissionModal"
+            );
+
+        const patientModal =
+            document.getElementById(
+                "patientModal"
+            );
+
+        if (event.target === admissionModal) {
+
+            closeAdmissionModal();
+
+        }
+
+        if (event.target === patientModal) {
+
+            closePatientModal();
+
+        }
+
+    };
+
+</script>
+
+</body>
+</html>
