@@ -1,0 +1,3253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="description"
+        content="MediCore Hospital Management System - Doctor Management"
+    >
+
+    <title>MediCore HMS - Doctors</title>
+
+    <link rel="stylesheet" href="../assets/css/style.css">
+
+    <style>
+        /* =====================================================
+           DOCTOR PAGE
+        ===================================================== */
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .page-header h1 {
+            font-size: 26px;
+            margin-bottom: 5px;
+        }
+
+        .page-header p {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        /* =====================================================
+           STATISTICS
+        ===================================================== */
+
+        .doctor-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 18px;
+        }
+
+        .doctor-stat {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 17px;
+            box-shadow: var(--shadow);
+        }
+
+        .doctor-stat-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .doctor-stat-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: grid;
+            place-items: center;
+            font-size: 18px;
+        }
+
+        .doctor-stat-label {
+            color: var(--muted);
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .doctor-stat-number {
+            font-size: 24px;
+            font-weight: 800;
+            margin-top: 8px;
+        }
+
+        /* =====================================================
+           FILTER
+        ===================================================== */
+
+        .filter-card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 18px;
+            box-shadow: var(--shadow);
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr auto;
+            gap: 10px;
+            align-items: end;
+        }
+
+        .field-group label {
+            display: block;
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--muted);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .doctor-search,
+        .form-control {
+            width: 100%;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 12px;
+            outline: none;
+            background: #fff;
+        }
+
+        .doctor-search:focus,
+        .form-control:focus {
+            border-color: #60a5fa;
+        }
+
+        select {
+            cursor: pointer;
+        }
+
+        /* =====================================================
+           DOCTOR GRID
+        ===================================================== */
+
+        .doctor-list {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .doctor-card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            padding: 17px;
+            transition: .2s ease;
+        }
+
+        .doctor-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(15,23,42,.09);
+        }
+
+        .doctor-card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .doctor-profile {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+        }
+
+        .doctor-avatar {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            background: #dbeafe;
+            color: #1d4ed8;
+            font-weight: 800;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .doctor-profile h3 {
+            font-size: 14px;
+            margin-bottom: 3px;
+        }
+
+        .doctor-profile p {
+            color: var(--muted);
+            font-size: 10px;
+        }
+
+        .doctor-rating {
+            font-size: 10px;
+            color: #b45309;
+            margin-top: 5px;
+        }
+
+        .doctor-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin: 15px 0;
+        }
+
+        .doctor-info-item {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 9px;
+        }
+
+        .doctor-info-item label {
+            display: block;
+            color: var(--muted);
+            font-size: 8px;
+            text-transform: uppercase;
+            margin-bottom: 3px;
+        }
+
+        .doctor-info-item strong {
+            font-size: 10px;
+        }
+
+        .doctor-card-footer {
+            border-top: 1px solid var(--border);
+            padding-top: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .doctor-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .icon-btn {
+            width: 30px;
+            height: 30px;
+            border: 1px solid var(--border);
+            background: white;
+            border-radius: 7px;
+            cursor: pointer;
+            display: grid;
+            place-items: center;
+            font-size: 12px;
+        }
+
+        .icon-btn:hover {
+            background: #eff6ff;
+            border-color: #93c5fd;
+        }
+
+        .empty-state {
+            grid-column: 1 / -1;
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--muted);
+            box-shadow: var(--shadow);
+        }
+
+        .empty-state-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        /* =====================================================
+           MODAL
+        ===================================================== */
+
+        .doctor-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15,23,42,.58);
+            z-index: 9999;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .doctor-modal.show {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .doctor-modal-box {
+            width: 100%;
+            max-width: 900px;
+            background: white;
+            border-radius: 16px;
+            margin: 20px auto;
+            box-shadow: 0 25px 70px rgba(0,0,0,.2);
+            overflow: hidden;
+        }
+
+        .modal-header {
+            padding: 18px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            font-size: 18px;
+        }
+
+        .modal-header p {
+            color: var(--muted);
+            font-size: 10px;
+            margin-top: 3px;
+        }
+
+        .modal-close {
+            width: 34px;
+            height: 34px;
+            border: none;
+            background: #f1f5f9;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .form-section-title {
+            font-size: 13px;
+            font-weight: 800;
+            margin: 20px 0 12px;
+            padding-bottom: 7px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .form-section-title:first-child {
+            margin-top: 0;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        textarea.form-control {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .modal-footer {
+            padding: 15px 20px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        /* =====================================================
+           PROFILE
+        ===================================================== */
+
+        .profile-banner {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 18px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .large-avatar {
+            width: 75px;
+            height: 75px;
+            border-radius: 50%;
+            background: #dbeafe;
+            color: #1d4ed8;
+            display: grid;
+            place-items: center;
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        .profile-banner h2 {
+            font-size: 19px;
+        }
+
+        .profile-banner p {
+            color: var(--muted);
+            font-size: 10px;
+            margin-top: 5px;
+        }
+
+        .profile-details {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .profile-detail {
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            padding: 11px;
+        }
+
+        .profile-detail label {
+            display: block;
+            color: var(--muted);
+            font-size: 8px;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .profile-detail strong {
+            font-size: 11px;
+        }
+
+        .profile-notes {
+            margin-top: 15px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 13px;
+        }
+
+        .profile-notes h4 {
+            font-size: 11px;
+            margin-bottom: 7px;
+        }
+
+        .profile-notes p {
+            color: var(--muted);
+            font-size: 10px;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 1100px) {
+            .doctor-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .doctor-list {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .filter-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 750px) {
+            .doctor-list {
+                grid-template-columns: 1fr;
+            }
+
+            .form-grid,
+            .profile-details {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 550px) {
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .doctor-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-grid,
+            .profile-details {
+                grid-template-columns: 1fr;
+            }
+
+            .full-width {
+                grid-column: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+            Medi<span>Core</span> HMS
+        </div>
+
+        <nav class="nav">
+
+            <div class="nav-title">Main</div>
+
+            <a href="../dashboard.html">
+                📊
+                <span>Dashboard</span>
+            </a>
+
+            <div class="nav-title">Clinical</div>
+
+            <a href="patients.html">
+                👤
+                <span>Patients</span>
+            </a>
+
+            <a href="doctors.html" class="active">
+                ⚕
+                <span>Doctors</span>
+            </a>
+
+            <a href="appointments.html">
+                📅
+                <span>Appointments</span>
+            </a>
+
+            <a href="opd.html">
+                🏥
+                <span>OPD</span>
+            </a>
+
+            <a href="ipd.html">
+                🛏
+                <span>IPD / Admission</span>
+            </a>
+
+            <a href="emergency.html">
+                🚑
+                <span>Emergency</span>
+            </a>
+
+            <a href="nursing.html">
+                ❤️
+                <span>Nursing</span>
+            </a>
+
+            <div class="nav-title">Diagnostics</div>
+
+            <a href="laboratory.html">
+                🧪
+                <span>Laboratory</span>
+            </a>
+
+            <a href="radiology.html">
+                🩻
+                <span>Radiology</span>
+            </a>
+
+            <a href="blood-bank.html">
+                🩸
+                <span>Blood Bank</span>
+            </a>
+
+            <div class="nav-title">Operations</div>
+
+            <a href="pharmacy.html">
+                💊
+                <span>Pharmacy</span>
+            </a>
+
+            <a href="billing.html">
+                💰
+                <span>Billing & Finance</span>
+            </a>
+
+            <a href="insurance.html">
+                📄
+                <span>Insurance / TPA</span>
+            </a>
+
+            <a href="inventory.html">
+                📦
+                <span>Inventory</span>
+            </a>
+
+            <a href="ambulance.html">
+                🚐
+                <span>Ambulance</span>
+            </a>
+
+            <div class="nav-title">Administration</div>
+
+            <a href="hr.html">
+                👥
+                <span>HR & Staff</span>
+            </a>
+
+            <a href="reports.html">
+                📈
+                <span>Reports</span>
+            </a>
+
+            <a href="communication.html">
+                ✉
+                <span>Communication</span>
+            </a>
+
+            <a href="settings.html">
+                ⚙
+                <span>Settings</span>
+            </a>
+
+            <div class="nav-title">Account</div>
+
+            <a href="#" data-logout>
+                🚪
+                <span>Logout</span>
+            </a>
+
+        </nav>
+    </aside>
+
+
+    <!-- =====================================================
+         MAIN
+    ====================================================== -->
+
+    <main class="main">
+
+        <!-- TOP BAR -->
+
+        <header class="topbar">
+
+            <button
+                class="hamb"
+                aria-label="Open menu"
+            >
+                ☰
+            </button>
+
+            <input
+                type="search"
+                class="search"
+                id="globalSearch"
+                placeholder="Search doctors..."
+            >
+
+            <div class="user">
+
+                <span
+                    style="font-size:20px;cursor:pointer"
+                    onclick="showDoctorNotifications()"
+                >
+                    🔔
+                </span>
+
+                <div class="avatar">
+                    AK
+                </div>
+
+                <div>
+                    <strong data-user>
+                        Administrator
+                    </strong>
+
+                    <small
+                        class="muted"
+                        style="display:block"
+                    >
+                        Hospital Administrator
+                    </small>
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- =================================================
+             CONTENT
+        ================================================== -->
+
+        <section class="content">
+
+            <div class="page-header">
+
+                <div>
+
+                    <h1>
+                        Doctor Management
+                    </h1>
+
+                    <p>
+                        Manage doctors, specialties, schedules and professional information.
+                    </p>
+
+                </div>
+
+                <div class="header-actions">
+
+                    <button
+                        class="btn secondary"
+                        onclick="exportDoctors()"
+                    >
+                        ⬇ Export
+                    </button>
+
+                    <button
+                        class="btn primary"
+                        onclick="openDoctorModal()"
+                    >
+                        + Add Doctor
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 STATISTICS
+            ================================================== -->
+
+            <div class="doctor-stats">
+
+                <div class="doctor-stat">
+
+                    <div class="doctor-stat-top">
+
+                        <div class="doctor-stat-label">
+                            Total Doctors
+                        </div>
+
+                        <div
+                            class="doctor-stat-icon"
+                            style="background:#dbeafe;color:#1d4ed8"
+                        >
+                            ⚕
+                        </div>
+
+                    </div>
+
+                    <div
+                        class="doctor-stat-number"
+                        id="statDoctors"
+                    >
+                        0
+                    </div>
+
+                </div>
+
+
+                <div class="doctor-stat">
+
+                    <div class="doctor-stat-top">
+
+                        <div class="doctor-stat-label">
+                            Available Today
+                        </div>
+
+                        <div
+                            class="doctor-stat-icon"
+                            style="background:#dcfce7;color:#15803d"
+                        >
+                            ✓
+                        </div>
+
+                    </div>
+
+                    <div
+                        class="doctor-stat-number"
+                        id="statAvailable"
+                    >
+                        0
+                    </div>
+
+                </div>
+
+
+                <div class="doctor-stat">
+
+                    <div class="doctor-stat-top">
+
+                        <div class="doctor-stat-label">
+                            On Leave
+                        </div>
+
+                        <div
+                            class="doctor-stat-icon"
+                            style="background:#fee2e2;color:#b91c1c"
+                        >
+                            ☕
+                        </div>
+
+                    </div>
+
+                    <div
+                        class="doctor-stat-number"
+                        id="statLeave"
+                    >
+                        0
+                    </div>
+
+                </div>
+
+
+                <div class="doctor-stat">
+
+                    <div class="doctor-stat-top">
+
+                        <div class="doctor-stat-label">
+                            Departments
+                        </div>
+
+                        <div
+                            class="doctor-stat-icon"
+                            style="background:#ede9fe;color:#6d28d9"
+                        >
+                            🏥
+                        </div>
+
+                    </div>
+
+                    <div
+                        class="doctor-stat-number"
+                        id="statDepartments"
+                    >
+                        0
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 FILTERS
+            ================================================== -->
+
+            <div class="filter-card">
+
+                <div class="filter-grid">
+
+                    <div class="field-group">
+
+                        <label>
+                            Search
+                        </label>
+
+                        <input
+                            type="search"
+                            id="doctorSearch"
+                            class="doctor-search"
+                            placeholder="Doctor name, ID, phone..."
+                            oninput="renderDoctors()"
+                        >
+
+                    </div>
+
+
+                    <div class="field-group">
+
+                        <label>
+                            Department
+                        </label>
+
+                        <select
+                            id="departmentFilter"
+                            class="doctor-search"
+                            onchange="renderDoctors()"
+                        >
+
+                            <option value="">
+                                All Departments
+                            </option>
+
+                            <option>Cardiology</option>
+                            <option>Orthopedics</option>
+                            <option>Neurology</option>
+                            <option>Dermatology</option>
+                            <option>General Medicine</option>
+                            <option>Pediatrics</option>
+                            <option>Gynecology</option>
+                            <option>ENT</option>
+                            <option>Ophthalmology</option>
+                            <option>General Surgery</option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="field-group">
+
+                        <label>
+                            Employment
+                        </label>
+
+                        <select
+                            id="employmentFilter"
+                            class="doctor-search"
+                            onchange="renderDoctors()"
+                        >
+
+                            <option value="">
+                                All Types
+                            </option>
+
+                            <option value="Full Time">
+                                Full Time
+                            </option>
+
+                            <option value="Part Time">
+                                Part Time
+                            </option>
+
+                            <option value="Consultant">
+                                Consultant
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="field-group">
+
+                        <label>
+                            Status
+                        </label>
+
+                        <select
+                            id="statusFilter"
+                            class="doctor-search"
+                            onchange="renderDoctors()"
+                        >
+
+                            <option value="">
+                                All Status
+                            </option>
+
+                            <option value="Available">
+                                Available
+                            </option>
+
+                            <option value="Busy">
+                                Busy
+                            </option>
+
+                            <option value="On Leave">
+                                On Leave
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <button
+                        class="btn secondary"
+                        onclick="clearDoctorFilters()"
+                    >
+                        Reset
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 DOCTOR CARDS
+            ================================================== -->
+
+            <div
+                class="doctor-list"
+                id="doctorList"
+            ></div>
+
+
+            <footer class="footer">
+
+                MediCore Hospital Management System
+                © 2026.
+                All Rights Reserved.
+
+                <br>
+
+                <span>
+                    Doctor Management Module
+                </span>
+
+            </footer>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- =====================================================
+     ADD / EDIT DOCTOR MODAL
+====================================================== -->
+
+<div
+    class="doctor-modal"
+    id="doctorModal"
+>
+
+    <div class="doctor-modal-box">
+
+        <div class="modal-header">
+
+            <div>
+
+                <h2 id="doctorModalTitle">
+                    Add New Doctor
+                </h2>
+
+                <p>
+                    Enter professional and contact information.
+                </p>
+
+            </div>
+
+            <button
+                class="modal-close"
+                onclick="closeDoctorModal()"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <form
+            id="doctorForm"
+            onsubmit="saveDoctor(event)"
+        >
+
+            <div class="modal-body">
+
+                <!-- BASIC -->
+
+                <div class="form-section-title">
+                    Basic Information
+                </div>
+
+                <div class="form-grid">
+
+                    <div class="field-group">
+
+                        <label>
+                            Full Name *
+                        </label>
+
+                        <input
+                            type="text"
+                            id="doctorName"
+                            class="form-control"
+                            required
+                            placeholder="Dr. Full Name"
+                        >
+
+                    </div>
+
+
+                    <div class="field-group">
+
+                        <label>
+                            Gender
+                        </label>
+
+                        <select
+                            id="doctorGender"
+                            class="form-control"
+                        >
+
+                            <option value="">
+                                Select Gender
+                            </option>
+
+                            <option>Male</option>
+                            <option>Female</option>
+                            <option>Other</option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="field-group">
+
+                        <label>
+                            Date of Birth
+                        </label>
+
+                        <input
+                            type="date"
+                            id="doctorDOB"
+                            class="form-control"
+                        >
+
+                    </div>
+
+
+                    <div class="field-group">
+
+                        <label>
+                            Phone *
+                        </label>
+
+                        <input
+                            type="tel"
+                            id="doctorPhone"
+                            class="form-control"
+                            required
+                            placeholder="Mobile number"
+                        >
+
+                    </div>
+
+
+                    <div class="field-group">
+
+                        <label>
+                            Email
+                        </label>
+
+                        <input
+                            type="email"
+                            id="doctorEmail"
+                            class="form-control"
+                            placeholder="doctor@hospital.com"
+                        >
+
+                    </div>
+
+
+                    <div class="field-group">
+
+                        <label>
+                            Registration Number
+                        </label>
+
+                        <input
+                            type="text"
+                            id="registrationNumber"
+                            class="form-control"
+                            placeholder="Medical registration number"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- PROFESSIONAL -->
+
+                <div class="form-section-title">
+                    Professional Information
+                </div>
+
+                <div class="form-grid">
+
+                    <div class="field-group">
+
+                        <label>
+                            Department *
+                        </label>
+
+                        <select
+                            id="doctorDepartment"
+                            class="form-control"
+                            required
+                        >
+
+                            <option value="">
+                                Select Department
+                            </option>
+
+                            <option>Cardiology</option>
+                            <option>Orthopedics</option>
+                            <option>Neurology</option>
+                            <option>Dermatology</option>
+                            <option>General Medicine</option>
+                            <option>Pediatrics</option>
+                            <option>Gynecology</option>
+                            <option>ENT</option>
+                            <option>Ophthalmology</option>
+                            <option>General Surgery</option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="field-group">
+
+                        <label>
+                            Specialty *
+                        </label>
+
+                        <input
+                            type="text"
+                            id="doctorSpecialty"
+                            class="form-control"
+                            required
+                            placeholder="e.g. Interventional Cardiology"
+                        >
+
+                    </div>
+
+
+                    <div class="field-group">
+
+                        <label>
+                            Qualification
+                        </label>
+
+                        <input
+                            type="text"
+                            id="doctorQualification"
+                            class="form-control"
+                            placeholder="MBBS, MD, MS..."
+                        >
+
+                    </div>
+
+
+                    <div class="field-group">
+
+                        <label>
+                            Experience
+                        </label>
+
+                        <input
+                            type="number"
+                            id="doctorExperience"
+                            class="form-control"
+                            min="0"
+                            placeholder="Years"
+                        >
+
+                    </div>
+
+
+                    <div class="field-group">
+
+                        <label>
+                            Employment Type
+                        </label>
+
+                        <select
+                            id="doctorEmployment"
+                            class="form-control"
+                        >
+
+                            <option>Full Time</option>
+                            <option>Part Time</option>
+                            <option>Consultant</option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="field-group">
+
+                        <label>
+                            Consultation Fee
+                        </label>
+
+                        <input
+                            type="number"
+                            id="doctorFee"
+                            class="form-control"
+                            min="0"
+                            placeholder="₹"
+                        >
+
+                    </div>
+
+
+                    <div class="field-group">
+
+                        <label>
+                            Status
+                        </label>
+
+                        <select
+                            id="doctorStatus"
+                            class="form-control"
+                        >
+
+                            <option>Available</option>
+                            <option>Busy</option>
+                            <option>On Leave</option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="field-group">
+
+                        <label>
+                            Joining Date
+                        </label>
+
+                        <input
+                            type="date"
+                            id="joiningDate"
+                            class="form-control"
+                        >
+
+                    </div>
+
+
+                    <div class="field-group">
+
+                        <label>
+                            Room / Cabin
+                        </label>
+
+                        <input
+                            type="text"
+                            id="doctorRoom"
+                            class="form-control"
+                            placeholder="e.g. C-203"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- SCHEDULE -->
+
+                <div class="form-section-title">
+                    Consultation Schedule
+                </div>
+
+                <div class="form-grid">
+
+                    <div class="field-group">
+
+                        <label>
+                            Start Time
+                        </label>
+
+                        <input
+                            type="time"
+                            id="doctorStartTime"
+                            class="form-control"
+                        >
+
+                    </div>
+
+
+                    <div class="field-group">
+
+                        <label>
+                            End Time
+                        </label>
+
+                        <input
+                            type="time"
+                            id="doctorEndTime"
+                            class="form-control"
+                        >
+
+                    </div>
+
+
+                    <div class="field-group">
+
+                        <label>
+                            Consultation Days
+                        </label>
+
+                        <input
+                            type="text"
+                            id="doctorDays"
+                            class="form-control"
+                            placeholder="Mon, Tue, Wed..."
+                        >
+
+                    </div>
+
+
+                    <div class="field-group full-width">
+
+                        <label>
+                            Professional Biography / Notes
+                        </label>
+
+                        <textarea
+                            id="doctorNotes"
+                            class="form-control"
+                            placeholder="Professional details, expertise, achievements..."
+                        ></textarea>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    class="btn secondary"
+                    onclick="closeDoctorModal()"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    type="submit"
+                    class="btn primary"
+                >
+                    Save Doctor
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     VIEW DOCTOR MODAL
+====================================================== -->
+
+<div
+    class="doctor-modal"
+    id="viewDoctorModal"
+>
+
+    <div class="doctor-modal-box">
+
+        <div class="modal-header">
+
+            <div>
+
+                <h2>
+                    Doctor Profile
+                </h2>
+
+                <p>
+                    Professional information
+                </p>
+
+            </div>
+
+            <button
+                class="modal-close"
+                onclick="closeViewDoctorModal()"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div class="modal-body">
+
+            <div id="doctorProfileContent"></div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script src="../assets/js/app.js"></script>
+
+
+<script>
+/* =========================================================
+   DOCTOR MANAGEMENT
+========================================================= */
+
+let editingDoctorId = null;
+
+
+/* =========================================================
+   GET DOCTORS
+========================================================= */
+
+function getDoctors() {
+
+    let doctors = [];
+
+    try {
+
+        doctors =
+            JSON.parse(
+                localStorage.getItem("hms_doctors")
+            ) || [];
+
+    } catch (error) {
+
+        doctors = [];
+
+    }
+
+
+    if (!doctors.length) {
+
+        doctors = [
+
+            {
+                id: "D-1001",
+                name: "Dr. Ananya Sharma",
+                gender: "Female",
+                dob: "1980-05-15",
+                phone: "9876501001",
+                email: "ananya@medicore.com",
+                registrationNumber: "MCI-45821",
+                department: "Cardiology",
+                specialty: "Interventional Cardiology",
+                qualification: "MBBS, MD, DM",
+                experience: 15,
+                employment: "Full Time",
+                fee: 1200,
+                status: "Available",
+                joiningDate: "2020-04-01",
+                room: "C-203",
+                startTime: "09:00",
+                endTime: "14:00",
+                days: "Mon, Tue, Wed, Fri",
+                notes: "Senior cardiologist with extensive experience in cardiac intervention.",
+                rating: 4.9
+            },
+
+            {
+                id: "D-1002",
+                name: "Dr. Raj Verma",
+                gender: "Male",
+                dob: "1978-09-22",
+                phone: "9876501002",
+                email: "raj@medicore.com",
+                registrationNumber: "MCI-32145",
+                department: "Orthopedics",
+                specialty: "Joint Replacement",
+                qualification: "MBBS, MS Orthopedics",
+                experience: 18,
+                employment: "Full Time",
+                fee: 1000,
+                status: "Busy",
+                joiningDate: "2019-07-15",
+                room: "O-105",
+                startTime: "10:00",
+                endTime: "16:00",
+                days: "Mon, Wed, Thu, Sat",
+                notes: "Specialist in joint replacement and sports injuries.",
+                rating: 4.8
+            },
+
+            {
+                id: "D-1003",
+                name: "Dr. Neha Gupta",
+                gender: "Female",
+                dob: "1985-01-10",
+                phone: "9876501003",
+                email: "neha@medicore.com",
+                registrationNumber: "MCI-52631",
+                department: "Neurology",
+                specialty: "Clinical Neurology",
+                qualification: "MBBS, MD, DM Neurology",
+                experience: 12,
+                employment: "Consultant",
+                fee: 1500,
+                status: "Available",
+                joiningDate: "2021-01-10",
+                room: "N-301",
+                startTime: "11:00",
+                endTime: "17:00",
+                days: "Tue, Wed, Fri, Sat",
+                notes: "Consultant neurologist specializing in stroke and epilepsy.",
+                rating: 4.9
+            },
+
+            {
+                id: "D-1004",
+                name: "Dr. Vikash Kumar",
+                gender: "Male",
+                dob: "1982-11-08",
+                phone: "9876501004",
+                email: "vikash@medicore.com",
+                registrationNumber: "MCI-61245",
+                department: "General Medicine",
+                specialty: "Internal Medicine",
+                qualification: "MBBS, MD",
+                experience: 14,
+                employment: "Full Time",
+                fee: 800,
+                status: "Available",
+                joiningDate: "2020-11-01",
+                room: "GM-201",
+                startTime: "09:00",
+                endTime: "15:00",
+                days: "Mon, Tue, Thu, Fri",
+                notes: "Experienced physician managing chronic and acute conditions.",
+                rating: 4.7
+            },
+
+            {
+                id: "D-1005",
+                name: "Dr. Priyanka Singh",
+                gender: "Female",
+                dob: "1987-03-12",
+                phone: "9876501005",
+                email: "priyanka@medicore.com",
+                registrationNumber: "MCI-74521",
+                department: "Gynecology",
+                specialty: "Obstetrics & Gynecology",
+                qualification: "MBBS, MS, DNB",
+                experience: 11,
+                employment: "Full Time",
+                fee: 1000,
+                status: "On Leave",
+                joiningDate: "2022-02-15",
+                room: "G-204",
+                startTime: "10:00",
+                endTime: "15:00",
+                days: "Mon, Wed, Fri",
+                notes: "Specialist in high-risk pregnancy and women's health.",
+                rating: 4.8
+            },
+
+            {
+                id: "D-1006",
+                name: "Dr. Arjun Mehta",
+                gender: "Male",
+                dob: "1983-06-20",
+                phone: "9876501006",
+                email: "arjun@medicore.com",
+                registrationNumber: "MCI-83124",
+                department: "General Surgery",
+                specialty: "Laparoscopic Surgery",
+                qualification: "MBBS, MS Surgery",
+                experience: 13,
+                employment: "Consultant",
+                fee: 1300,
+                status: "Available",
+                joiningDate: "2021-08-01",
+                room: "S-102",
+                startTime: "12:00",
+                endTime: "18:00",
+                days: "Tue, Thu, Fri, Sat",
+                notes: "Laparoscopic and minimally invasive surgery specialist.",
+                rating: 4.8
+            }
+
+        ];
+
+
+        saveDoctors(
+            doctors
+        );
+
+    }
+
+
+    return doctors;
+
+}
+
+
+/* =========================================================
+   SAVE DOCTORS
+========================================================= */
+
+function saveDoctors(doctors) {
+
+    localStorage.setItem(
+        "hms_doctors",
+        JSON.stringify(doctors)
+    );
+
+}
+
+
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
+
+function safe(value) {
+
+    return String(
+        value ?? ""
+    )
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+
+}
+
+
+/* =========================================================
+   INITIALIZE
+========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        renderDoctors();
+        updateDoctorStats();
+
+    }
+);
+
+
+/* =========================================================
+   RENDER DOCTORS
+========================================================= */
+
+function renderDoctors() {
+
+    const doctors =
+        getDoctors();
+
+
+    const search =
+        (
+            document.getElementById(
+                "doctorSearch"
+            )?.value || ""
+        )
+        .toLowerCase()
+        .trim();
+
+
+    const department =
+        document.getElementById(
+            "departmentFilter"
+        )?.value || "";
+
+
+    const employment =
+        document.getElementById(
+            "employmentFilter"
+        )?.value || "";
+
+
+    const status =
+        document.getElementById(
+            "statusFilter"
+        )?.value || "";
+
+
+    const filtered =
+        doctors.filter(
+            doctor => {
+
+                const matchesSearch =
+                    !search ||
+                    doctor.name
+                        .toLowerCase()
+                        .includes(search) ||
+                    doctor.id
+                        .toLowerCase()
+                        .includes(search) ||
+                    doctor.phone
+                        .toLowerCase()
+                        .includes(search) ||
+                    doctor.specialty
+                        .toLowerCase()
+                        .includes(search);
+
+
+                const matchesDepartment =
+                    !department ||
+                    doctor.department === department;
+
+
+                const matchesEmployment =
+                    !employment ||
+                    doctor.employment === employment;
+
+
+                const matchesStatus =
+                    !status ||
+                    doctor.status === status;
+
+
+                return (
+                    matchesSearch &&
+                    matchesDepartment &&
+                    matchesEmployment &&
+                    matchesStatus
+                );
+
+            }
+        );
+
+
+    const list =
+        document.getElementById(
+            "doctorList"
+        );
+
+
+    if (!filtered.length) {
+
+        list.innerHTML = `
+
+            <div class="empty-state">
+
+                <div class="empty-state-icon">
+                    ⚕
+                </div>
+
+                <strong>
+                    No doctors found
+                </strong>
+
+                <p style="margin-top:5px">
+                    Try changing your search or filters.
+                </p>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    list.innerHTML =
+        filtered
+            .map(
+                doctor =>
+                    doctorCard(doctor)
+            )
+            .join("");
+
+}
+
+
+/* =========================================================
+   DOCTOR CARD
+========================================================= */
+
+function doctorCard(doctor) {
+
+    const initials =
+        getInitials(
+            doctor.name
+        );
+
+
+    let statusClass =
+        "green";
+
+    if (
+        doctor.status ===
+        "Busy"
+    ) {
+
+        statusClass =
+            "yellow";
+
+    }
+
+    if (
+        doctor.status ===
+        "On Leave"
+    ) {
+
+        statusClass =
+            "red";
+
+    }
+
+
+    return `
+
+        <div class="doctor-card">
+
+            <div class="doctor-card-top">
+
+                <div class="doctor-profile">
+
+                    <div class="doctor-avatar">
+                        ${safe(initials)}
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            ${safe(doctor.name)}
+                        </h3>
+
+                        <p>
+                            ${safe(doctor.specialty)}
+                        </p>
+
+                        <div class="doctor-rating">
+                            ⭐ ${safe(doctor.rating || "4.5")} / 5
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <span class="badge ${statusClass}">
+                    ${safe(doctor.status)}
+                </span>
+
+            </div>
+
+
+            <div class="doctor-info">
+
+                <div class="doctor-info-item">
+
+                    <label>
+                        Department
+                    </label>
+
+                    <strong>
+                        ${safe(doctor.department)}
+                    </strong>
+
+                </div>
+
+
+                <div class="doctor-info-item">
+
+                    <label>
+                        Experience
+                    </label>
+
+                    <strong>
+                        ${safe(doctor.experience || 0)} Years
+                    </strong>
+
+                </div>
+
+
+                <div class="doctor-info-item">
+
+                    <label>
+                        Qualification
+                    </label>
+
+                    <strong>
+                        ${safe(doctor.qualification || "—")}
+                    </strong>
+
+                </div>
+
+
+                <div class="doctor-info-item">
+
+                    <label>
+                        Consultation
+                    </label>
+
+                    <strong>
+                        ₹${safe(doctor.fee || 0)}
+                    </strong>
+
+                </div>
+
+
+                <div class="doctor-info-item">
+
+                    <label>
+                        Schedule
+                    </label>
+
+                    <strong>
+                        ${safe(doctor.startTime || "—")}
+                        -
+                        ${safe(doctor.endTime || "—")}
+                    </strong>
+
+                </div>
+
+
+                <div class="doctor-info-item">
+
+                    <label>
+                        Room
+                    </label>
+
+                    <strong>
+                        ${safe(doctor.room || "—")}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="doctor-card-footer">
+
+                <div>
+
+                    <small
+                        style="
+                            display:block;
+                            color:var(--muted);
+                            font-size:9px
+                        "
+                    >
+                        Doctor ID
+                    </small>
+
+                    <strong style="font-size:10px">
+                        ${safe(doctor.id)}
+                    </strong>
+
+                </div>
+
+
+                <div class="doctor-actions">
+
+                    <button
+                        class="icon-btn"
+                        title="View Profile"
+                        onclick="viewDoctor('${safe(doctor.id)}')"
+                    >
+                        👁
+                    </button>
+
+                    <button
+                        class="icon-btn"
+                        title="Edit Doctor"
+                        onclick="editDoctor('${safe(doctor.id)}')"
+                    >
+                        ✏
+                    </button>
+
+                    <button
+                        class="icon-btn"
+                        title="Delete Doctor"
+                        onclick="deleteDoctor('${safe(doctor.id)}')"
+                    >
+                        🗑
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    `;
+
+}
+
+
+/* =========================================================
+   INITIALS
+========================================================= */
+
+function getInitials(name) {
+
+    return String(
+        name || ""
+    )
+    .split(" ")
+    .filter(Boolean)
+    .slice(0, 2)
+    .map(
+        word =>
+            word.charAt(0)
+                .toUpperCase()
+    )
+    .join("");
+
+}
+
+
+/* =========================================================
+   STATISTICS
+========================================================= */
+
+function updateDoctorStats() {
+
+    const doctors =
+        getDoctors();
+
+
+    document.getElementById(
+        "statDoctors"
+    ).textContent =
+        doctors.length;
+
+
+    document.getElementById(
+        "statAvailable"
+    ).textContent =
+        doctors.filter(
+            d =>
+                d.status ===
+                "Available"
+        ).length;
+
+
+    document.getElementById(
+        "statLeave"
+    ).textContent =
+        doctors.filter(
+            d =>
+                d.status ===
+                "On Leave"
+        ).length;
+
+
+    const departments =
+        new Set(
+            doctors.map(
+                d =>
+                    d.department
+            )
+        );
+
+
+    document.getElementById(
+        "statDepartments"
+    ).textContent =
+        departments.size;
+
+}
+
+
+/* =========================================================
+   OPEN MODAL
+========================================================= */
+
+function openDoctorModal(
+    doctor = null
+) {
+
+    editingDoctorId =
+        doctor?.id || null;
+
+
+    document.getElementById(
+        "doctorForm"
+    ).reset();
+
+
+    document.getElementById(
+        "doctorModalTitle"
+    ).textContent =
+        doctor
+            ? "Edit Doctor"
+            : "Add New Doctor";
+
+
+    if (doctor) {
+
+        fillDoctorForm(
+            doctor
+        );
+
+    }
+
+
+    document
+        .getElementById(
+            "doctorModal"
+        )
+        .classList.add(
+            "show"
+        );
+
+}
+
+
+/* =========================================================
+   CLOSE MODAL
+========================================================= */
+
+function closeDoctorModal() {
+
+    document
+        .getElementById(
+            "doctorModal"
+        )
+        .classList.remove(
+            "show"
+        );
+
+    editingDoctorId =
+        null;
+
+}
+
+
+/* =========================================================
+   FILL FORM
+========================================================= */
+
+function fillDoctorForm(doctor) {
+
+    document.getElementById(
+        "doctorName"
+    ).value =
+        doctor.name || "";
+
+
+    document.getElementById(
+        "doctorGender"
+    ).value =
+        doctor.gender || "";
+
+
+    document.getElementById(
+        "doctorDOB"
+    ).value =
+        doctor.dob || "";
+
+
+    document.getElementById(
+        "doctorPhone"
+    ).value =
+        doctor.phone || "";
+
+
+    document.getElementById(
+        "doctorEmail"
+    ).value =
+        doctor.email || "";
+
+
+    document.getElementById(
+        "registrationNumber"
+    ).value =
+        doctor.registrationNumber || "";
+
+
+    document.getElementById(
+        "doctorDepartment"
+    ).value =
+        doctor.department || "";
+
+
+    document.getElementById(
+        "doctorSpecialty"
+    ).value =
+        doctor.specialty || "";
+
+
+    document.getElementById(
+        "doctorQualification"
+    ).value =
+        doctor.qualification || "";
+
+
+    document.getElementById(
+        "doctorExperience"
+    ).value =
+        doctor.experience || "";
+
+
+    document.getElementById(
+        "doctorEmployment"
+    ).value =
+        doctor.employment || "Full Time";
+
+
+    document.getElementById(
+        "doctorFee"
+    ).value =
+        doctor.fee || "";
+
+
+    document.getElementById(
+        "doctorStatus"
+    ).value =
+        doctor.status || "Available";
+
+
+    document.getElementById(
+        "joiningDate"
+    ).value =
+        doctor.joiningDate || "";
+
+
+    document.getElementById(
+        "doctorRoom"
+    ).value =
+        doctor.room || "";
+
+
+    document.getElementById(
+        "doctorStartTime"
+    ).value =
+        doctor.startTime || "";
+
+
+    document.getElementById(
+        "doctorEndTime"
+    ).value =
+        doctor.endTime || "";
+
+
+    document.getElementById(
+        "doctorDays"
+    ).value =
+        doctor.days || "";
+
+
+    document.getElementById(
+        "doctorNotes"
+    ).value =
+        doctor.notes || "";
+
+}
+
+
+/* =========================================================
+   SAVE DOCTOR
+========================================================= */
+
+function saveDoctor(event) {
+
+    event.preventDefault();
+
+
+    const name =
+        document.getElementById(
+            "doctorName"
+        ).value.trim();
+
+
+    const phone =
+        document.getElementById(
+            "doctorPhone"
+        ).value.trim();
+
+
+    const department =
+        document.getElementById(
+            "doctorDepartment"
+        ).value;
+
+
+    const specialty =
+        document.getElementById(
+            "doctorSpecialty"
+        ).value.trim();
+
+
+    if (
+        !name ||
+        !phone ||
+        !department ||
+        !specialty
+    ) {
+
+        alert(
+            "Please complete all required fields."
+        );
+
+        return;
+
+    }
+
+
+    if (
+        !/^[0-9+\-\s]{10,15}$/
+            .test(phone)
+    ) {
+
+        alert(
+            "Please enter a valid phone number."
+        );
+
+        return;
+
+    }
+
+
+    const doctors =
+        getDoctors();
+
+
+    const data = {
+
+        name,
+
+        gender:
+            document.getElementById(
+                "doctorGender"
+            ).value,
+
+        dob:
+            document.getElementById(
+                "doctorDOB"
+            ).value,
+
+        phone,
+
+        email:
+            document.getElementById(
+                "doctorEmail"
+            ).value.trim(),
+
+        registrationNumber:
+            document.getElementById(
+                "registrationNumber"
+            ).value.trim(),
+
+        department,
+
+        specialty,
+
+        qualification:
+            document.getElementById(
+                "doctorQualification"
+            ).value.trim(),
+
+        experience:
+            Number(
+                document.getElementById(
+                    "doctorExperience"
+                ).value
+            ) || 0,
+
+        employment:
+            document.getElementById(
+                "doctorEmployment"
+            ).value,
+
+        fee:
+            Number(
+                document.getElementById(
+                    "doctorFee"
+                ).value
+            ) || 0,
+
+        status:
+            document.getElementById(
+                "doctorStatus"
+            ).value,
+
+        joiningDate:
+            document.getElementById(
+                "joiningDate"
+            ).value,
+
+        room:
+            document.getElementById(
+                "doctorRoom"
+            ).value.trim(),
+
+        startTime:
+            document.getElementById(
+                "doctorStartTime"
+            ).value,
+
+        endTime:
+            document.getElementById(
+                "doctorEndTime"
+            ).value,
+
+        days:
+            document.getElementById(
+                "doctorDays"
+            ).value.trim(),
+
+        notes:
+            document.getElementById(
+                "doctorNotes"
+            ).value.trim()
+
+    };
+
+
+    if (editingDoctorId) {
+
+        const index =
+            doctors.findIndex(
+                doctor =>
+                    doctor.id ===
+                    editingDoctorId
+            );
+
+
+        if (index !== -1) {
+
+            doctors[index] = {
+
+                ...doctors[index],
+
+                ...data,
+
+                updatedAt:
+                    new Date()
+                        .toISOString()
+
+            };
+
+        }
+
+    } else {
+
+        doctors.unshift({
+
+            id:
+                generateDoctorId(
+                    doctors
+                ),
+
+            ...data,
+
+            rating: 4.5,
+
+            createdAt:
+                new Date()
+                    .toISOString()
+
+        });
+
+    }
+
+
+    saveDoctors(
+        doctors
+    );
+
+
+    closeDoctorModal();
+
+    renderDoctors();
+
+    updateDoctorStats();
+
+
+    alert(
+        editingDoctorId
+            ? "Doctor updated successfully."
+            : "Doctor added successfully."
+    );
+
+}
+
+
+/* =========================================================
+   GENERATE DOCTOR ID
+========================================================= */
+
+function generateDoctorId(
+    doctors
+) {
+
+    let highest =
+        1000;
+
+
+    doctors.forEach(
+        doctor => {
+
+            const number =
+                parseInt(
+                    String(
+                        doctor.id || ""
+                    )
+                    .replace(
+                        "D-",
+                        ""
+                    )
+                );
+
+
+            if (
+                !isNaN(number) &&
+                number > highest
+            ) {
+
+                highest =
+                    number;
+
+            }
+
+        }
+    );
+
+
+    return `D-${highest + 1}`;
+
+}
+
+
+/* =========================================================
+   EDIT DOCTOR
+========================================================= */
+
+function editDoctor(id) {
+
+    const doctor =
+        getDoctors()
+            .find(
+                d =>
+                    d.id === id
+            );
+
+
+    if (!doctor) {
+
+        alert(
+            "Doctor record not found."
+        );
+
+        return;
+
+    }
+
+
+    openDoctorModal(
+        doctor
+    );
+
+}
+
+
+/* =========================================================
+   DELETE DOCTOR
+========================================================= */
+
+function deleteDoctor(id) {
+
+    const doctor =
+        getDoctors()
+            .find(
+                d =>
+                    d.id === id
+            );
+
+
+    if (!doctor) {
+        return;
+    }
+
+
+    const confirmed =
+        confirm(
+            `Are you sure you want to delete ${doctor.name}?`
+        );
+
+
+    if (!confirmed) {
+        return;
+    }
+
+
+    const doctors =
+        getDoctors()
+            .filter(
+                d =>
+                    d.id !== id
+            );
+
+
+    saveDoctors(
+        doctors
+    );
+
+
+    renderDoctors();
+
+    updateDoctorStats();
+
+
+    alert(
+        "Doctor deleted successfully."
+    );
+
+}
+
+
+/* =========================================================
+   VIEW DOCTOR
+========================================================= */
+
+function viewDoctor(id) {
+
+    const doctor =
+        getDoctors()
+            .find(
+                d =>
+                    d.id === id
+            );
+
+
+    if (!doctor) {
+        return;
+    }
+
+
+    const statusClass =
+        doctor.status === "Available"
+            ? "green"
+            : doctor.status === "Busy"
+                ? "yellow"
+                : "red";
+
+
+    document.getElementById(
+        "doctorProfileContent"
+    ).innerHTML = `
+
+        <div class="profile-banner">
+
+            <div class="large-avatar">
+                ${safe(
+                    getInitials(
+                        doctor.name
+                    )
+                )}
+            </div>
+
+            <div>
+
+                <h2>
+                    ${safe(doctor.name)}
+                </h2>
+
+                <p>
+                    ${safe(doctor.specialty)}
+                    •
+                    ${safe(doctor.department)}
+                    •
+                    <span class="badge ${statusClass}">
+                        ${safe(doctor.status)}
+                    </span>
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="profile-details">
+
+            <div class="profile-detail">
+
+                <label>
+                    Doctor ID
+                </label>
+
+                <strong>
+                    ${safe(doctor.id)}
+                </strong>
+
+            </div>
+
+
+            <div class="profile-detail">
+
+                <label>
+                    Registration No.
+                </label>
+
+                <strong>
+                    ${safe(
+                        doctor.registrationNumber ||
+                        "—"
+                    )}
+                </strong>
+
+            </div>
+
+
+            <div class="profile-detail">
+
+                <label>
+                    Qualification
+                </label>
+
+                <strong>
+                    ${safe(
+                        doctor.qualification ||
+                        "—"
+                    )}
+                </strong>
+
+            </div>
+
+
+            <div class="profile-detail">
+
+                <label>
+                    Experience
+                </label>
+
+                <strong>
+                    ${safe(
+                        doctor.experience ||
+                        0
+                    )}
+                    Years
+                </strong>
+
+            </div>
+
+
+            <div class="profile-detail">
+
+                <label>
+                    Phone
+                </label>
+
+                <strong>
+                    ${safe(
+                        doctor.phone
+                    )}
+                </strong>
+
+            </div>
+
+
+            <div class="profile-detail">
+
+                <label>
+                    Email
+                </label>
+
+                <strong>
+                    ${safe(
+                        doctor.email ||
+                        "—"
+                    )}
+                </strong>
+
+            </div>
+
+
+            <div class="profile-detail">
+
+                <label>
+                    Employment
+                </label>
+
+                <strong>
+                    ${safe(
+                        doctor.employment
+                    )}
+                </strong>
+
+            </div>
+
+
+            <div class="profile-detail">
+
+                <label>
+                    Consultation Fee
+                </label>
+
+                <strong>
+                    ₹${safe(
+                        doctor.fee ||
+                        0
+                    )}
+                </strong>
+
+            </div>
+
+
+            <div class="profile-detail">
+
+                <label>
+                    Room / Cabin
+                </label>
+
+                <strong>
+                    ${safe(
+                        doctor.room ||
+                        "—"
+                    )}
+                </strong>
+
+            </div>
+
+
+            <div class="profile-detail">
+
+                <label>
+                    Consultation Time
+                </label>
+
+                <strong>
+                    ${safe(
+                        doctor.startTime ||
+                        "—"
+                    )}
+                    -
+                    ${safe(
+                        doctor.endTime ||
+                        "—"
+                    )}
+                </strong>
+
+            </div>
+
+
+            <div class="profile-detail">
+
+                <label>
+                    Consultation Days
+                </label>
+
+                <strong>
+                    ${safe(
+                        doctor.days ||
+                        "—"
+                    )}
+                </strong>
+
+            </div>
+
+
+            <div class="profile-detail">
+
+                <label>
+                    Rating
+                </label>
+
+                <strong>
+                    ⭐ ${safe(
+                        doctor.rating ||
+                        4.5
+                    )}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="profile-notes">
+
+            <h4>
+                🩺 Professional Information
+            </h4>
+
+            <p>
+                ${safe(
+                    doctor.notes ||
+                    "No additional information available."
+                )}
+            </p>
+
+        </div>
+
+    `;
+
+
+    document
+        .getElementById(
+            "viewDoctorModal"
+        )
+        .classList.add(
+            "show"
+        );
+
+}
+
+
+/* =========================================================
+   CLOSE VIEW
+========================================================= */
+
+function closeViewDoctorModal() {
+
+    document
+        .getElementById(
+            "viewDoctorModal"
+        )
+        .classList.remove(
+            "show"
+        );
+
+}
+
+
+/* =========================================================
+   RESET FILTERS
+========================================================= */
+
+function clearDoctorFilters() {
+
+    document.getElementById(
+        "doctorSearch"
+    ).value = "";
+
+
+    document.getElementById(
+        "departmentFilter"
+    ).value = "";
+
+
+    document.getElementById(
+        "employmentFilter"
+    ).value = "";
+
+
+    document.getElementById(
+        "statusFilter"
+    ).value = "";
+
+
+    renderDoctors();
+
+}
+
+
+/* =========================================================
+   GLOBAL SEARCH
+========================================================= */
+
+document
+    .getElementById(
+        "globalSearch"
+    )
+    ?.addEventListener(
+        "input",
+        function () {
+
+            document.getElementById(
+                "doctorSearch"
+            ).value =
+                this.value;
+
+
+            renderDoctors();
+
+        }
+    );
+
+
+/* =========================================================
+   EXPORT DOCTORS
+========================================================= */
+
+function exportDoctors() {
+
+    const doctors =
+        getDoctors();
+
+
+    if (!doctors.length) {
+
+        alert(
+            "No doctors available for export."
+        );
+
+        return;
+
+    }
+
+
+    const headers = [
+
+        "Doctor ID",
+        "Name",
+        "Department",
+        "Specialty",
+        "Qualification",
+        "Experience",
+        "Phone",
+        "Email",
+        "Employment",
+        "Fee",
+        "Status"
+
+    ];
+
+
+    const rows =
+        doctors.map(
+            doctor => [
+
+                doctor.id,
+                doctor.name,
+                doctor.department,
+                doctor.specialty,
+                doctor.qualification,
+                doctor.experience,
+                doctor.phone,
+                doctor.email,
+                doctor.employment,
+                doctor.fee,
+                doctor.status
+
+            ]
+        );
+
+
+    const csv = [
+
+        headers,
+
+        ...rows
+
+    ]
+    .map(
+        row =>
+            row
+                .map(
+                    value =>
+                        `"${String(
+                            value ?? ""
+                        ).replace(
+                            /"/g,
+                            '""'
+                        )}"`
+                )
+                .join(",")
+    )
+    .join("\n");
+
+
+    const blob =
+        new Blob(
+            [csv],
+            {
+                type:
+                    "text/csv;charset=utf-8;"
+            }
+        );
+
+
+    const url =
+        URL.createObjectURL(
+            blob
+        );
+
+
+    const link =
+        document.createElement(
+            "a"
+        );
+
+
+    link.href =
+        url;
+
+    link.download =
+        "hospital-doctors.csv";
+
+    link.click();
+
+
+    URL.revokeObjectURL(
+        url
+    );
+
+}
+
+
+/* =========================================================
+   NOTIFICATIONS
+========================================================= */
+
+function showDoctorNotifications() {
+
+    alert(
+        "Doctor Notifications\n\n" +
+        "• 4 doctors available for OPD\n" +
+        "• 1 doctor currently on leave\n" +
+        "• 3 doctors have appointments pending\n" +
+        "• 2 schedule changes require confirmation"
+    );
+
+}
+
+
+/* =========================================================
+   CLOSE MODALS ON OUTSIDE CLICK
+========================================================= */
+
+document.addEventListener(
+    "click",
+    function (event) {
+
+        const doctorModal =
+            document.getElementById(
+                "doctorModal"
+            );
+
+        const viewModal =
+            document.getElementById(
+                "viewDoctorModal"
+            );
+
+
+        if (
+            event.target ===
+            doctorModal
+        ) {
+
+            closeDoctorModal();
+
+        }
+
+
+        if (
+            event.target ===
+            viewModal
+        ) {
+
+            closeViewDoctorModal();
+
+        }
+
+    }
+);
+
+</script>
+
+</body>
+</html>
