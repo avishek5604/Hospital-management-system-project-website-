@@ -1,1 +1,3277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <meta
+        name="description"
+        content="MediCore Hospital Management System - Patient Management"
+    >
+
+    <title>MediCore HMS - Patients</title>
+
+    <link rel="stylesheet" href="../assets/css/style.css">
+
+    <style>
+        /* =====================================================
+           PATIENT PAGE
+        ===================================================== */
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .page-header h1 {
+            font-size: 26px;
+            margin-bottom: 5px;
+        }
+
+        .page-header p {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .patient-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 18px;
+        }
+
+        .patient-stat {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 17px;
+            box-shadow: var(--shadow);
+        }
+
+        .patient-stat-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .patient-stat-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: grid;
+            place-items: center;
+            font-size: 18px;
+        }
+
+        .patient-stat-label {
+            color: var(--muted);
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .patient-stat-number {
+            font-size: 24px;
+            font-weight: 800;
+            margin-top: 8px;
+        }
+
+        .filter-card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 18px;
+            box-shadow: var(--shadow);
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr auto;
+            gap: 10px;
+            align-items: end;
+        }
+
+        .field-group label {
+            display: block;
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--muted);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .patient-search {
+            width: 100%;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 12px;
+            outline: none;
+            background: #fff;
+        }
+
+        .patient-search:focus {
+            border-color: #60a5fa;
+        }
+
+        select.patient-search {
+            cursor: pointer;
+        }
+
+        .patient-card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .patient-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 17px 18px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .patient-card-header h3 {
+            font-size: 15px;
+        }
+
+        .patient-card-header p {
+            font-size: 10px;
+            color: var(--muted);
+            margin-top: 3px;
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+        }
+
+        .patient-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1050px;
+        }
+
+        .patient-table th,
+        .patient-table td {
+            padding: 12px 11px;
+            border-bottom: 1px solid var(--border);
+            text-align: left;
+            font-size: 11px;
+        }
+
+        .patient-table th {
+            color: var(--muted);
+            font-size: 9px;
+            text-transform: uppercase;
+            background: #fafafa;
+        }
+
+        .patient-table tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        .patient-name {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+        }
+
+        .patient-avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            background: #dbeafe;
+            color: #1d4ed8;
+            font-size: 10px;
+            font-weight: 800;
+            flex-shrink: 0;
+        }
+
+        .patient-name strong {
+            display: block;
+            font-size: 11px;
+        }
+
+        .patient-name small {
+            color: var(--muted);
+            font-size: 9px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+        }
+
+        .icon-btn {
+            width: 29px;
+            height: 29px;
+            border: 1px solid var(--border);
+            background: white;
+            border-radius: 7px;
+            cursor: pointer;
+            display: grid;
+            place-items: center;
+            font-size: 12px;
+        }
+
+        .icon-btn:hover {
+            background: #eff6ff;
+            border-color: #93c5fd;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 17px;
+            gap: 10px;
+        }
+
+        .pagination-info {
+            color: var(--muted);
+            font-size: 10px;
+        }
+
+        .pagination-buttons {
+            display: flex;
+            gap: 5px;
+        }
+
+        .page-number {
+            width: 30px;
+            height: 30px;
+            border: 1px solid var(--border);
+            background: #fff;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 10px;
+        }
+
+        .page-number.active {
+            background: #2563eb;
+            color: white;
+            border-color: #2563eb;
+        }
+
+        /* =====================================================
+           MODAL
+        ===================================================== */
+
+        .patient-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.58);
+            z-index: 9999;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .patient-modal.show {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .patient-modal-box {
+            width: 100%;
+            max-width: 950px;
+            background: white;
+            border-radius: 16px;
+            margin: 20px auto;
+            box-shadow: 0 25px 70px rgba(0,0,0,.2);
+            overflow: hidden;
+        }
+
+        .modal-header {
+            padding: 18px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            font-size: 18px;
+        }
+
+        .modal-header p {
+            color: var(--muted);
+            font-size: 10px;
+            margin-top: 3px;
+        }
+
+        .modal-close {
+            width: 34px;
+            height: 34px;
+            border: none;
+            background: #f1f5f9;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .form-section-title {
+            font-size: 13px;
+            font-weight: 800;
+            margin: 20px 0 12px;
+            padding-bottom: 7px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .form-section-title:first-child {
+            margin-top: 0;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 11px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            outline: none;
+            font-size: 12px;
+            background: #fff;
+        }
+
+        .form-control:focus {
+            border-color: #60a5fa;
+        }
+
+        textarea.form-control {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .modal-footer {
+            padding: 15px 20px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        /* =====================================================
+           PATIENT PROFILE
+        ===================================================== */
+
+        .profile-top {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            padding: 15px;
+            background: #f8fafc;
+            border-radius: 12px;
+            margin-bottom: 15px;
+        }
+
+        .profile-avatar {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            background: #dbeafe;
+            color: #1d4ed8;
+            display: grid;
+            place-items: center;
+            font-weight: 800;
+            font-size: 18px;
+        }
+
+        .profile-info h2 {
+            font-size: 18px;
+        }
+
+        .profile-info p {
+            color: var(--muted);
+            font-size: 10px;
+            margin-top: 4px;
+        }
+
+        .profile-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .profile-item {
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            padding: 11px;
+        }
+
+        .profile-item label {
+            display: block;
+            color: var(--muted);
+            font-size: 9px;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .profile-item strong {
+            font-size: 11px;
+        }
+
+        .medical-box {
+            margin-top: 15px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 13px;
+        }
+
+        .medical-box h4 {
+            font-size: 11px;
+            margin-bottom: 7px;
+        }
+
+        .medical-box p {
+            color: var(--muted);
+            font-size: 10px;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 1100px) {
+            .patient-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .filter-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 800px) {
+            .page-header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .form-grid,
+            .profile-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 550px) {
+            .patient-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-grid,
+            .profile-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .full-width {
+                grid-column: auto;
+            }
+
+            .pagination {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+            Medi<span>Core</span> HMS
+        </div>
+
+        <nav class="nav">
+
+            <div class="nav-title">Main</div>
+
+            <a href="../dashboard.html">
+                📊
+                <span>Dashboard</span>
+            </a>
+
+            <div class="nav-title">Clinical</div>
+
+            <a href="patients.html" class="active">
+                👤
+                <span>Patients</span>
+            </a>
+
+            <a href="doctors.html">
+                ⚕
+                <span>Doctors</span>
+            </a>
+
+            <a href="appointments.html">
+                📅
+                <span>Appointments</span>
+            </a>
+
+            <a href="opd.html">
+                🏥
+                <span>OPD</span>
+            </a>
+
+            <a href="ipd.html">
+                🛏
+                <span>IPD / Admission</span>
+            </a>
+
+            <a href="emergency.html">
+                🚑
+                <span>Emergency</span>
+            </a>
+
+            <a href="nursing.html">
+                ❤️
+                <span>Nursing</span>
+            </a>
+
+            <div class="nav-title">Diagnostics</div>
+
+            <a href="laboratory.html">
+                🧪
+                <span>Laboratory</span>
+            </a>
+
+            <a href="radiology.html">
+                🩻
+                <span>Radiology</span>
+            </a>
+
+            <a href="blood-bank.html">
+                🩸
+                <span>Blood Bank</span>
+            </a>
+
+            <div class="nav-title">Operations</div>
+
+            <a href="pharmacy.html">
+                💊
+                <span>Pharmacy</span>
+            </a>
+
+            <a href="billing.html">
+                💰
+                <span>Billing & Finance</span>
+            </a>
+
+            <a href="insurance.html">
+                📄
+                <span>Insurance / TPA</span>
+            </a>
+
+            <a href="inventory.html">
+                📦
+                <span>Inventory</span>
+            </a>
+
+            <a href="ambulance.html">
+                🚐
+                <span>Ambulance</span>
+            </a>
+
+            <div class="nav-title">Administration</div>
+
+            <a href="hr.html">
+                👥
+                <span>HR & Staff</span>
+            </a>
+
+            <a href="reports.html">
+                📈
+                <span>Reports</span>
+            </a>
+
+            <a href="communication.html">
+                ✉
+                <span>Communication</span>
+            </a>
+
+            <a href="settings.html">
+                ⚙
+                <span>Settings</span>
+            </a>
+
+            <div class="nav-title">Account</div>
+
+            <a href="#" data-logout>
+                🚪
+                <span>Logout</span>
+            </a>
+
+        </nav>
+    </aside>
+
+
+    <!-- =====================================================
+         MAIN
+    ====================================================== -->
+
+    <main class="main">
+
+        <!-- TOP BAR -->
+
+        <header class="topbar">
+
+            <button
+                class="hamb"
+                aria-label="Open menu"
+            >
+                ☰
+            </button>
+
+            <input
+                type="search"
+                class="search"
+                id="globalSearch"
+                placeholder="Search patients..."
+            >
+
+            <div class="user">
+
+                <span
+                    style="font-size:20px;cursor:pointer"
+                    onclick="showPatientNotifications()"
+                >
+                    🔔
+                </span>
+
+                <div class="avatar">
+                    AK
+                </div>
+
+                <div>
+                    <strong data-user>
+                        Administrator
+                    </strong>
+
+                    <small
+                        class="muted"
+                        style="display:block"
+                    >
+                        Hospital Administrator
+                    </small>
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- CONTENT -->
+
+        <section class="content">
+
+            <!-- PAGE HEADER -->
+
+            <div class="page-header">
+
+                <div>
+
+                    <h1>
+                        Patient Management
+                    </h1>
+
+                    <p>
+                        Register, manage and monitor all hospital patients.
+                    </p>
+
+                </div>
+
+                <div class="header-actions">
+
+                    <button
+                        class="btn secondary"
+                        onclick="exportPatients()"
+                    >
+                        ⬇ Export
+                    </button>
+
+                    <button
+                        class="btn primary"
+                        onclick="openPatientModal()"
+                    >
+                        + Register Patient
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 PATIENT STATISTICS
+            ================================================== -->
+
+            <div class="patient-stats">
+
+                <div class="patient-stat">
+
+                    <div class="patient-stat-top">
+
+                        <div class="patient-stat-label">
+                            Total Patients
+                        </div>
+
+                        <div
+                            class="patient-stat-icon"
+                            style="
+                                background:#dbeafe;
+                                color:#1d4ed8;
+                            "
+                        >
+                            👥
+                        </div>
+
+                    </div>
+
+                    <div
+                        class="patient-stat-number"
+                        id="statTotalPatients"
+                    >
+                        0
+                    </div>
+
+                </div>
+
+
+                <div class="patient-stat">
+
+                    <div class="patient-stat-top">
+
+                        <div class="patient-stat-label">
+                            Active Patients
+                        </div>
+
+                        <div
+                            class="patient-stat-icon"
+                            style="
+                                background:#dcfce7;
+                                color:#15803d;
+                            "
+                        >
+                            ✓
+                        </div>
+
+                    </div>
+
+                    <div
+                        class="patient-stat-number"
+                        id="statActivePatients"
+                    >
+                        0
+                    </div>
+
+                </div>
+
+
+                <div class="patient-stat">
+
+                    <div class="patient-stat-top">
+
+                        <div class="patient-stat-label">
+                            Admitted
+                        </div>
+
+                        <div
+                            class="patient-stat-icon"
+                            style="
+                                background:#ffedd5;
+                                color:#c2410c;
+                            "
+                        >
+                            🛏
+                        </div>
+
+                    </div>
+
+                    <div
+                        class="patient-stat-number"
+                        id="statAdmitted"
+                    >
+                        0
+                    </div>
+
+                </div>
+
+
+                <div class="patient-stat">
+
+                    <div class="patient-stat-top">
+
+                        <div class="patient-stat-label">
+                            New Today
+                        </div>
+
+                        <div
+                            class="patient-stat-icon"
+                            style="
+                                background:#ede9fe;
+                                color:#6d28d9;
+                            "
+                        >
+                            +
+                        </div>
+
+                    </div>
+
+                    <div
+                        class="patient-stat-number"
+                        id="statNewToday"
+                    >
+                        0
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 FILTERS
+            ================================================== -->
+
+            <div class="filter-card">
+
+                <div class="filter-grid">
+
+                    <div class="field-group">
+
+                        <label>
+                            Search
+                        </label>
+
+                        <input
+                            type="search"
+                            id="patientSearch"
+                            class="patient-search"
+                            placeholder="Patient name, ID, phone..."
+                            oninput="renderPatients()"
+                        >
+
+                    </div>
+
+
+                    <div class="field-group">
+
+                        <label>
+                            Gender
+                        </label>
+
+                        <select
+                            id="genderFilter"
+                            class="patient-search"
+                            onchange="renderPatients()"
+                        >
+
+                            <option value="">
+                                All Gender
+                            </option>
+
+                            <option value="Male">
+                                Male
+                            </option>
+
+                            <option value="Female">
+                                Female
+                            </option>
+
+                            <option value="Other">
+                                Other
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="field-group">
+
+                        <label>
+                            Department
+                        </label>
+
+                        <select
+                            id="departmentFilter"
+                            class="patient-search"
+                            onchange="renderPatients()"
+                        >
+
+                            <option value="">
+                                All Departments
+                            </option>
+
+                            <option value="Cardiology">
+                                Cardiology
+                            </option>
+
+                            <option value="Orthopedics">
+                                Orthopedics
+                            </option>
+
+                            <option value="Neurology">
+                                Neurology
+                            </option>
+
+                            <option value="Dermatology">
+                                Dermatology
+                            </option>
+
+                            <option value="General Medicine">
+                                General Medicine
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="field-group">
+
+                        <label>
+                            Status
+                        </label>
+
+                        <select
+                            id="statusFilter"
+                            class="patient-search"
+                            onchange="renderPatients()"
+                        >
+
+                            <option value="">
+                                All Status
+                            </option>
+
+                            <option value="Active">
+                                Active
+                            </option>
+
+                            <option value="Admitted">
+                                Admitted
+                            </option>
+
+                            <option value="Discharged">
+                                Discharged
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <button
+                        class="btn secondary"
+                        onclick="clearFilters()"
+                    >
+                        Reset
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 PATIENT TABLE
+            ================================================== -->
+
+            <div class="patient-card">
+
+                <div class="patient-card-header">
+
+                    <div>
+
+                        <h3>
+                            Patient Directory
+                        </h3>
+
+                        <p>
+                            Complete list of registered patients
+                        </p>
+
+                    </div>
+
+                    <span
+                        class="badge blue"
+                        id="patientCountBadge"
+                    >
+                        0 Patients
+                    </span>
+
+                </div>
+
+
+                <div class="table-wrap">
+
+                    <table class="patient-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Patient
+                                </th>
+
+                                <th>
+                                    Patient ID
+                                </th>
+
+                                <th>
+                                    Age / Gender
+                                </th>
+
+                                <th>
+                                    Phone
+                                </th>
+
+                                <th>
+                                    Blood Group
+                                </th>
+
+                                <th>
+                                    Department
+                                </th>
+
+                                <th>
+                                    Doctor
+                                </th>
+
+                                <th>
+                                    Status
+                                </th>
+
+                                <th>
+                                    Actions
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="patientTableBody">
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+                <div class="pagination">
+
+                    <div
+                        class="pagination-info"
+                        id="paginationInfo"
+                    >
+                        Showing 0 patients
+                    </div>
+
+                    <div class="pagination-buttons">
+
+                        <button
+                            class="page-number"
+                            onclick="previousPage()"
+                        >
+                            ‹
+                        </button>
+
+                        <button
+                            class="page-number active"
+                            id="pageOne"
+                        >
+                            1
+                        </button>
+
+                        <button
+                            class="page-number"
+                            onclick="nextPage()"
+                        >
+                            ›
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- FOOTER -->
+
+            <footer class="footer">
+
+                MediCore Hospital Management System
+                © 2026.
+                All Rights Reserved.
+
+                <br>
+
+                <span>
+                    Patient Management Module
+                </span>
+
+            </footer>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- =====================================================
+     REGISTER / EDIT PATIENT MODAL
+====================================================== -->
+
+<div
+    class="patient-modal"
+    id="patientModal"
+>
+
+    <div class="patient-modal-box">
+
+        <div class="modal-header">
+
+            <div>
+
+                <h2 id="patientModalTitle">
+                    Register New Patient
+                </h2>
+
+                <p>
+                    Enter complete patient information.
+                </p>
+
+            </div>
+
+            <button
+                class="modal-close"
+                onclick="closePatientModal()"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <form
+            id="patientForm"
+            onsubmit="savePatient(event)"
+        >
+
+            <div class="modal-body">
+
+                <!-- BASIC INFORMATION -->
+
+                <div class="form-section-title">
+                    Basic Information
+                </div>
+
+                <div class="form-grid">
+
+                    <div class="field-group">
+
+                        <label>
+                            Full Name *
+                        </label>
+
+                        <input
+                            type="text"
+                            id="patientName"
+                            class="form-control"
+                            required
+                            placeholder="Enter patient name"
+                        >
+
+                    </div>
+
+
+                    <div class="field-group">
+
+                        <label>
+                            Date of Birth
+                        </label>
+
+                        <input
+                            type="date"
+                            id="patientDOB"
+                            class="form-control"
+                        >
+
+                    </div>
+
+
+                    <div class="field-group">
+
+                        <label>
+                            Gender *
+                        </label>
+
+                        <select
+                            id="patientGender"
+                            class="form-control"
+                            required
+                        >
+
+                            <option value="">
+                                Select Gender
+                            </option>
+
+                            <option value="Male">
+                                Male
+                            </option>
+
+                            <option value="Female">
+                                Female
+                            </option>
+
+                            <option value="Other">
+                                Other
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="field-group">
+
+                        <label>
+                            Phone *
+                        </label>
+
+                        <input
+                            type="tel"
+                            id="patientPhone"
+                            class="form-control"
+                            required
+                            placeholder="10-digit mobile number"
+                        >
+
+                    </div>
+
+
+                    <div class="field-group">
+
+                        <label>
+                            Email
+                        </label>
+
+                        <input
+                            type="email"
+                            id="patientEmail"
+                            class="form-control"
+                            placeholder="patient@email.com"
+                        >
+
+                    </div>
+
+
+                    <div class="field-group">
+
+                        <label>
+                            Blood Group
+                        </label>
+
+                        <select
+                            id="patientBloodGroup"
+                            class="form-control"
+                        >
+
+                            <option value="">
+                                Select
+                            </option>
+
+                            <option>A+</option>
+                            <option>A-</option>
+                            <option>B+</option>
+                            <option>B-</option>
+                            <option>AB+</option>
+                            <option>AB-</option>
+                            <option>O+</option>
+                            <option>O-</option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="field-group full-width">
+
+                        <label>
+                            Address
+                        </label>
+
+                        <textarea
+                            id="patientAddress"
+                            class="form-control"
+                            placeholder="Complete residential address"
+                        ></textarea>
+
+                    </div>
+
+                </div>
+
+
+                <!-- MEDICAL INFORMATION -->
+
+                <div class="form-section-title">
+                    Medical Information
+                </div>
+
+                <div class="form-grid">
+
+                    <div class="field-group">
+
+                        <label>
+                            Department *
+                        </label>
+
+                        <select
+                            id="patientDepartment"
+                            class="form-control"
+                            required
+                        >
+
+                            <option value="">
+                                Select Department
+                            </option>
+
+                            <option>
+                                Cardiology
+                            </option>
+
+                            <option>
+                                Orthopedics
+                            </option>
+
+                            <option>
+                                Neurology
+                            </option>
+
+                            <option>
+                                Dermatology
+                            </option>
+
+                            <option>
+                                General Medicine
+                            </option>
+
+                            <option>
+                                Pediatrics
+                            </option>
+
+                            <option>
+                                Gynecology
+                            </option>
+
+                            <option>
+                                ENT
+                            </option>
+
+                            <option>
+                                Ophthalmology
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="field-group">
+
+                        <label>
+                            Doctor
+                        </label>
+
+                        <input
+                            type="text"
+                            id="patientDoctor"
+                            class="form-control"
+                            placeholder="Consulting doctor"
+                        >
+
+                    </div>
+
+
+                    <div class="field-group">
+
+                        <label>
+                            Patient Status
+                        </label>
+
+                        <select
+                            id="patientStatus"
+                            class="form-control"
+                        >
+
+                            <option value="Active">
+                                Active
+                            </option>
+
+                            <option value="Admitted">
+                                Admitted
+                            </option>
+
+                            <option value="Discharged">
+                                Discharged
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="field-group">
+
+                        <label>
+                            Allergies
+                        </label>
+
+                        <input
+                            type="text"
+                            id="patientAllergies"
+                            class="form-control"
+                            placeholder="e.g. Penicillin"
+                        >
+
+                    </div>
+
+
+                    <div class="field-group">
+
+                        <label>
+                            Existing Diseases
+                        </label>
+
+                        <input
+                            type="text"
+                            id="patientDiseases"
+                            class="form-control"
+                            placeholder="Diabetes, hypertension..."
+                        >
+
+                    </div>
+
+
+                    <div class="field-group">
+
+                        <label>
+                            Insurance Provider
+                        </label>
+
+                        <input
+                            type="text"
+                            id="patientInsurance"
+                            class="form-control"
+                            placeholder="Insurance / TPA"
+                        >
+
+                    </div>
+
+
+                    <div class="field-group full-width">
+
+                        <label>
+                            Medical Notes
+                        </label>
+
+                        <textarea
+                            id="patientNotes"
+                            class="form-control"
+                            placeholder="Medical history, clinical notes..."
+                        ></textarea>
+
+                    </div>
+
+                </div>
+
+
+                <!-- EMERGENCY CONTACT -->
+
+                <div class="form-section-title">
+                    Emergency Contact
+                </div>
+
+                <div class="form-grid">
+
+                    <div class="field-group">
+
+                        <label>
+                            Contact Name
+                        </label>
+
+                        <input
+                            type="text"
+                            id="emergencyName"
+                            class="form-control"
+                            placeholder="Emergency contact"
+                        >
+
+                    </div>
+
+
+                    <div class="field-group">
+
+                        <label>
+                            Relationship
+                        </label>
+
+                        <input
+                            type="text"
+                            id="emergencyRelation"
+                            class="form-control"
+                            placeholder="Father / Mother / Spouse"
+                        >
+
+                    </div>
+
+
+                    <div class="field-group">
+
+                        <label>
+                            Contact Phone
+                        </label>
+
+                        <input
+                            type="tel"
+                            id="emergencyPhone"
+                            class="form-control"
+                            placeholder="Emergency number"
+                        >
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    class="btn secondary"
+                    onclick="closePatientModal()"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    type="submit"
+                    class="btn primary"
+                >
+                    Save Patient
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     VIEW PATIENT MODAL
+====================================================== -->
+
+<div
+    class="patient-modal"
+    id="viewPatientModal"
+>
+
+    <div class="patient-modal-box">
+
+        <div class="modal-header">
+
+            <div>
+
+                <h2>
+                    Patient Profile
+                </h2>
+
+                <p>
+                    Complete patient information
+                </p>
+
+            </div>
+
+            <button
+                class="modal-close"
+                onclick="closeViewModal()"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div class="modal-body">
+
+            <div id="patientProfileContent">
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script src="../assets/js/app.js"></script>
+
+
+<script>
+    /* =====================================================
+       PATIENT MANAGEMENT JAVASCRIPT
+    ===================================================== */
+
+    let editingPatientId = null;
+    let currentPage = 1;
+    const patientsPerPage = 10;
+
+
+    /* =====================================================
+       DEFAULT PATIENTS
+    ===================================================== */
+
+    function getLocalPatients() {
+
+        let patients = [];
+
+        try {
+            patients =
+                JSON.parse(
+                    localStorage.getItem("hms_patients")
+                ) || [];
+        } catch (error) {
+            patients = [];
+        }
+
+        if (!patients.length) {
+
+            patients = [
+                {
+                    id: "P-1001",
+                    name: "Rahul Kumar",
+                    age: 42,
+                    dob: "1984-04-15",
+                    gender: "Male",
+                    phone: "9876543210",
+                    email: "rahul@example.com",
+                    bloodGroup: "B+",
+                    address: "Patna, Bihar",
+                    department: "Cardiology",
+                    doctor: "Dr. Ananya Sharma",
+                    status: "Active",
+                    allergies: "None",
+                    diseases: "Hypertension",
+                    insurance: "Star Health",
+                    notes: "Regular cardiac follow-up.",
+                    emergencyName: "Rakesh Kumar",
+                    emergencyRelation: "Brother",
+                    emergencyPhone: "9876500000",
+                    registeredAt: new Date().toISOString()
+                },
+
+                {
+                    id: "P-1002",
+                    name: "Priya Singh",
+                    age: 31,
+                    dob: "1995-02-10",
+                    gender: "Female",
+                    phone: "9876543211",
+                    email: "priya@example.com",
+                    bloodGroup: "O+",
+                    address: "Kankarbagh, Patna",
+                    department: "Orthopedics",
+                    doctor: "Dr. Raj Verma",
+                    status: "Admitted",
+                    allergies: "None",
+                    diseases: "Arthritis",
+                    insurance: "ICICI Lombard",
+                    notes: "Post-operative observation.",
+                    emergencyName: "Amit Singh",
+                    emergencyRelation: "Husband",
+                    emergencyPhone: "9876500001",
+                    registeredAt: new Date().toISOString()
+                },
+
+                {
+                    id: "P-1003",
+                    name: "Amit Das",
+                    age: 56,
+                    dob: "1970-07-18",
+                    gender: "Male",
+                    phone: "9876543212",
+                    email: "amit@example.com",
+                    bloodGroup: "A+",
+                    address: "Rajendra Nagar, Patna",
+                    department: "Neurology",
+                    doctor: "Dr. Neha Gupta",
+                    status: "Discharged",
+                    allergies: "Penicillin",
+                    diseases: "Diabetes",
+                    insurance: "HDFC Ergo",
+                    notes: "Discharged after treatment.",
+                    emergencyName: "Sunita Das",
+                    emergencyRelation: "Wife",
+                    emergencyPhone: "9876500002",
+                    registeredAt: new Date().toISOString()
+                }
+            ];
+
+            saveLocalPatients(patients);
+        }
+
+        return patients;
+    }
+
+
+    function saveLocalPatients(patients) {
+
+        localStorage.setItem(
+            "hms_patients",
+            JSON.stringify(patients)
+        );
+
+    }
+
+
+    /* =====================================================
+       HMS COMPATIBILITY
+    ===================================================== */
+
+    window.HMS =
+        window.HMS || {};
+
+    HMS.getPatients =
+        function () {
+            return getLocalPatients();
+        };
+
+
+    /* =====================================================
+       ESCAPE HTML
+    ===================================================== */
+
+    function safe(value) {
+
+        return String(
+            value ?? ""
+        )
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+    }
+
+
+    /* =====================================================
+       INITIALIZE
+    ===================================================== */
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        function () {
+
+            renderPatients();
+            updatePatientStats();
+
+        }
+    );
+
+
+    /* =====================================================
+       RENDER PATIENTS
+    ===================================================== */
+
+    function renderPatients() {
+
+        const patients =
+            getLocalPatients();
+
+        const search =
+            (
+                document.getElementById(
+                    "patientSearch"
+                )?.value || ""
+            )
+            .toLowerCase()
+            .trim();
+
+        const gender =
+            document.getElementById(
+                "genderFilter"
+            )?.value || "";
+
+        const department =
+            document.getElementById(
+                "departmentFilter"
+            )?.value || "";
+
+        const status =
+            document.getElementById(
+                "statusFilter"
+            )?.value || "";
+
+
+        let filtered =
+            patients.filter(
+                patient => {
+
+                    const matchesSearch =
+                        !search ||
+                        String(patient.name)
+                            .toLowerCase()
+                            .includes(search) ||
+                        String(patient.id)
+                            .toLowerCase()
+                            .includes(search) ||
+                        String(patient.phone)
+                            .toLowerCase()
+                            .includes(search);
+
+                    const matchesGender =
+                        !gender ||
+                        patient.gender === gender;
+
+                    const matchesDepartment =
+                        !department ||
+                        patient.department === department;
+
+                    const matchesStatus =
+                        !status ||
+                        patient.status === status;
+
+                    return (
+                        matchesSearch &&
+                        matchesGender &&
+                        matchesDepartment &&
+                        matchesStatus
+                    );
+
+                }
+            );
+
+
+        const total =
+            filtered.length;
+
+        const start =
+            (currentPage - 1) *
+            patientsPerPage;
+
+        const pagePatients =
+            filtered.slice(
+                start,
+                start + patientsPerPage
+            );
+
+
+        const tbody =
+            document.getElementById(
+                "patientTableBody"
+            );
+
+
+        if (!tbody) {
+            return;
+        }
+
+
+        if (!pagePatients.length) {
+
+            tbody.innerHTML = `
+                <tr>
+                    <td
+                        colspan="9"
+                        style="
+                            text-align:center;
+                            padding:35px;
+                            color:var(--muted);
+                        "
+                    >
+                        👤 No patients found.
+                    </td>
+                </tr>
+            `;
+
+        } else {
+
+            tbody.innerHTML =
+                pagePatients
+                    .map(
+                        patient =>
+                            patientRow(patient)
+                    )
+                    .join("");
+
+        }
+
+
+        document.getElementById(
+            "patientCountBadge"
+        ).textContent =
+            `${total} Patient${total === 1 ? "" : "s"}`;
+
+
+        const showingStart =
+            total === 0
+                ? 0
+                : start + 1;
+
+        const showingEnd =
+            Math.min(
+                start + patientsPerPage,
+                total
+            );
+
+
+        document.getElementById(
+            "paginationInfo"
+        ).textContent =
+            `Showing ${showingStart}-${showingEnd} of ${total} patients`;
+
+    }
+
+
+    /* =====================================================
+       PATIENT ROW
+    ===================================================== */
+
+    function patientRow(patient) {
+
+        const initials =
+            getInitials(
+                patient.name
+            );
+
+        const statusClass =
+            patient.status === "Active"
+                ? "green"
+                : patient.status === "Admitted"
+                    ? "yellow"
+                    : "blue";
+
+
+        return `
+            <tr>
+
+                <td>
+
+                    <div class="patient-name">
+
+                        <div class="patient-avatar">
+                            ${safe(initials)}
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                ${safe(patient.name)}
+                            </strong>
+
+                            <small>
+                                Registered patient
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                </td>
+
+
+                <td>
+                    <strong>
+                        ${safe(patient.id)}
+                    </strong>
+                </td>
+
+
+                <td>
+                    ${safe(patient.age || calculateAge(patient.dob))}
+                    /
+                    ${safe(patient.gender)}
+                </td>
+
+
+                <td>
+                    ${safe(patient.phone)}
+                </td>
+
+
+                <td>
+                    <strong>
+                        ${safe(patient.bloodGroup || "—")}
+                    </strong>
+                </td>
+
+
+                <td>
+                    ${safe(patient.department)}
+                </td>
+
+
+                <td>
+                    ${safe(patient.doctor || "—")}
+                </td>
+
+
+                <td>
+
+                    <span class="badge ${statusClass}">
+                        ${safe(patient.status)}
+                    </span>
+
+                </td>
+
+
+                <td>
+
+                    <div class="action-buttons">
+
+                        <button
+                            class="icon-btn"
+                            title="View"
+                            onclick="viewPatient('${safe(patient.id)}')"
+                        >
+                            👁
+                        </button>
+
+                        <button
+                            class="icon-btn"
+                            title="Edit"
+                            onclick="editPatient('${safe(patient.id)}')"
+                        >
+                            ✏
+                        </button>
+
+                        <button
+                            class="icon-btn"
+                            title="Delete"
+                            onclick="deletePatient('${safe(patient.id)}')"
+                        >
+                            🗑
+                        </button>
+
+                    </div>
+
+                </td>
+
+            </tr>
+        `;
+
+    }
+
+
+    /* =====================================================
+       INITIALS
+    ===================================================== */
+
+    function getInitials(name) {
+
+        return String(name || "")
+            .split(" ")
+            .filter(Boolean)
+            .slice(0, 2)
+            .map(
+                word =>
+                    word.charAt(0)
+                        .toUpperCase()
+            )
+            .join("");
+
+    }
+
+
+    /* =====================================================
+       AGE
+    ===================================================== */
+
+    function calculateAge(dob) {
+
+        if (!dob) {
+            return "";
+        }
+
+        const birth =
+            new Date(dob);
+
+        const today =
+            new Date();
+
+        let age =
+            today.getFullYear() -
+            birth.getFullYear();
+
+        const month =
+            today.getMonth() -
+            birth.getMonth();
+
+        if (
+            month < 0 ||
+            (
+                month === 0 &&
+                today.getDate() <
+                birth.getDate()
+            )
+        ) {
+            age--;
+        }
+
+        return age;
+
+    }
+
+
+    /* =====================================================
+       UPDATE STATISTICS
+    ===================================================== */
+
+    function updatePatientStats() {
+
+        const patients =
+            getLocalPatients();
+
+        const total =
+            patients.length;
+
+        const active =
+            patients.filter(
+                p => p.status === "Active"
+            ).length;
+
+        const admitted =
+            patients.filter(
+                p => p.status === "Admitted"
+            ).length;
+
+
+        const today =
+            new Date()
+                .toISOString()
+                .slice(0, 10);
+
+
+        const newToday =
+            patients.filter(
+                p =>
+                    String(
+                        p.registeredAt || ""
+                    ).slice(0, 10) === today
+            ).length;
+
+
+        document.getElementById(
+            "statTotalPatients"
+        ).textContent = total;
+
+
+        document.getElementById(
+            "statActivePatients"
+        ).textContent = active;
+
+
+        document.getElementById(
+            "statAdmitted"
+        ).textContent = admitted;
+
+
+        document.getElementById(
+            "statNewToday"
+        ).textContent = newToday;
+
+    }
+
+
+    /* =====================================================
+       OPEN PATIENT MODAL
+    ===================================================== */
+
+    function openPatientModal(patient = null) {
+
+        editingPatientId =
+            patient?.id || null;
+
+        const modal =
+            document.getElementById(
+                "patientModal"
+            );
+
+        const title =
+            document.getElementById(
+                "patientModalTitle"
+            );
+
+
+        document.getElementById(
+            "patientForm"
+        ).reset();
+
+
+        if (patient) {
+
+            title.textContent =
+                "Edit Patient";
+
+            fillPatientForm(
+                patient
+            );
+
+        } else {
+
+            title.textContent =
+                "Register New Patient";
+
+        }
+
+
+        modal.classList.add(
+            "show"
+        );
+
+    }
+
+
+    function closePatientModal() {
+
+        document
+            .getElementById(
+                "patientModal"
+            )
+            .classList.remove(
+                "show"
+            );
+
+        editingPatientId =
+            null;
+
+    }
+
+
+    /* =====================================================
+       FILL PATIENT FORM
+    ===================================================== */
+
+    function fillPatientForm(patient) {
+
+        document.getElementById(
+            "patientName"
+        ).value =
+            patient.name || "";
+
+        document.getElementById(
+            "patientDOB"
+        ).value =
+            patient.dob || "";
+
+        document.getElementById(
+            "patientGender"
+        ).value =
+            patient.gender || "";
+
+        document.getElementById(
+            "patientPhone"
+        ).value =
+            patient.phone || "";
+
+        document.getElementById(
+            "patientEmail"
+        ).value =
+            patient.email || "";
+
+        document.getElementById(
+            "patientBloodGroup"
+        ).value =
+            patient.bloodGroup || "";
+
+        document.getElementById(
+            "patientAddress"
+        ).value =
+            patient.address || "";
+
+        document.getElementById(
+            "patientDepartment"
+        ).value =
+            patient.department || "";
+
+        document.getElementById(
+            "patientDoctor"
+        ).value =
+            patient.doctor || "";
+
+        document.getElementById(
+            "patientStatus"
+        ).value =
+            patient.status || "Active";
+
+        document.getElementById(
+            "patientAllergies"
+        ).value =
+            patient.allergies || "";
+
+        document.getElementById(
+            "patientDiseases"
+        ).value =
+            patient.diseases || "";
+
+        document.getElementById(
+            "patientInsurance"
+        ).value =
+            patient.insurance || "";
+
+        document.getElementById(
+            "patientNotes"
+        ).value =
+            patient.notes || "";
+
+        document.getElementById(
+            "emergencyName"
+        ).value =
+            patient.emergencyName || "";
+
+        document.getElementById(
+            "emergencyRelation"
+        ).value =
+            patient.emergencyRelation || "";
+
+        document.getElementById(
+            "emergencyPhone"
+        ).value =
+            patient.emergencyPhone || "";
+
+    }
+
+
+    /* =====================================================
+       SAVE PATIENT
+    ===================================================== */
+
+    function savePatient(event) {
+
+        event.preventDefault();
+
+
+        const name =
+            document.getElementById(
+                "patientName"
+            ).value.trim();
+
+        const gender =
+            document.getElementById(
+                "patientGender"
+            ).value;
+
+        const phone =
+            document.getElementById(
+                "patientPhone"
+            ).value.trim();
+
+        const department =
+            document.getElementById(
+                "patientDepartment"
+            ).value;
+
+
+        if (
+            !name ||
+            !gender ||
+            !phone ||
+            !department
+        ) {
+
+            alert(
+                "Please complete all required fields."
+            );
+
+            return;
+
+        }
+
+
+        if (
+            !/^[0-9+\-\s]{10,15}$/
+                .test(phone)
+        ) {
+
+            alert(
+                "Please enter a valid phone number."
+            );
+
+            return;
+
+        }
+
+
+        const patients =
+            getLocalPatients();
+
+
+        const patientData = {
+
+            name,
+
+            dob:
+                document.getElementById(
+                    "patientDOB"
+                ).value,
+
+            age:
+                calculateAge(
+                    document.getElementById(
+                        "patientDOB"
+                    ).value
+                ),
+
+            gender,
+
+            phone,
+
+            email:
+                document.getElementById(
+                    "patientEmail"
+                ).value.trim(),
+
+            bloodGroup:
+                document.getElementById(
+                    "patientBloodGroup"
+                ).value,
+
+            address:
+                document.getElementById(
+                    "patientAddress"
+                ).value.trim(),
+
+            department,
+
+            doctor:
+                document.getElementById(
+                    "patientDoctor"
+                ).value.trim(),
+
+            status:
+                document.getElementById(
+                    "patientStatus"
+                ).value,
+
+            allergies:
+                document.getElementById(
+                    "patientAllergies"
+                ).value.trim(),
+
+            diseases:
+                document.getElementById(
+                    "patientDiseases"
+                ).value.trim(),
+
+            insurance:
+                document.getElementById(
+                    "patientInsurance"
+                ).value.trim(),
+
+            notes:
+                document.getElementById(
+                    "patientNotes"
+                ).value.trim(),
+
+            emergencyName:
+                document.getElementById(
+                    "emergencyName"
+                ).value.trim(),
+
+            emergencyRelation:
+                document.getElementById(
+                    "emergencyRelation"
+                ).value.trim(),
+
+            emergencyPhone:
+                document.getElementById(
+                    "emergencyPhone"
+                ).value.trim()
+
+        };
+
+
+        if (editingPatientId) {
+
+            const index =
+                patients.findIndex(
+                    p =>
+                        p.id ===
+                        editingPatientId
+                );
+
+
+            if (index !== -1) {
+
+                patients[index] = {
+
+                    ...patients[index],
+
+                    ...patientData,
+
+                    updatedAt:
+                        new Date()
+                            .toISOString()
+
+                };
+
+            }
+
+        } else {
+
+            const newPatient = {
+
+                id:
+                    generatePatientId(
+                        patients
+                    ),
+
+                ...patientData,
+
+                registeredAt:
+                    new Date()
+                        .toISOString()
+
+            };
+
+
+            patients.unshift(
+                newPatient
+            );
+
+        }
+
+
+        saveLocalPatients(
+            patients
+        );
+
+
+        closePatientModal();
+
+        renderPatients();
+
+        updatePatientStats();
+
+
+        alert(
+            editingPatientId
+                ? "Patient updated successfully."
+                : "Patient registered successfully."
+        );
+
+    }
+
+
+    /* =====================================================
+       GENERATE PATIENT ID
+    ===================================================== */
+
+    function generatePatientId(
+        patients
+    ) {
+
+        let highest =
+            1000;
+
+
+        patients.forEach(
+            patient => {
+
+                const number =
+                    parseInt(
+                        String(
+                            patient.id || ""
+                        )
+                        .replace(
+                            "P-",
+                            ""
+                        )
+                    );
+
+                if (
+                    !isNaN(number) &&
+                    number > highest
+                ) {
+
+                    highest =
+                        number;
+
+                }
+
+            }
+        );
+
+
+        return `P-${highest + 1}`;
+
+    }
+
+
+    /* =====================================================
+       EDIT PATIENT
+    ===================================================== */
+
+    function editPatient(id) {
+
+        const patient =
+            getLocalPatients()
+                .find(
+                    p => p.id === id
+                );
+
+
+        if (!patient) {
+
+            alert(
+                "Patient record not found."
+            );
+
+            return;
+
+        }
+
+
+        openPatientModal(
+            patient
+        );
+
+    }
+
+
+    /* =====================================================
+       DELETE PATIENT
+    ===================================================== */
+
+    function deletePatient(id) {
+
+        const patient =
+            getLocalPatients()
+                .find(
+                    p => p.id === id
+                );
+
+
+        if (!patient) {
+            return;
+        }
+
+
+        const confirmed =
+            confirm(
+                `Are you sure you want to delete ${patient.name}?`
+            );
+
+
+        if (!confirmed) {
+            return;
+        }
+
+
+        const patients =
+            getLocalPatients()
+                .filter(
+                    p => p.id !== id
+                );
+
+
+        saveLocalPatients(
+            patients
+        );
+
+
+        renderPatients();
+
+        updatePatientStats();
+
+
+        alert(
+            "Patient deleted successfully."
+        );
+
+    }
+
+
+    /* =====================================================
+       VIEW PATIENT
+    ===================================================== */
+
+    function viewPatient(id) {
+
+        const patient =
+            getLocalPatients()
+                .find(
+                    p => p.id === id
+                );
+
+
+        if (!patient) {
+            return;
+        }
+
+
+        const profile =
+            document.getElementById(
+                "patientProfileContent"
+            );
+
+
+        const initials =
+            getInitials(
+                patient.name
+            );
+
+
+        profile.innerHTML = `
+
+            <div class="profile-top">
+
+                <div class="profile-avatar">
+                    ${safe(initials)}
+                </div>
+
+                <div class="profile-info">
+
+                    <h2>
+                        ${safe(patient.name)}
+                    </h2>
+
+                    <p>
+                        Patient ID:
+                        <strong>
+                            ${safe(patient.id)}
+                        </strong>
+                        &nbsp; • &nbsp;
+                        <span class="badge ${
+                            patient.status === "Active"
+                                ? "green"
+                                : patient.status === "Admitted"
+                                    ? "yellow"
+                                    : "blue"
+                        }">
+                            ${safe(patient.status)}
+                        </span>
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="profile-grid">
+
+                <div class="profile-item">
+                    <label>Age</label>
+                    <strong>
+                        ${safe(
+                            patient.age ||
+                            calculateAge(patient.dob) ||
+                            "—"
+                        )}
+                    </strong>
+                </div>
+
+                <div class="profile-item">
+                    <label>Gender</label>
+                    <strong>
+                        ${safe(patient.gender)}
+                    </strong>
+                </div>
+
+                <div class="profile-item">
+                    <label>Blood Group</label>
+                    <strong>
+                        ${safe(patient.bloodGroup || "—")}
+                    </strong>
+                </div>
+
+                <div class="profile-item">
+                    <label>Phone</label>
+                    <strong>
+                        ${safe(patient.phone)}
+                    </strong>
+                </div>
+
+                <div class="profile-item">
+                    <label>Email</label>
+                    <strong>
+                        ${safe(patient.email || "—")}
+                    </strong>
+                </div>
+
+                <div class="profile-item">
+                    <label>Department</label>
+                    <strong>
+                        ${safe(patient.department)}
+                    </strong>
+                </div>
+
+                <div class="profile-item">
+                    <label>Doctor</label>
+                    <strong>
+                        ${safe(patient.doctor || "—")}
+                    </strong>
+                </div>
+
+                <div class="profile-item">
+                    <label>Insurance</label>
+                    <strong>
+                        ${safe(patient.insurance || "—")}
+                    </strong>
+                </div>
+
+                <div class="profile-item">
+                    <label>Registration Date</label>
+                    <strong>
+                        ${formatDate(patient.registeredAt)}
+                    </strong>
+                </div>
+
+            </div>
+
+
+            <div class="medical-box">
+
+                <h4>
+                    🩺 Medical Information
+                </h4>
+
+                <p>
+                    <strong>Allergies:</strong>
+                    ${safe(patient.allergies || "None recorded")}
+                    <br>
+
+                    <strong>Existing Diseases:</strong>
+                    ${safe(patient.diseases || "None recorded")}
+                    <br>
+
+                    <strong>Medical Notes:</strong>
+                    ${safe(patient.notes || "No medical notes")}
+                </p>
+
+            </div>
+
+
+            <div class="medical-box">
+
+                <h4>
+                    🚨 Emergency Contact
+                </h4>
+
+                <p>
+                    <strong>Name:</strong>
+                    ${safe(patient.emergencyName || "—")}
+                    <br>
+
+                    <strong>Relationship:</strong>
+                    ${safe(patient.emergencyRelation || "—")}
+                    <br>
+
+                    <strong>Phone:</strong>
+                    ${safe(patient.emergencyPhone || "—")}
+                </p>
+
+            </div>
+
+
+            <div class="medical-box">
+
+                <h4>
+                    📍 Address
+                </h4>
+
+                <p>
+                    ${safe(patient.address || "No address recorded")}
+                </p>
+
+            </div>
+
+        `;
+
+
+        document
+            .getElementById(
+                "viewPatientModal"
+            )
+            .classList.add(
+                "show"
+            );
+
+    }
+
+
+    /* =====================================================
+       CLOSE VIEW
+    ===================================================== */
+
+    function closeViewModal() {
+
+        document
+            .getElementById(
+                "viewPatientModal"
+            )
+            .classList.remove(
+                "show"
+            );
+
+    }
+
+
+    /* =====================================================
+       DATE FORMAT
+    ===================================================== */
+
+    function formatDate(value) {
+
+        if (!value) {
+            return "—";
+        }
+
+
+        const date =
+            new Date(value);
+
+
+        if (isNaN(date)) {
+            return "—";
+        }
+
+
+        return date.toLocaleDateString(
+            "en-IN",
+            {
+                day: "2-digit",
+                month: "short",
+                year: "numeric"
+            }
+        );
+
+    }
+
+
+    /* =====================================================
+       FILTER RESET
+    ===================================================== */
+
+    function clearFilters() {
+
+        document.getElementById(
+            "patientSearch"
+        ).value = "";
+
+        document.getElementById(
+            "genderFilter"
+        ).value = "";
+
+        document.getElementById(
+            "departmentFilter"
+        ).value = "";
+
+        document.getElementById(
+            "statusFilter"
+        ).value = "";
+
+        currentPage = 1;
+
+        renderPatients();
+
+    }
+
+
+    /* =====================================================
+       GLOBAL SEARCH
+    ===================================================== */
+
+    document
+        .getElementById(
+            "globalSearch"
+        )
+        ?.addEventListener(
+            "input",
+            function () {
+
+                document.getElementById(
+                    "patientSearch"
+                ).value =
+                    this.value;
+
+                currentPage = 1;
+
+                renderPatients();
+
+            }
+        );
+
+
+    /* =====================================================
+       PAGINATION
+    ===================================================== */
+
+    function previousPage() {
+
+        if (currentPage > 1) {
+
+            currentPage--;
+
+            renderPatients();
+
+        }
+
+    }
+
+
+    function nextPage() {
+
+        const patients =
+            getLocalPatients();
+
+        const pages =
+            Math.ceil(
+                patients.length /
+                patientsPerPage
+            );
+
+
+        if (
+            currentPage <
+            pages
+        ) {
+
+            currentPage++;
+
+            renderPatients();
+
+        }
+
+    }
+
+
+    /* =====================================================
+       EXPORT PATIENTS CSV
+    ===================================================== */
+
+    function exportPatients() {
+
+        const patients =
+            getLocalPatients();
+
+
+        if (!patients.length) {
+
+            alert(
+                "No patient records available."
+            );
+
+            return;
+
+        }
+
+
+        const headers = [
+            "Patient ID",
+            "Name",
+            "Age",
+            "Gender",
+            "Phone",
+            "Email",
+            "Blood Group",
+            "Department",
+            "Doctor",
+            "Status",
+            "Insurance"
+        ];
+
+
+        const rows =
+            patients.map(
+                patient => [
+
+                    patient.id,
+                    patient.name,
+                    patient.age ||
+                        calculateAge(
+                            patient.dob
+                        ),
+                    patient.gender,
+                    patient.phone,
+                    patient.email,
+                    patient.bloodGroup,
+                    patient.department,
+                    patient.doctor,
+                    patient.status,
+                    patient.insurance
+
+                ]
+            );
+
+
+        const csv = [
+
+            headers,
+
+            ...rows
+
+        ]
+        .map(
+            row =>
+                row
+                    .map(
+                        value =>
+                            `"${String(
+                                value ?? ""
+                            ).replace(
+                                /"/g,
+                                '""'
+                            )}"`
+                    )
+                    .join(",")
+        )
+        .join("\n");
+
+
+        const blob =
+            new Blob(
+                [csv],
+                {
+                    type:
+                        "text/csv;charset=utf-8;"
+                }
+            );
+
+
+        const url =
+            URL.createObjectURL(
+                blob
+            );
+
+
+        const link =
+            document.createElement(
+                "a"
+            );
+
+
+        link.href =
+            url;
+
+        link.download =
+            "hospital-patients.csv";
+
+        link.click();
+
+
+        URL.revokeObjectURL(
+            url
+        );
+
+    }
+
+
+    /* =====================================================
+       NOTIFICATIONS
+    ===================================================== */
+
+    function showPatientNotifications() {
+
+        alert(
+            "Hospital Notifications\n\n" +
+            "• 2 ICU beds available\n" +
+            "• 8 medicines below reorder level\n" +
+            "• 14 laboratory reports pending\n" +
+            "• 6 insurance claims awaiting approval"
+        );
+
+    }
+
+
+    /* =====================================================
+       CLOSE MODALS WHEN CLICKING OUTSIDE
+    ===================================================== */
+
+    document.addEventListener(
+        "click",
+        function (event) {
+
+            const registerModal =
+                document.getElementById(
+                    "patientModal"
+                );
+
+            const viewModal =
+                document.getElementById(
+                    "viewPatientModal"
+                );
+
+
+            if (
+                event.target ===
+                registerModal
+            ) {
+
+                closePatientModal();
+
+            }
+
+
+            if (
+                event.target ===
+                viewModal
+            ) {
+
+                closeViewModal();
+
+            }
+
+        }
+    );
+
+</script>
+
+</body>
+</html>
