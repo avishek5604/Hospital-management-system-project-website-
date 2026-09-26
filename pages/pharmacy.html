@@ -1,0 +1,2456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Pharmacy Management | Hospital Management System</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+:root{
+    --primary:#2563eb;
+    --secondary:#0f766e;
+    --success:#16a34a;
+    --danger:#dc2626;
+    --warning:#d97706;
+    --dark:#172033;
+    --light:#f4f7fb;
+    --border:#e5e7eb;
+}
+
+body{
+    background:var(--light);
+    color:#1f2937;
+}
+
+/* ================= SIDEBAR ================= */
+
+.sidebar{
+    position:fixed;
+    left:0;
+    top:0;
+    width:250px;
+    height:100vh;
+    background:var(--dark);
+    color:white;
+    padding:20px 15px;
+    overflow-y:auto;
+    z-index:1000;
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:10px;
+    margin-bottom:25px;
+}
+
+.logo-icon{
+    width:42px;
+    height:42px;
+    background:var(--primary);
+    border-radius:10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:bold;
+    font-size:20px;
+}
+
+.logo h2{
+    font-size:18px;
+}
+
+.logo small{
+    color:#94a3b8;
+}
+
+.menu-title{
+    font-size:11px;
+    color:#64748b;
+    margin:20px 10px 8px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+}
+
+.menu a{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    color:#cbd5e1;
+    text-decoration:none;
+    padding:12px 13px;
+    border-radius:8px;
+    margin-bottom:5px;
+    font-size:14px;
+    transition:.2s;
+}
+
+.menu a:hover,
+.menu a.active{
+    background:var(--primary);
+    color:white;
+}
+
+/* ================= MAIN ================= */
+
+.main{
+    margin-left:250px;
+    min-height:100vh;
+}
+
+.topbar{
+    height:70px;
+    background:white;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:0 25px;
+    position:sticky;
+    top:0;
+    z-index:500;
+}
+
+.topbar h1{
+    font-size:22px;
+}
+
+.top-right{
+    display:flex;
+    align-items:center;
+    gap:20px;
+}
+
+.notification{
+    font-size:20px;
+    cursor:pointer;
+}
+
+.profile{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.avatar{
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    background:var(--primary);
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-weight:bold;
+}
+
+.content{
+    padding:25px;
+}
+
+/* ================= BUTTONS ================= */
+
+button{
+    border:none;
+    cursor:pointer;
+    border-radius:7px;
+    padding:10px 15px;
+    font-size:13px;
+}
+
+.btn-primary{
+    background:var(--primary);
+    color:white;
+}
+
+.btn-success{
+    background:var(--success);
+    color:white;
+}
+
+.btn-danger{
+    background:var(--danger);
+    color:white;
+}
+
+.btn-warning{
+    background:var(--warning);
+    color:white;
+}
+
+.btn-secondary{
+    background:#64748b;
+    color:white;
+}
+
+/* ================= STATS ================= */
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:18px;
+    margin-bottom:25px;
+}
+
+.stat-card{
+    background:white;
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:18px;
+    box-shadow:0 2px 7px rgba(0,0,0,.04);
+}
+
+.stat-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.stat-card p{
+    color:#64748b;
+    font-size:12px;
+}
+
+.stat-card h2{
+    font-size:25px;
+    margin-top:9px;
+}
+
+.stat-icon{
+    width:44px;
+    height:44px;
+    border-radius:10px;
+    background:#eff6ff;
+    color:var(--primary);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:20px;
+}
+
+/* ================= QUICK ACTIONS ================= */
+
+.quick-actions{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:12px;
+    margin-bottom:25px;
+}
+
+.quick-action{
+    background:white;
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:16px;
+    text-align:center;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.quick-action:hover{
+    transform:translateY(-2px);
+    box-shadow:0 5px 15px rgba(0,0,0,.08);
+}
+
+.quick-action .icon{
+    font-size:25px;
+    margin-bottom:7px;
+}
+
+.quick-action strong{
+    font-size:13px;
+}
+
+/* ================= TABLE ================= */
+
+.table-card{
+    background:white;
+    border:1px solid var(--border);
+    border-radius:12px;
+    overflow:hidden;
+    margin-bottom:25px;
+}
+
+.table-header{
+    padding:18px;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+}
+
+.table-header h3{
+    font-size:17px;
+}
+
+.table-header small{
+    color:#64748b;
+}
+
+.table-responsive{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:1000px;
+}
+
+th,td{
+    padding:13px 15px;
+    border-bottom:1px solid var(--border);
+    text-align:left;
+    font-size:13px;
+}
+
+th{
+    background:#f8fafc;
+    color:#475569;
+    font-size:11px;
+    text-transform:uppercase;
+}
+
+tr:hover{
+    background:#f8fafc;
+}
+
+.badge{
+    display:inline-block;
+    padding:5px 9px;
+    border-radius:20px;
+    font-size:10px;
+    font-weight:bold;
+}
+
+.badge-green{
+    background:#dcfce7;
+    color:#166534;
+}
+
+.badge-red{
+    background:#fee2e2;
+    color:#991b1b;
+}
+
+.badge-yellow{
+    background:#fef3c7;
+    color:#92400e;
+}
+
+.badge-blue{
+    background:#dbeafe;
+    color:#1e40af;
+}
+
+.actions{
+    display:flex;
+    gap:5px;
+}
+
+.action-btn{
+    padding:6px 9px;
+    font-size:11px;
+}
+
+/* ================= SEARCH ================= */
+
+.toolbar{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.search-box{
+    flex:1;
+    min-width:250px;
+    display:flex;
+    gap:8px;
+}
+
+input,
+select,
+textarea{
+    width:100%;
+    padding:10px 12px;
+    border:1px solid #d1d5db;
+    border-radius:7px;
+    outline:none;
+    background:white;
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+    border-color:var(--primary);
+}
+
+/* ================= TWO COLUMNS ================= */
+
+.two-columns{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+}
+
+.stock-warning{
+    padding:15px;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.stock-warning:last-child{
+    border-bottom:none;
+}
+
+/* ================= MODAL ================= */
+
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(15,23,42,.65);
+    z-index:2000;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+}
+
+.modal.active{
+    display:flex;
+}
+
+.modal-box{
+    background:white;
+    width:900px;
+    max-width:100%;
+    max-height:90vh;
+    overflow-y:auto;
+    border-radius:12px;
+    padding:25px;
+}
+
+.modal-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.close{
+    background:#f1f5f9;
+    font-size:20px;
+    padding:5px 10px;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:15px;
+}
+
+.form-group label{
+    display:block;
+    font-size:12px;
+    font-weight:bold;
+    margin-bottom:6px;
+}
+
+.form-full{
+    grid-column:1/-1;
+}
+
+.modal-footer{
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+    margin-top:20px;
+}
+
+/* ================= ALERT ================= */
+
+.alert{
+    display:none;
+    padding:12px 15px;
+    border-radius:8px;
+    margin-bottom:15px;
+}
+
+.alert.success{
+    display:block;
+    background:#dcfce7;
+    color:#166534;
+}
+
+.alert.error{
+    display:block;
+    background:#fee2e2;
+    color:#991b1b;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:1200px){
+
+    .stats{
+        grid-template-columns:repeat(3,1fr);
+    }
+
+    .quick-actions{
+        grid-template-columns:repeat(3,1fr);
+    }
+}
+
+@media(max-width:900px){
+
+    .sidebar{
+        width:70px;
+        padding:15px 8px;
+    }
+
+    .logo h2,
+    .logo small,
+    .menu-title,
+    .menu a span{
+        display:none;
+    }
+
+    .logo{
+        justify-content:center;
+    }
+
+    .menu a{
+        justify-content:center;
+    }
+
+    .main{
+        margin-left:70px;
+    }
+
+    .two-columns{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:650px){
+
+    .content{
+        padding:15px;
+    }
+
+    .topbar{
+        padding:0 15px;
+    }
+
+    .topbar h1{
+        font-size:17px;
+    }
+
+    .stats{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .quick-actions{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+    .form-full{
+        grid-column:auto;
+    }
+}
+
+@media print{
+
+    .sidebar,
+    .topbar,
+    .quick-actions,
+    .toolbar,
+    button{
+        display:none !important;
+    }
+
+    .main{
+        margin-left:0;
+    }
+
+    .content{
+        padding:0;
+    }
+
+    .table-card{
+        box-shadow:none;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ================= SIDEBAR ================= -->
+
+<aside class="sidebar">
+
+    <div class="logo">
+
+        <div class="logo-icon">H+</div>
+
+        <div>
+            <h2>Medicare HMS</h2>
+            <small>Hospital System</small>
+        </div>
+
+    </div>
+
+    <div class="menu-title">Main</div>
+
+    <nav class="menu">
+
+        <!-- ROOT FILES -->
+        <a href="../dashboard.html">
+            🏠 <span>Dashboard</span>
+        </a>
+
+        <!-- PAGES FOLDER -->
+        <a href="patient.html">
+            👥 <span>Patients</span>
+        </a>
+
+        <a href="doctor.html">
+            👨‍⚕️ <span>Doctors</span>
+        </a>
+
+        <a href="appointment.html">
+            📅 <span>Appointments</span>
+        </a>
+
+        <a href="opd.html">
+            🏥 <span>OPD</span>
+        </a>
+
+        <a href="ipd.html">
+            🛏️ <span>IPD</span>
+        </a>
+
+        <a href="pharmacy.html" class="active">
+            💊 <span>Pharmacy</span>
+        </a>
+
+        <a href="laboratory.html">
+            🧪 <span>Laboratory</span>
+        </a>
+
+        <a href="billing.html">
+            💳 <span>Billing</span>
+        </a>
+
+        <a href="reports.html">
+            📊 <span>Reports</span>
+        </a>
+
+    </nav>
+
+    <div class="menu-title">Administration</div>
+
+    <nav class="menu">
+
+        <a href="staff.html">
+            👨‍💼 <span>Staff</span>
+        </a>
+
+        <a href="inventory.html">
+            📦 <span>Inventory</span>
+        </a>
+
+        <a href="settings.html">
+            ⚙️ <span>Settings</span>
+        </a>
+
+        <a href="login.html">
+            🚪 <span>Logout</span>
+        </a>
+
+    </nav>
+
+</aside>
+
+
+<!-- ================= MAIN ================= -->
+
+<main class="main">
+
+<header class="topbar">
+
+    <h1>Pharmacy Management</h1>
+
+    <div class="top-right">
+
+        <div class="notification">🔔</div>
+
+        <div class="profile">
+
+            <div class="avatar">AK</div>
+
+            <div>
+                <strong>Admin</strong><br>
+                <small>Administrator</small>
+            </div>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<section class="content">
+
+<div id="alert" class="alert"></div>
+
+
+<!-- ================= STATISTICS ================= -->
+
+<div class="stats">
+
+    <div class="stat-card">
+
+        <div class="stat-top">
+
+            <div>
+                <p>Total Medicines</p>
+                <h2 id="totalMedicines">1,248</h2>
+            </div>
+
+            <div class="stat-icon">💊</div>
+
+        </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div class="stat-top">
+
+            <div>
+                <p>Low Stock</p>
+                <h2>37</h2>
+            </div>
+
+            <div class="stat-icon">⚠️</div>
+
+        </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div class="stat-top">
+
+            <div>
+                <p>Expiring Soon</p>
+                <h2>12</h2>
+            </div>
+
+            <div class="stat-icon">⏳</div>
+
+        </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div class="stat-top">
+
+            <div>
+                <p>Today's Sales</p>
+                <h2>₹48,750</h2>
+            </div>
+
+            <div class="stat-icon">💰</div>
+
+        </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div class="stat-top">
+
+            <div>
+                <p>Pending Orders</p>
+                <h2>18</h2>
+            </div>
+
+            <div class="stat-icon">📦</div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ================= QUICK ACTIONS ================= -->
+
+<div class="quick-actions">
+
+    <div class="quick-action" onclick="openMedicineModal()">
+        <div class="icon">➕</div>
+        <strong>Add Medicine</strong>
+    </div>
+
+    <div class="quick-action" onclick="openSaleModal()">
+        <div class="icon">🧾</div>
+        <strong>New Sale</strong>
+    </div>
+
+    <div class="quick-action" onclick="openPurchaseModal()">
+        <div class="icon">📥</div>
+        <strong>Purchase</strong>
+    </div>
+
+    <div class="quick-action"
+         onclick="showAlert('Prescription module opened.','success')">
+        <div class="icon">📋</div>
+        <strong>Prescription</strong>
+    </div>
+
+    <div class="quick-action"
+         onclick="showAlert('Stock audit started.','success')">
+        <div class="icon">🔍</div>
+        <strong>Stock Audit</strong>
+    </div>
+
+</div>
+
+
+<!-- ================= SEARCH ================= -->
+
+<div class="toolbar">
+
+    <div class="search-box">
+
+        <input
+            type="text"
+            id="medicineSearch"
+            placeholder="Search medicine, batch, manufacturer..."
+            onkeyup="searchMedicine()">
+
+        <button
+            class="btn-primary"
+            onclick="searchMedicine()">
+            Search
+        </button>
+
+    </div>
+
+
+    <select
+        id="categoryFilter"
+        onchange="filterCategory()"
+        style="max-width:200px">
+
+        <option value="all">All Categories</option>
+        <option value="tablet">Tablet</option>
+        <option value="capsule">Capsule</option>
+        <option value="syrup">Syrup</option>
+        <option value="injection">Injection</option>
+        <option value="ointment">Ointment</option>
+
+    </select>
+
+
+    <button
+        class="btn-primary"
+        onclick="openMedicineModal()">
+        + Add Medicine
+    </button>
+
+</div>
+
+
+<!-- ================= MEDICINE INVENTORY ================= -->
+
+<div class="table-card">
+
+<div class="table-header">
+
+    <div>
+
+        <h3>Medicine Inventory</h3>
+
+        <small>
+            Medicine stock and batch management
+        </small>
+
+    </div>
+
+    <button
+        class="btn-secondary"
+        onclick="printInventory()">
+        🖨 Print
+    </button>
+
+</div>
+
+
+<div class="table-responsive">
+
+<table id="medicineTable">
+
+<thead>
+
+<tr>
+    <th>Medicine</th>
+    <th>Category</th>
+    <th>Batch No.</th>
+    <th>Manufacturer</th>
+    <th>Expiry</th>
+    <th>MRP</th>
+    <th>Stock</th>
+    <th>Status</th>
+    <th>Actions</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr data-category="tablet">
+
+<td>
+<strong>Paracetamol 500mg</strong><br>
+<small>Tablet</small>
+</td>
+
+<td>Tablet</td>
+<td>PCM2026A</td>
+<td>Sun Pharma</td>
+<td>Dec 2027</td>
+<td>₹25</td>
+<td>450</td>
+
+<td>
+<span class="badge badge-green">
+In Stock
+</span>
+</td>
+
+<td>
+
+<div class="actions">
+
+<button
+class="btn-primary action-btn"
+onclick="viewMedicine('Paracetamol 500mg')">
+View
+</button>
+
+<button
+class="btn-warning action-btn"
+onclick="editMedicine('Paracetamol 500mg')">
+Edit
+</button>
+
+</div>
+
+</td>
+
+</tr>
+
+
+<tr data-category="capsule">
+
+<td>
+<strong>Amoxicillin 500mg</strong><br>
+<small>Capsule</small>
+</td>
+
+<td>Capsule</td>
+<td>AMX2026B</td>
+<td>Cipla</td>
+<td>Oct 2027</td>
+<td>₹85</td>
+<td>72</td>
+
+<td>
+<span class="badge badge-yellow">
+Low Stock
+</span>
+</td>
+
+<td>
+
+<div class="actions">
+
+<button
+class="btn-primary action-btn"
+onclick="viewMedicine('Amoxicillin 500mg')">
+View
+</button>
+
+<button
+class="btn-warning action-btn"
+onclick="editMedicine('Amoxicillin 500mg')">
+Edit
+</button>
+
+</div>
+
+</td>
+
+</tr>
+
+
+<tr data-category="syrup">
+
+<td>
+<strong>Cough Syrup 100ml</strong><br>
+<small>Syrup</small>
+</td>
+
+<td>Syrup</td>
+<td>CS2026C</td>
+<td>Abbott</td>
+<td>Nov 2026</td>
+<td>₹120</td>
+<td>25</td>
+
+<td>
+<span class="badge badge-yellow">
+Low Stock
+</span>
+</td>
+
+<td>
+
+<div class="actions">
+
+<button
+class="btn-primary action-btn"
+onclick="viewMedicine('Cough Syrup 100ml')">
+View
+</button>
+
+<button
+class="btn-warning action-btn"
+onclick="editMedicine('Cough Syrup 100ml')">
+Edit
+</button>
+
+</div>
+
+</td>
+
+</tr>
+
+
+<tr data-category="injection">
+
+<td>
+<strong>Ceftriaxone 1g</strong><br>
+<small>Injection</small>
+</td>
+
+<td>Injection</td>
+<td>CEF2026D</td>
+<td>Sun Pharma</td>
+<td>Mar 2028</td>
+<td>₹145</td>
+<td>210</td>
+
+<td>
+<span class="badge badge-green">
+In Stock
+</span>
+</td>
+
+<td>
+
+<div class="actions">
+
+<button
+class="btn-primary action-btn"
+onclick="viewMedicine('Ceftriaxone 1g')">
+View
+</button>
+
+<button
+class="btn-warning action-btn"
+onclick="editMedicine('Ceftriaxone 1g')">
+Edit
+</button>
+
+</div>
+
+</td>
+
+</tr>
+
+
+<tr data-category="ointment">
+
+<td>
+<strong>Antiseptic Cream</strong><br>
+<small>Ointment</small>
+</td>
+
+<td>Ointment</td>
+<td>ANT2026E</td>
+<td>GSK</td>
+<td>Sep 2026</td>
+<td>₹75</td>
+<td>8</td>
+
+<td>
+<span class="badge badge-red">
+Critical
+</span>
+</td>
+
+<td>
+
+<div class="actions">
+
+<button
+class="btn-primary action-btn"
+onclick="viewMedicine('Antiseptic Cream')">
+View
+</button>
+
+<button
+class="btn-warning action-btn"
+onclick="editMedicine('Antiseptic Cream')">
+Edit
+</button>
+
+</div>
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+
+<!-- ================= ALERTS ================= -->
+
+<div class="two-columns">
+
+
+<div class="table-card">
+
+<div class="table-header">
+
+<div>
+<h3>Low Stock Alert</h3>
+<small>Medicines requiring restocking</small>
+</div>
+
+<button
+class="btn-warning"
+onclick="showAlert('Purchase order preparation started.','success')">
+Restock
+</button>
+
+</div>
+
+
+<div class="stock-warning">
+
+<div>
+<strong>Amoxicillin 500mg</strong><br>
+<small>Current stock: 72</small>
+</div>
+
+<span class="badge badge-yellow">
+Low
+</span>
+
+</div>
+
+
+<div class="stock-warning">
+
+<div>
+<strong>Cough Syrup 100ml</strong><br>
+<small>Current stock: 25</small>
+</div>
+
+<span class="badge badge-yellow">
+Low
+</span>
+
+</div>
+
+
+<div class="stock-warning">
+
+<div>
+<strong>Antiseptic Cream</strong><br>
+<small>Current stock: 8</small>
+</div>
+
+<span class="badge badge-red">
+Critical
+</span>
+
+</div>
+
+</div>
+
+
+<div class="table-card">
+
+<div class="table-header">
+
+<div>
+<h3>Expiry Alert</h3>
+<small>Medicines nearing expiry</small>
+</div>
+
+<button
+class="btn-danger"
+onclick="showAlert('Expiry report generated.','success')">
+Report
+</button>
+
+</div>
+
+
+<div class="stock-warning">
+
+<div>
+<strong>Antiseptic Cream</strong><br>
+<small>Expiry: Sep 2026</small>
+</div>
+
+<span class="badge badge-red">
+Critical
+</span>
+
+</div>
+
+
+<div class="stock-warning">
+
+<div>
+<strong>Cough Syrup 100ml</strong><br>
+<small>Expiry: Nov 2026</small>
+</div>
+
+<span class="badge badge-yellow">
+Warning
+</span>
+
+</div>
+
+
+<div class="stock-warning">
+
+<div>
+<strong>Vitamin Tablets</strong><br>
+<small>Expiry: Dec 2026</small>
+</div>
+
+<span class="badge badge-yellow">
+Warning
+</span>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- ================= SALES ================= -->
+
+<div class="table-card">
+
+<div class="table-header">
+
+<div>
+<h3>Recent Pharmacy Sales</h3>
+<small>Latest medicine transactions</small>
+</div>
+
+<button
+class="btn-primary"
+onclick="openSaleModal()">
++ New Sale
+</button>
+
+</div>
+
+
+<div class="table-responsive">
+
+<table>
+
+<thead>
+
+<tr>
+<th>Invoice</th>
+<th>Date</th>
+<th>Patient</th>
+<th>Medicine</th>
+<th>Qty</th>
+<th>Amount</th>
+<th>Payment</th>
+<th>Status</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+<td>PH-5001</td>
+<td>27 Sep 2026</td>
+<td>Raj Kumar</td>
+<td>Paracetamol 500mg</td>
+<td>10</td>
+<td>₹250</td>
+<td>Cash</td>
+<td>
+<span class="badge badge-green">Paid</span>
+</td>
+</tr>
+
+
+<tr>
+<td>PH-5002</td>
+<td>27 Sep 2026</td>
+<td>Sunita Devi</td>
+<td>Amoxicillin 500mg</td>
+<td>10</td>
+<td>₹850</td>
+<td>UPI</td>
+<td>
+<span class="badge badge-green">Paid</span>
+</td>
+</tr>
+
+
+<tr>
+<td>PH-5003</td>
+<td>27 Sep 2026</td>
+<td>Mohan Prasad</td>
+<td>Ceftriaxone 1g</td>
+<td>5</td>
+<td>₹725</td>
+<td>Insurance</td>
+<td>
+<span class="badge badge-yellow">Pending</span>
+</td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+
+<!-- ================= PURCHASE ORDERS ================= -->
+
+<div class="table-card">
+
+<div class="table-header">
+
+<div>
+<h3>Supplier Purchase Orders</h3>
+<small>Recent medicine procurement</small>
+</div>
+
+<button
+class="btn-primary"
+onclick="openPurchaseModal()">
++ New Purchase
+</button>
+
+</div>
+
+
+<div class="table-responsive">
+
+<table>
+
+<thead>
+
+<tr>
+<th>PO Number</th>
+<th>Supplier</th>
+<th>Order Date</th>
+<th>Items</th>
+<th>Total</th>
+<th>Delivery</th>
+<th>Status</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+<td>PO-2026-001</td>
+<td>MedPlus Distributors</td>
+<td>27 Sep 2026</td>
+<td>25</td>
+<td>₹85,600</td>
+<td>29 Sep 2026</td>
+<td>
+<span class="badge badge-yellow">Pending</span>
+</td>
+</tr>
+
+
+<tr>
+<td>PO-2026-002</td>
+<td>ABC Pharma Ltd.</td>
+<td>26 Sep 2026</td>
+<td>40</td>
+<td>₹1,25,400</td>
+<td>28 Sep 2026</td>
+<td>
+<span class="badge badge-blue">Processing</span>
+</td>
+</tr>
+
+
+<tr>
+<td>PO-2026-003</td>
+<td>HealthCare Distributors</td>
+<td>24 Sep 2026</td>
+<td>35</td>
+<td>₹92,300</td>
+<td>27 Sep 2026</td>
+<td>
+<span class="badge badge-green">Received</span>
+</td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</section>
+
+</main>
+
+
+<!-- ================= ADD MEDICINE MODAL ================= -->
+
+<div class="modal" id="medicineModal">
+
+<div class="modal-box">
+
+<div class="modal-header">
+
+<div>
+<h2>Add New Medicine</h2>
+<small>Add medicine and inventory information</small>
+</div>
+
+<button
+class="close"
+onclick="closeModal('medicineModal')">
+×
+</button>
+
+</div>
+
+
+<form id="medicineForm">
+
+<div class="form-grid">
+
+<div class="form-group">
+
+<label>Medicine Name *</label>
+
+<input
+type="text"
+id="medicineName"
+required
+placeholder="Medicine name">
+
+</div>
+
+
+<div class="form-group">
+
+<label>Category *</label>
+
+<select id="medicineCategory" required>
+
+<option value="">Select Category</option>
+<option>Tablet</option>
+<option>Capsule</option>
+<option>Syrup</option>
+<option>Injection</option>
+<option>Ointment</option>
+<option>Other</option>
+
+</select>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Batch Number *</label>
+
+<input
+type="text"
+id="batchNumber"
+required
+placeholder="Batch number">
+
+</div>
+
+
+<div class="form-group">
+
+<label>Manufacturer *</label>
+
+<input
+type="text"
+id="manufacturer"
+required
+placeholder="Manufacturer">
+
+</div>
+
+
+<div class="form-group">
+
+<label>Expiry Date *</label>
+
+<input
+type="date"
+id="expiryDate"
+required>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Purchase Price *</label>
+
+<input
+type="number"
+id="purchasePrice"
+min="0"
+step="0.01"
+required
+placeholder="₹">
+
+</div>
+
+
+<div class="form-group">
+
+<label>MRP *</label>
+
+<input
+type="number"
+id="mrp"
+min="0"
+step="0.01"
+required
+placeholder="₹">
+
+</div>
+
+
+<div class="form-group">
+
+<label>Initial Stock *</label>
+
+<input
+type="number"
+id="initialStock"
+min="0"
+required
+placeholder="Quantity">
+
+</div>
+
+
+<div class="form-group">
+
+<label>Minimum Stock Level</label>
+
+<input
+type="number"
+id="minimumStock"
+min="0"
+value="20">
+
+</div>
+
+
+<div class="form-group">
+
+<label>Supplier</label>
+
+<select id="supplier">
+
+<option>MedPlus Distributors</option>
+<option>ABC Pharma Ltd.</option>
+<option>HealthCare Distributors</option>
+<option>Local Pharma Supplier</option>
+
+</select>
+
+</div>
+
+
+<div class="form-group form-full">
+
+<label>Description</label>
+
+<textarea
+id="medicineDescription"
+rows="3"
+placeholder="Medicine description"></textarea>
+
+</div>
+
+</div>
+
+
+<div class="modal-footer">
+
+<button
+type="button"
+class="btn-secondary"
+onclick="closeModal('medicineModal')">
+Cancel
+</button>
+
+<button
+type="submit"
+class="btn-primary">
+Save Medicine
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+
+<!-- ================= SALE MODAL ================= -->
+
+<div class="modal" id="saleModal">
+
+<div class="modal-box">
+
+<div class="modal-header">
+
+<div>
+<h2>New Pharmacy Sale</h2>
+<small>Create medicine sales invoice</small>
+</div>
+
+<button
+class="close"
+onclick="closeModal('saleModal')">
+×
+</button>
+
+</div>
+
+
+<form id="saleForm">
+
+<div class="form-grid">
+
+<div class="form-group">
+
+<label>Patient Name *</label>
+
+<input
+type="text"
+id="salePatient"
+required
+placeholder="Patient name">
+
+</div>
+
+
+<div class="form-group">
+
+<label>UHID</label>
+
+<input
+type="text"
+id="saleUHID"
+placeholder="UHID">
+
+</div>
+
+
+<div class="form-group">
+
+<label>Medicine *</label>
+
+<select id="saleMedicine" required>
+
+<option value="">Select Medicine</option>
+<option>Paracetamol 500mg</option>
+<option>Amoxicillin 500mg</option>
+<option>Cough Syrup 100ml</option>
+<option>Ceftriaxone 1g</option>
+<option>Antiseptic Cream</option>
+
+</select>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Quantity *</label>
+
+<input
+type="number"
+id="saleQuantity"
+min="1"
+value="1"
+required>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Payment Method *</label>
+
+<select id="salePayment">
+
+<option>Cash</option>
+<option>UPI</option>
+<option>Card</option>
+<option>Insurance</option>
+<option>Credit</option>
+
+</select>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Discount</label>
+
+<input
+type="number"
+id="saleDiscount"
+min="0"
+value="0">
+
+</div>
+
+
+<div class="form-group form-full">
+
+<label>Notes</label>
+
+<textarea
+id="saleNotes"
+rows="3"
+placeholder="Additional notes"></textarea>
+
+</div>
+
+</div>
+
+
+<div class="modal-footer">
+
+<button
+type="button"
+class="btn-secondary"
+onclick="closeModal('saleModal')">
+Cancel
+</button>
+
+<button
+type="submit"
+class="btn-success">
+Generate Invoice
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+
+<!-- ================= PURCHASE MODAL ================= -->
+
+<div class="modal" id="purchaseModal">
+
+<div class="modal-box">
+
+<div class="modal-header">
+
+<div>
+<h2>New Purchase Order</h2>
+<small>Create supplier purchase order</small>
+</div>
+
+<button
+class="close"
+onclick="closeModal('purchaseModal')">
+×
+</button>
+
+</div>
+
+
+<form id="purchaseForm">
+
+<div class="form-grid">
+
+<div class="form-group">
+
+<label>Supplier *</label>
+
+<select id="purchaseSupplier" required>
+
+<option>MedPlus Distributors</option>
+<option>ABC Pharma Ltd.</option>
+<option>HealthCare Distributors</option>
+
+</select>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Expected Delivery</label>
+
+<input
+type="date"
+id="deliveryDate">
+
+</div>
+
+
+<div class="form-group">
+
+<label>Medicine *</label>
+
+<select id="purchaseMedicine">
+
+<option>Paracetamol 500mg</option>
+<option>Amoxicillin 500mg</option>
+<option>Cough Syrup 100ml</option>
+<option>Ceftriaxone 1g</option>
+<option>Antiseptic Cream</option>
+
+</select>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Quantity *</label>
+
+<input
+type="number"
+id="purchaseQuantity"
+min="1"
+value="100">
+
+</div>
+
+
+<div class="form-group">
+
+<label>Unit Purchase Price</label>
+
+<input
+type="number"
+id="unitPrice"
+min="0"
+step="0.01"
+placeholder="₹">
+
+</div>
+
+
+<div class="form-group">
+
+<label>Tax %</label>
+
+<input
+type="number"
+id="purchaseTax"
+min="0"
+value="5">
+
+</div>
+
+
+<div class="form-group form-full">
+
+<label>Purchase Notes</label>
+
+<textarea
+id="purchaseNotes"
+rows="3"
+placeholder="Purchase order notes"></textarea>
+
+</div>
+
+</div>
+
+
+<div class="modal-footer">
+
+<button
+type="button"
+class="btn-secondary"
+onclick="closeModal('purchaseModal')">
+Cancel
+</button>
+
+<button
+type="submit"
+class="btn-primary">
+Create Purchase Order
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+
+<!-- ================= VIEW MEDICINE ================= -->
+
+<div class="modal" id="viewMedicineModal">
+
+<div class="modal-box">
+
+<div class="modal-header">
+
+<h2>Medicine Details</h2>
+
+<button
+class="close"
+onclick="closeModal('viewMedicineModal')">
+×
+</button>
+
+</div>
+
+<div id="medicineDetails"></div>
+
+<div class="modal-footer">
+
+<button
+class="btn-secondary"
+onclick="closeModal('viewMedicineModal')">
+Close
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<script>
+
+/* ================= MODALS ================= */
+
+function openMedicineModal(){
+
+    document
+    .getElementById("medicineModal")
+    .classList.add("active");
+
+}
+
+function openSaleModal(){
+
+    document
+    .getElementById("saleModal")
+    .classList.add("active");
+
+}
+
+function openPurchaseModal(){
+
+    document
+    .getElementById("purchaseModal")
+    .classList.add("active");
+
+}
+
+function closeModal(id){
+
+    document
+    .getElementById(id)
+    .classList.remove("active");
+
+}
+
+
+/* ================= ALERT ================= */
+
+function showAlert(message,type="success"){
+
+    const alertBox =
+        document.getElementById("alert");
+
+    alertBox.textContent=message;
+
+    alertBox.className =
+        "alert " +
+        (type==="error" ? "error" : "success");
+
+    setTimeout(function(){
+
+        alertBox.className="alert";
+
+    },4000);
+
+}
+
+
+/* ================= SEARCH ================= */
+
+function searchMedicine(){
+
+    const search =
+        document
+        .getElementById("medicineSearch")
+        .value
+        .toLowerCase();
+
+    const rows =
+        document.querySelectorAll(
+            "#medicineTable tbody tr"
+        );
+
+    rows.forEach(function(row){
+
+        const text =
+            row.textContent.toLowerCase();
+
+        row.style.display =
+            text.includes(search)
+            ? ""
+            : "none";
+
+    });
+
+}
+
+
+/* ================= CATEGORY FILTER ================= */
+
+function filterCategory(){
+
+    const category =
+        document
+        .getElementById("categoryFilter")
+        .value;
+
+    const rows =
+        document.querySelectorAll(
+            "#medicineTable tbody tr"
+        );
+
+    rows.forEach(function(row){
+
+        const rowCategory =
+            row.dataset.category;
+
+        if(
+            category === "all" ||
+            rowCategory === category
+        ){
+
+            row.style.display="";
+
+        }else{
+
+            row.style.display="none";
+
+        }
+
+    });
+
+}
+
+
+/* ================= VIEW MEDICINE ================= */
+
+function viewMedicine(name){
+
+    document
+    .getElementById("medicineDetails")
+    .innerHTML = `
+
+    <div style="
+        display:grid;
+        grid-template-columns:repeat(2,1fr);
+        gap:18px;
+    ">
+
+        <div>
+            <strong>Medicine</strong>
+            <p>${name}</p>
+        </div>
+
+        <div>
+            <strong>Category</strong>
+            <p>Pharmaceutical</p>
+        </div>
+
+        <div>
+            <strong>Batch Number</strong>
+            <p>PCM2026A</p>
+        </div>
+
+        <div>
+            <strong>Manufacturer</strong>
+            <p>Sun Pharma</p>
+        </div>
+
+        <div>
+            <strong>Current Stock</strong>
+            <p>450 Units</p>
+        </div>
+
+        <div>
+            <strong>MRP</strong>
+            <p>₹25</p>
+        </div>
+
+        <div>
+            <strong>Expiry</strong>
+            <p>December 2027</p>
+        </div>
+
+        <div>
+            <strong>Supplier</strong>
+            <p>MedPlus Distributors</p>
+        </div>
+
+        <div style="grid-column:1/-1">
+
+            <strong>Description</strong>
+
+            <p>
+                Medicine inventory record maintained
+                by the hospital pharmacy.
+            </p>
+
+        </div>
+
+    </div>
+
+    `;
+
+    document
+    .getElementById("viewMedicineModal")
+    .classList.add("active");
+
+}
+
+
+/* ================= EDIT MEDICINE ================= */
+
+function editMedicine(name){
+
+    openMedicineModal();
+
+    document
+    .getElementById("medicineName")
+    .value=name;
+
+    showAlert(
+        "Editing medicine: "+name,
+        "success"
+    );
+
+}
+
+
+/* ================= ADD MEDICINE ================= */
+
+document
+.getElementById("medicineForm")
+.addEventListener("submit",function(event){
+
+    event.preventDefault();
+
+    const name =
+        document
+        .getElementById("medicineName")
+        .value;
+
+    if(!name){
+
+        showAlert(
+            "Please enter medicine name.",
+            "error"
+        );
+
+        return;
+
+    }
+
+    showAlert(
+        name+
+        " added to pharmacy inventory successfully.",
+        "success"
+    );
+
+    closeModal("medicineModal");
+
+    this.reset();
+
+    increaseMedicineCount();
+
+});
+
+
+/* ================= SALE ================= */
+
+document
+.getElementById("saleForm")
+.addEventListener("submit",function(event){
+
+    event.preventDefault();
+
+    const patient =
+        document
+        .getElementById("salePatient")
+        .value;
+
+    const medicine =
+        document
+        .getElementById("saleMedicine")
+        .value;
+
+    const quantity =
+        document
+        .getElementById("saleQuantity")
+        .value;
+
+    if(!patient || !medicine){
+
+        showAlert(
+            "Please complete required sale fields.",
+            "error"
+        );
+
+        return;
+
+    }
+
+    const invoice =
+        "PH-" +
+        Math.floor(
+            1000 +
+            Math.random()*9000
+        );
+
+    showAlert(
+        "Invoice "+
+        invoice+
+        " generated successfully for "+
+        patient+
+        " ("+
+        quantity+
+        " units).",
+        "success"
+    );
+
+    closeModal("saleModal");
+
+    this.reset();
+
+});
+
+
+/* ================= PURCHASE ================= */
+
+document
+.getElementById("purchaseForm")
+.addEventListener("submit",function(event){
+
+    event.preventDefault();
+
+    const supplier =
+        document
+        .getElementById("purchaseSupplier")
+        .value;
+
+    const medicine =
+        document
+        .getElementById("purchaseMedicine")
+        .value;
+
+    const quantity =
+        document
+        .getElementById("purchaseQuantity")
+        .value;
+
+    const po =
+        "PO-2026-" +
+        Math.floor(
+            100 +
+            Math.random()*900
+        );
+
+    showAlert(
+        "Purchase order "+
+        po+
+        " created for "+
+        quantity+
+        " units of "+
+        medicine+
+        " from "+
+        supplier+".",
+        "success"
+    );
+
+    closeModal("purchaseModal");
+
+    this.reset();
+
+});
+
+
+/* ================= MEDICINE COUNT ================= */
+
+function increaseMedicineCount(){
+
+    const element =
+        document
+        .getElementById("totalMedicines");
+
+    let value =
+        parseInt(
+            element.textContent.replace(",","")
+        );
+
+    value++;
+
+    element.textContent =
+        value.toLocaleString();
+
+}
+
+
+/* ================= PRINT ================= */
+
+function printInventory(){
+
+    window.print();
+
+}
+
+
+/* ================= OUTSIDE CLICK ================= */
+
+window.onclick=function(event){
+
+    const modals =
+        document.querySelectorAll(".modal");
+
+    modals.forEach(function(modal){
+
+        if(event.target === modal){
+
+            modal.classList.remove("active");
+
+        }
+
+    });
+
+};
+
+
+/* ================= ESCAPE ================= */
+
+document.addEventListener(
+"keydown",
+function(event){
+
+    if(event.key === "Escape"){
+
+        document
+        .querySelectorAll(".modal")
+        .forEach(function(modal){
+
+            modal.classList.remove("active");
+
+        });
+
+    }
+
+});
+
+</script>
+
+</body>
+</html>
