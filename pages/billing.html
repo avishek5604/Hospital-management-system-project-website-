@@ -1,0 +1,2641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Billing & Finance | Hospital Management System</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+:root{
+    --primary:#2563eb;
+    --dark:#172033;
+    --bg:#f4f7fb;
+    --border:#e5e7eb;
+    --green:#16a34a;
+    --red:#dc2626;
+    --orange:#d97706;
+    --purple:#7c3aed;
+    --cyan:#0891b2;
+}
+
+body{
+    background:var(--bg);
+    color:#1f2937;
+}
+
+.sidebar{
+    position:fixed;
+    left:0;
+    top:0;
+    width:250px;
+    height:100vh;
+    background:var(--dark);
+    color:white;
+    padding:20px 15px;
+    overflow-y:auto;
+    z-index:1000;
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:10px;
+    margin-bottom:25px;
+}
+
+.logo-icon{
+    width:42px;
+    height:42px;
+    background:var(--primary);
+    border-radius:10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:bold;
+}
+
+.logo h2{
+    font-size:18px;
+}
+
+.logo small{
+    color:#94a3b8;
+}
+
+.menu-title{
+    color:#64748b;
+    font-size:11px;
+    margin:20px 10px 8px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+}
+
+.menu a{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    color:#cbd5e1;
+    text-decoration:none;
+    padding:12px 13px;
+    border-radius:8px;
+    margin-bottom:5px;
+    font-size:14px;
+}
+
+.menu a:hover,
+.menu a.active{
+    background:var(--primary);
+    color:white;
+}
+
+.main{
+    margin-left:250px;
+    min-height:100vh;
+}
+
+.topbar{
+    height:70px;
+    background:white;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:0 25px;
+    position:sticky;
+    top:0;
+    z-index:500;
+}
+
+.topbar h1{
+    font-size:22px;
+}
+
+.top-right{
+    display:flex;
+    align-items:center;
+    gap:20px;
+}
+
+.profile{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.avatar{
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    background:var(--primary);
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:bold;
+}
+
+.content{
+    padding:25px;
+}
+
+button{
+    border:0;
+    border-radius:7px;
+    padding:10px 15px;
+    cursor:pointer;
+    font-size:13px;
+}
+
+.btn-primary{
+    background:var(--primary);
+    color:white;
+}
+
+.btn-success{
+    background:var(--green);
+    color:white;
+}
+
+.btn-danger{
+    background:var(--red);
+    color:white;
+}
+
+.btn-warning{
+    background:var(--orange);
+    color:white;
+}
+
+.btn-purple{
+    background:var(--purple);
+    color:white;
+}
+
+.btn-secondary{
+    background:#64748b;
+    color:white;
+}
+
+.banner{
+    background:linear-gradient(120deg,#1e40af,#2563eb);
+    color:white;
+    border-radius:12px;
+    padding:22px;
+    margin-bottom:25px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+}
+
+.banner h2{
+    margin-bottom:7px;
+}
+
+.banner p{
+    font-size:13px;
+    opacity:.9;
+}
+
+.banner button{
+    background:white;
+    color:#1d4ed8;
+    font-weight:bold;
+}
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:18px;
+    margin-bottom:25px;
+}
+
+.stat-card{
+    background:white;
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:18px;
+}
+
+.stat-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.stat-card p{
+    color:#64748b;
+    font-size:12px;
+}
+
+.stat-card h2{
+    font-size:23px;
+    margin-top:8px;
+}
+
+.stat-icon{
+    width:44px;
+    height:44px;
+    border-radius:10px;
+    background:#dbeafe;
+    color:var(--primary);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:20px;
+}
+
+.quick-actions{
+    display:grid;
+    grid-template-columns:repeat(6,1fr);
+    gap:12px;
+    margin-bottom:25px;
+}
+
+.quick{
+    background:white;
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:15px 10px;
+    text-align:center;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.quick:hover{
+    transform:translateY(-2px);
+    box-shadow:0 5px 15px #0001;
+}
+
+.quick-icon{
+    font-size:24px;
+    margin-bottom:7px;
+}
+
+.toolbar{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-bottom:20px;
+}
+
+.search{
+    flex:1;
+    min-width:240px;
+}
+
+input,
+select,
+textarea{
+    width:100%;
+    padding:10px 12px;
+    border:1px solid #d1d5db;
+    border-radius:7px;
+    background:white;
+    outline:none;
+}
+
+.table-card{
+    background:white;
+    border:1px solid var(--border);
+    border-radius:12px;
+    overflow:hidden;
+    margin-bottom:25px;
+}
+
+.table-header{
+    padding:18px;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+}
+
+.table-header h3{
+    font-size:17px;
+}
+
+.table-header small{
+    color:#64748b;
+}
+
+.table-responsive{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:1050px;
+}
+
+th,
+td{
+    padding:13px 15px;
+    border-bottom:1px solid var(--border);
+    text-align:left;
+    font-size:13px;
+}
+
+th{
+    background:#f8fafc;
+    color:#475569;
+    font-size:11px;
+    text-transform:uppercase;
+}
+
+tr:hover{
+    background:#f8fafc;
+}
+
+.badge{
+    display:inline-block;
+    padding:5px 9px;
+    border-radius:20px;
+    font-size:10px;
+    font-weight:bold;
+}
+
+.green{
+    background:#dcfce7;
+    color:#166534;
+}
+
+.red{
+    background:#fee2e2;
+    color:#991b1b;
+}
+
+.yellow{
+    background:#fef3c7;
+    color:#92400e;
+}
+
+.blue{
+    background:#dbeafe;
+    color:#1e40af;
+}
+
+.purple{
+    background:#ede9fe;
+    color:#5b21b6;
+}
+
+.cyan{
+    background:#cffafe;
+    color:#155e75;
+}
+
+.actions{
+    display:flex;
+    gap:5px;
+}
+
+.action-btn{
+    padding:6px 9px;
+    font-size:11px;
+}
+
+.two-col{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+}
+
+.item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:15px;
+    border-bottom:1px solid var(--border);
+}
+
+.item:last-child{
+    border-bottom:0;
+}
+
+.item-left{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.item-icon{
+    width:42px;
+    height:42px;
+    border-radius:9px;
+    background:#dbeafe;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:20px;
+}
+
+.alert{
+    display:none;
+    padding:12px 15px;
+    border-radius:8px;
+    margin-bottom:15px;
+    background:#dcfce7;
+    color:#166534;
+}
+
+.alert.show{
+    display:block;
+}
+
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:#0f172aaa;
+    z-index:2000;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+}
+
+.modal.active{
+    display:flex;
+}
+
+.modal-box{
+    background:white;
+    width:900px;
+    max-width:100%;
+    max-height:90vh;
+    overflow-y:auto;
+    border-radius:12px;
+    padding:25px;
+}
+
+.modal-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.close{
+    background:#f1f5f9;
+    font-size:20px;
+    padding:5px 10px;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:15px;
+}
+
+.form-group label{
+    display:block;
+    font-size:12px;
+    font-weight:bold;
+    margin-bottom:6px;
+}
+
+.full{
+    grid-column:1/-1;
+}
+
+.modal-footer{
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+    margin-top:20px;
+}
+
+.summary-box{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
+    padding:20px;
+}
+
+.summary{
+    padding:18px;
+    border-radius:10px;
+    background:#f8fafc;
+}
+
+.summary small{
+    color:#64748b;
+}
+
+.summary h2{
+    margin-top:7px;
+}
+
+@media(max-width:1200px){
+
+    .stats{
+        grid-template-columns:repeat(3,1fr);
+    }
+
+    .quick-actions{
+        grid-template-columns:repeat(3,1fr);
+    }
+
+    .summary-box{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+@media(max-width:900px){
+
+    .sidebar{
+        width:70px;
+        padding:15px 8px;
+    }
+
+    .logo h2,
+    .logo small,
+    .menu-title,
+    .menu a span{
+        display:none;
+    }
+
+    .logo{
+        justify-content:center;
+    }
+
+    .menu a{
+        justify-content:center;
+    }
+
+    .main{
+        margin-left:70px;
+    }
+
+    .two-col{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:650px){
+
+    .content{
+        padding:15px;
+    }
+
+    .stats{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .quick-actions{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .summary-box{
+        grid-template-columns:1fr;
+    }
+
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+    .full{
+        grid-column:auto;
+    }
+
+    .banner{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+
+<aside class="sidebar">
+
+<div class="logo">
+
+<div class="logo-icon">H+</div>
+
+<div>
+<h2>Medicare HMS</h2>
+<small>Hospital System</small>
+</div>
+
+</div>
+
+<div class="menu-title">Main</div>
+
+<nav class="menu">
+
+<a href="../dashboard.html">
+🏠 <span>Dashboard</span>
+</a>
+
+<a href="patient.html">
+👥 <span>Patients</span>
+</a>
+
+<a href="doctor.html">
+👨‍⚕️ <span>Doctors</span>
+</a>
+
+<a href="appointment.html">
+📅 <span>Appointments</span>
+</a>
+
+<a href="opd.html">
+🏥 <span>OPD</span>
+</a>
+
+<a href="ipd.html">
+🛏️ <span>IPD / Admission</span>
+</a>
+
+<a href="emergency.html">
+🚑 <span>Emergency</span>
+</a>
+
+<a href="nursing.html">
+👩‍⚕️ <span>Nursing</span>
+</a>
+
+</nav>
+
+<div class="menu-title">Diagnostics</div>
+
+<nav class="menu">
+
+<a href="clinical.html">
+🩺 <span>Clinical</span>
+</a>
+
+<a href="laboratory.html">
+🧪 <span>Laboratory</span>
+</a>
+
+<a href="radiology.html">
+☢️ <span>Radiology</span>
+</a>
+
+<a href="blood-bank.html">
+🩸 <span>Blood Bank</span>
+</a>
+
+<a href="pharmacy.html">
+💊 <span>Pharmacy</span>
+</a>
+
+</nav>
+
+<div class="menu-title">Administration</div>
+
+<nav class="menu">
+
+<a href="billing.html" class="active">
+💳 <span>Billing & Finance</span>
+</a>
+
+<a href="reports.html">
+📊 <span>Reports</span>
+</a>
+
+<a href="staff.html">
+👨‍💼 <span>Staff</span>
+</a>
+
+<a href="inventory.html">
+📦 <span>Inventory</span>
+</a>
+
+<a href="settings.html">
+⚙️ <span>Settings</span>
+</a>
+
+</nav>
+
+</aside>
+
+
+<!-- MAIN -->
+
+<main class="main">
+
+<header class="topbar">
+
+<h1>Billing & Finance</h1>
+
+<div class="top-right">
+
+<div>🔔</div>
+
+<div class="profile">
+
+<div class="avatar">AK</div>
+
+<div>
+<strong>Admin</strong><br>
+<small>Finance Administrator</small>
+</div>
+
+</div>
+
+</div>
+
+</header>
+
+
+<section class="content">
+
+<div id="alert" class="alert"></div>
+
+
+<!-- BANNER -->
+
+<div class="banner">
+
+<div>
+
+<h2>💳 Billing & Financial Management</h2>
+
+<p>
+Manage hospital invoices, payments, insurance, TPA,
+expenses, refunds, revenue and financial reports.
+</p>
+
+</div>
+
+<button onclick="openInvoiceModal()">
++ Create Invoice
+</button>
+
+</div>
+
+
+<!-- STATISTICS -->
+
+<div class="stats">
+
+<div class="stat-card">
+
+<div class="stat-top">
+
+<div>
+<p>Today's Revenue</p>
+<h2>₹8.46 L</h2>
+</div>
+
+<div class="stat-icon">💰</div>
+
+</div>
+
+</div>
+
+
+<div class="stat-card">
+
+<div class="stat-top">
+
+<div>
+<p>Pending Amount</p>
+<h2>₹2.18 L</h2>
+</div>
+
+<div class="stat-icon">⏳</div>
+
+</div>
+
+</div>
+
+
+<div class="stat-card">
+
+<div class="stat-top">
+
+<div>
+<p>Today's Invoices</p>
+<h2>126</h2>
+</div>
+
+<div class="stat-icon">🧾</div>
+
+</div>
+
+</div>
+
+
+<div class="stat-card">
+
+<div class="stat-top">
+
+<div>
+<p>Insurance Claims</p>
+<h2>48</h2>
+</div>
+
+<div class="stat-icon">🏦</div>
+
+</div>
+
+</div>
+
+
+<div class="stat-card">
+
+<div class="stat-top">
+
+<div>
+<p>Refunds</p>
+<h2>₹36,500</h2>
+</div>
+
+<div class="stat-icon">↩️</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- QUICK ACTIONS -->
+
+<div class="quick-actions">
+
+<div class="quick" onclick="openInvoiceModal()">
+<div class="quick-icon">🧾</div>
+<strong>Create Invoice</strong>
+</div>
+
+<div class="quick" onclick="openPaymentModal()">
+<div class="quick-icon">💵</div>
+<strong>Receive Payment</strong>
+</div>
+
+<div class="quick" onclick="openRefundModal()">
+<div class="quick-icon">↩️</div>
+<strong>Refund</strong>
+</div>
+
+<div class="quick" onclick="showAlert('Insurance / TPA claim module opened.')">
+<div class="quick-icon">🏦</div>
+<strong>Insurance</strong>
+</div>
+
+<div class="quick" onclick="showAlert('Expense management module opened.')">
+<div class="quick-icon">💸</div>
+<strong>Expenses</strong>
+</div>
+
+<div class="quick" onclick="showAlert('Financial report generated.')">
+<div class="quick-icon">📊</div>
+<strong>Finance Report</strong>
+</div>
+
+</div>
+
+
+<!-- REVENUE SUMMARY -->
+
+<div class="table-card">
+
+<div class="table-header">
+
+<div>
+
+<h3>Revenue Summary</h3>
+
+<small>Today's financial performance</small>
+
+</div>
+
+<select
+style="width:150px"
+onchange="showAlert('Revenue period changed.')">
+
+<option>Today</option>
+<option>This Week</option>
+<option>This Month</option>
+<option>This Year</option>
+
+</select>
+
+</div>
+
+<div class="summary-box">
+
+<div class="summary">
+
+<small>OPD Revenue</small>
+
+<h2>₹1,84,500</h2>
+
+<span class="badge green">+12.4%</span>
+
+</div>
+
+<div class="summary">
+
+<small>IPD Revenue</small>
+
+<h2>₹3,42,800</h2>
+
+<span class="badge green">+18.2%</span>
+
+</div>
+
+<div class="summary">
+
+<small>Pharmacy</small>
+
+<h2>₹84,650</h2>
+
+<span class="badge blue">+8.6%</span>
+
+</div>
+
+<div class="summary">
+
+<small>Diagnostics</small>
+
+<h2>₹1,56,700</h2>
+
+<span class="badge purple">+14.1%</span>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- INVOICE SEARCH -->
+
+<div class="toolbar">
+
+<div class="search">
+
+<input
+id="invoiceSearch"
+type="text"
+placeholder="Search invoice, patient, UHID..."
+onkeyup="searchInvoices()">
+
+</div>
+
+<select
+id="invoiceType"
+style="max-width:180px"
+onchange="filterInvoices()">
+
+<option value="all">All Services</option>
+<option value="OPD">OPD</option>
+<option value="IPD">IPD</option>
+<option value="Pharmacy">Pharmacy</option>
+<option value="Laboratory">Laboratory</option>
+<option value="Radiology">Radiology</option>
+<option value="Emergency">Emergency</option>
+
+</select>
+
+<select
+id="paymentFilter"
+style="max-width:170px"
+onchange="filterInvoices()">
+
+<option value="all">All Payments</option>
+<option value="Paid">Paid</option>
+<option value="Pending">Pending</option>
+<option value="Partial">Partial</option>
+
+</select>
+
+<button
+class="btn-primary"
+onclick="openInvoiceModal()">
+
++ New Invoice
+
+</button>
+
+</div>
+
+
+<!-- INVOICES -->
+
+<div class="table-card">
+
+<div class="table-header">
+
+<div>
+
+<h3>Hospital Invoices</h3>
+
+<small>Recent billing transactions</small>
+
+</div>
+
+<button
+class="btn-secondary"
+onclick="printInvoices()">
+
+Print
+
+</button>
+
+</div>
+
+<div class="table-responsive">
+
+<table id="invoiceTable">
+
+<thead>
+
+<tr>
+
+<th>Invoice No.</th>
+<th>Patient</th>
+<th>UHID</th>
+<th>Service</th>
+<th>Gross</th>
+<th>Discount</th>
+<th>Net Amount</th>
+<th>Payment</th>
+<th>Status</th>
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr data-service="OPD" data-payment="Paid">
+
+<td>INV-26001</td>
+
+<td><strong>Rahul Kumar</strong></td>
+
+<td>UHID-10234</td>
+
+<td>OPD</td>
+
+<td>₹1,500</td>
+
+<td>₹100</td>
+
+<td><strong>₹1,400</strong></td>
+
+<td>Cash</td>
+
+<td>
+<span class="badge green">Paid</span>
+</td>
+
+<td>
+
+<div class="actions">
+
+<button
+class="btn-primary action-btn"
+onclick="viewInvoice('INV-26001')">
+
+View
+
+</button>
+
+<button
+class="btn-secondary action-btn"
+onclick="printInvoice('INV-26001')">
+
+Print
+
+</button>
+
+</div>
+
+</td>
+
+</tr>
+
+
+<tr data-service="IPD" data-payment="Partial">
+
+<td>INV-26002</td>
+
+<td><strong>Sunita Devi</strong></td>
+
+<td>UHID-10235</td>
+
+<td>IPD</td>
+
+<td>₹68,500</td>
+
+<td>₹3,500</td>
+
+<td><strong>₹65,000</strong></td>
+
+<td>₹40,000</td>
+
+<td>
+<span class="badge yellow">Partial</span>
+</td>
+
+<td>
+
+<div class="actions">
+
+<button
+class="btn-primary action-btn"
+onclick="viewInvoice('INV-26002')">
+
+View
+
+</button>
+
+<button
+class="btn-success action-btn"
+onclick="collectPayment('INV-26002')">
+
+Pay
+
+</button>
+
+</div>
+
+</td>
+
+</tr>
+
+
+<tr data-service="Pharmacy" data-payment="Paid">
+
+<td>INV-26003</td>
+
+<td><strong>Mohan Prasad</strong></td>
+
+<td>UHID-10236</td>
+
+<td>Pharmacy</td>
+
+<td>₹2,840</td>
+
+<td>₹0</td>
+
+<td><strong>₹2,840</strong></td>
+
+<td>UPI</td>
+
+<td>
+<span class="badge green">Paid</span>
+</td>
+
+<td>
+
+<div class="actions">
+
+<button
+class="btn-primary action-btn"
+onclick="viewInvoice('INV-26003')">
+
+View
+
+</button>
+
+<button
+class="btn-secondary action-btn"
+onclick="printInvoice('INV-26003')">
+
+Print
+
+</button>
+
+</div>
+
+</td>
+
+</tr>
+
+
+<tr data-service="Laboratory" data-payment="Pending">
+
+<td>INV-26004</td>
+
+<td><strong>Anita Kumari</strong></td>
+
+<td>UHID-10237</td>
+
+<td>Laboratory</td>
+
+<td>₹4,250</td>
+
+<td>₹250</td>
+
+<td><strong>₹4,000</strong></td>
+
+<td>—</td>
+
+<td>
+<span class="badge red">Pending</span>
+</td>
+
+<td>
+
+<div class="actions">
+
+<button
+class="btn-primary action-btn"
+onclick="viewInvoice('INV-26004')">
+
+View
+
+</button>
+
+<button
+class="btn-success action-btn"
+onclick="collectPayment('INV-26004')">
+
+Pay
+
+</button>
+
+</div>
+
+</td>
+
+</tr>
+
+
+<tr data-service="Radiology" data-payment="Paid">
+
+<td>INV-26005</td>
+
+<td><strong>Amit Singh</strong></td>
+
+<td>UHID-10238</td>
+
+<td>Radiology</td>
+
+<td>₹7,500</td>
+
+<td>₹500</td>
+
+<td><strong>₹7,000</strong></td>
+
+<td>Card</td>
+
+<td>
+<span class="badge green">Paid</span>
+</td>
+
+<td>
+
+<div class="actions">
+
+<button
+class="btn-primary action-btn"
+onclick="viewInvoice('INV-26005')">
+
+View
+
+</button>
+
+<button
+class="btn-secondary action-btn"
+onclick="printInvoice('INV-26005')">
+
+Print
+
+</button>
+
+</div>
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+
+<!-- TWO COLUMNS -->
+
+<div class="two-col">
+
+
+<!-- OUTSTANDING -->
+
+<div class="table-card">
+
+<div class="table-header">
+
+<div>
+
+<h3>💰 Outstanding Payments</h3>
+
+<small>Patients with pending dues</small>
+
+</div>
+
+</div>
+
+<div class="item">
+
+<div class="item-left">
+
+<div class="item-icon">👤</div>
+
+<div>
+<strong>Sunita Devi</strong><br>
+<small>IPD • INV-26002</small>
+</div>
+
+</div>
+
+<strong style="color:#dc2626">₹25,000</strong>
+
+</div>
+
+<div class="item">
+
+<div class="item-left">
+
+<div class="item-icon">👤</div>
+
+<div>
+<strong>Anita Kumari</strong><br>
+<small>Laboratory • INV-26004</small>
+</div>
+
+</div>
+
+<strong style="color:#dc2626">₹4,000</strong>
+
+</div>
+
+<div class="item">
+
+<div class="item-left">
+
+<div class="item-icon">👤</div>
+
+<div>
+<strong>Raj Verma</strong><br>
+<small>Emergency • INV-25981</small>
+</div>
+
+</div>
+
+<strong style="color:#dc2626">₹18,500</strong>
+
+</div>
+
+<div class="item">
+
+<div class="item-left">
+
+<div class="item-icon">👤</div>
+
+<div>
+<strong>Priya Singh</strong><br>
+<small>IPD • INV-25972</small>
+</div>
+
+</div>
+
+<strong style="color:#dc2626">₹31,250</strong>
+
+</div>
+
+</div>
+
+
+<!-- INSURANCE -->
+
+<div class="table-card">
+
+<div class="table-header">
+
+<div>
+
+<h3>🏦 Insurance / TPA</h3>
+
+<small>Claim processing summary</small>
+
+</div>
+
+</div>
+
+<div class="item">
+
+<div class="item-left">
+
+<div class="item-icon">📄</div>
+
+<div>
+<strong>New Claims</strong><br>
+<small>Submitted today</small>
+</div>
+
+</div>
+
+<strong>12</strong>
+
+</div>
+
+<div class="item">
+
+<div class="item-left">
+
+<div class="item-icon">⏳</div>
+
+<div>
+<strong>Under Review</strong><br>
+<small>Pending approval</small>
+</div>
+
+</div>
+
+<strong>21</strong>
+
+</div>
+
+<div class="item">
+
+<div class="item-left">
+
+<div class="item-icon">✅</div>
+
+<div>
+<strong>Approved</strong><br>
+<small>Ready for settlement</small>
+</div>
+
+</div>
+
+<strong>15</strong>
+
+</div>
+
+<div class="item">
+
+<div class="item-left">
+
+<div class="item-icon">❌</div>
+
+<div>
+<strong>Rejected</strong><br>
+<small>Requires action</small>
+</div>
+
+</div>
+
+<strong>3</strong>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- PAYMENT TRANSACTIONS -->
+
+<div class="table-card">
+
+<div class="table-header">
+
+<div>
+
+<h3>Recent Payments</h3>
+
+<small>Today's payment transactions</small>
+
+</div>
+
+<button
+class="btn-primary"
+onclick="openPaymentModal()">
+
++ Receive Payment
+
+</button>
+
+</div>
+
+<div class="table-responsive">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Receipt No.</th>
+<th>Patient</th>
+<th>Invoice</th>
+<th>Payment Mode</th>
+<th>Amount</th>
+<th>Date</th>
+<th>Received By</th>
+<th>Status</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>REC-50001</td>
+<td>Rahul Kumar</td>
+<td>INV-26001</td>
+<td>Cash</td>
+<td>₹1,400</td>
+<td>26 Sep 2026</td>
+<td>Cashier 01</td>
+<td><span class="badge green">Success</span></td>
+
+</tr>
+
+<tr>
+
+<td>REC-50002</td>
+<td>Mohan Prasad</td>
+<td>INV-26003</td>
+<td>UPI</td>
+<td>₹2,840</td>
+<td>26 Sep 2026</td>
+<td>Cashier 02</td>
+<td><span class="badge green">Success</span></td>
+
+</tr>
+
+<tr>
+
+<td>REC-50003</td>
+<td>Amit Singh</td>
+<td>INV-26005</td>
+<td>Card</td>
+<td>₹7,000</td>
+<td>26 Sep 2026</td>
+<td>Cashier 01</td>
+<td><span class="badge green">Success</span></td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+
+<!-- EXPENSES -->
+
+<div class="table-card">
+
+<div class="table-header">
+
+<div>
+
+<h3>Hospital Expenses</h3>
+
+<small>Recent operational expenses</small>
+
+</div>
+
+<button
+class="btn-warning"
+onclick="openExpenseModal()">
+
++ Add Expense
+
+</button>
+
+</div>
+
+<div class="table-responsive">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Expense ID</th>
+<th>Category</th>
+<th>Description</th>
+<th>Vendor</th>
+<th>Amount</th>
+<th>Date</th>
+<th>Status</th>
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>EXP-1001</td>
+<td>Medical Supplies</td>
+<td>Surgical consumables</td>
+<td>ABC Medical</td>
+<td>₹35,800</td>
+<td>26 Sep 2026</td>
+<td><span class="badge green">Paid</span></td>
+
+<td>
+<button
+class="btn-primary action-btn"
+onclick="showAlert('Expense details opened.')">
+View
+</button>
+</td>
+
+</tr>
+
+<tr>
+
+<td>EXP-1002</td>
+<td>Electricity</td>
+<td>Monthly electricity bill</td>
+<td>Electricity Board</td>
+<td>₹84,500</td>
+<td>25 Sep 2026</td>
+<td><span class="badge green">Paid</span></td>
+
+<td>
+<button
+class="btn-primary action-btn"
+onclick="showAlert('Expense details opened.')">
+View
+</button>
+</td>
+
+</tr>
+
+<tr>
+
+<td>EXP-1003</td>
+<td>Maintenance</td>
+<td>Equipment maintenance</td>
+<td>MedTech Services</td>
+<td>₹26,750</td>
+<td>25 Sep 2026</td>
+<td><span class="badge yellow">Pending</span></td>
+
+<td>
+<button
+class="btn-primary action-btn"
+onclick="showAlert('Expense details opened.')">
+View
+</button>
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+
+<!-- REFUNDS -->
+
+<div class="table-card">
+
+<div class="table-header">
+
+<div>
+
+<h3>Refund Management</h3>
+
+<small>Recent refund requests and transactions</small>
+
+</div>
+
+<button
+class="btn-danger"
+onclick="openRefundModal()">
+
++ Process Refund
+
+</button>
+
+</div>
+
+<div class="table-responsive">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Refund ID</th>
+<th>Patient</th>
+<th>Invoice</th>
+<th>Reason</th>
+<th>Amount</th>
+<th>Date</th>
+<th>Status</th>
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>REF-1001</td>
+<td>Ravi Kumar</td>
+<td>INV-25921</td>
+<td>Excess Payment</td>
+<td>₹5,000</td>
+<td>26 Sep 2026</td>
+<td><span class="badge green">Completed</span></td>
+
+<td>
+<button
+class="btn-primary action-btn"
+onclick="showAlert('Refund receipt opened.')">
+View
+</button>
+</td>
+
+</tr>
+
+<tr>
+
+<td>REF-1002</td>
+<td>Neha Singh</td>
+<td>INV-25948</td>
+<td>Cancelled Service</td>
+<td>₹2,500</td>
+<td>26 Sep 2026</td>
+<td><span class="badge yellow">Pending</span></td>
+
+<td>
+<button
+class="btn-success action-btn"
+onclick="approveRefund('REF-1002')">
+Approve
+</button>
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+
+<!-- FINANCIAL REPORTS -->
+
+<div class="table-card">
+
+<div class="table-header">
+
+<div>
+
+<h3>📊 Financial Reports</h3>
+
+<small>Generate hospital finance reports</small>
+
+</div>
+
+</div>
+
+<div class="quick-actions" style="padding:18px;margin:0">
+
+<div class="quick" onclick="generateReport('Daily Revenue')">
+<div class="quick-icon">💰</div>
+<strong>Daily Revenue</strong>
+</div>
+
+<div class="quick" onclick="generateReport('Outstanding')">
+<div class="quick-icon">⏳</div>
+<strong>Outstanding</strong>
+</div>
+
+<div class="quick" onclick="generateReport('Insurance')">
+<div class="quick-icon">🏦</div>
+<strong>Insurance</strong>
+</div>
+
+<div class="quick" onclick="generateReport('Expense')">
+<div class="quick-icon">💸</div>
+<strong>Expenses</strong>
+</div>
+
+<div class="quick" onclick="generateReport('GST')">
+<div class="quick-icon">🧾</div>
+<strong>GST Report</strong>
+</div>
+
+<div class="quick" onclick="generateReport('Profit & Loss')">
+<div class="quick-icon">📈</div>
+<strong>Profit & Loss</strong>
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+</main>
+
+
+<!-- INVOICE MODAL -->
+
+<div class="modal" id="invoiceModal">
+
+<div class="modal-box">
+
+<div class="modal-header">
+
+<div>
+
+<h2>Create New Invoice</h2>
+
+<small>Hospital billing invoice</small>
+
+</div>
+
+<button class="close" onclick="closeInvoiceModal()">×</button>
+
+</div>
+
+<form id="invoiceForm">
+
+<div class="form-grid">
+
+<div class="form-group">
+<label>Patient Name *</label>
+<input type="text" placeholder="Patient name" required>
+</div>
+
+<div class="form-group">
+<label>UHID *</label>
+<input type="text" placeholder="UHID" required>
+</div>
+
+<div class="form-group">
+<label>Service Type *</label>
+
+<select required>
+
+<option value="">Select Service</option>
+<option>OPD</option>
+<option>IPD</option>
+<option>Emergency</option>
+<option>Pharmacy</option>
+<option>Laboratory</option>
+<option>Radiology</option>
+<option>Blood Bank</option>
+</select>
+
+</div>
+
+<div class="form-group">
+<label>Invoice Date</label>
+<input type="date" id="invoiceDate">
+</div>
+
+<div class="form-group">
+<label>Gross Amount *</label>
+<input type="number" id="grossAmount" oninput="calculateInvoice()" required>
+</div>
+
+<div class="form-group">
+<label>Discount</label>
+<input type="number" id="discount" value="0" oninput="calculateInvoice()">
+</div>
+
+<div class="form-group">
+<label>Tax / GST</label>
+<input type="number" id="tax" value="0" oninput="calculateInvoice()">
+</div>
+
+<div class="form-group">
+<label>Net Amount</label>
+<input type="number" id="netAmount" readonly>
+</div>
+
+<div class="form-group">
+<label>Payment Mode</label>
+
+<select>
+
+<option>Cash</option>
+<option>UPI</option>
+<option>Card</option>
+<option>Bank Transfer</option>
+<option>Insurance / TPA</option>
+</select>
+
+</div>
+
+<div class="form-group">
+<label>Payment Status</label>
+
+<select>
+
+<option>Paid</option>
+<option>Pending</option>
+<option>Partial</option>
+</select>
+
+</div>
+
+<div class="form-group full">
+<label>Description</label>
+<textarea rows="4" placeholder="Billing description"></textarea>
+</div>
+
+</div>
+
+<div class="modal-footer">
+
+<button type="button" class="btn-secondary" onclick="closeInvoiceModal()">
+Cancel
+</button>
+
+<button type="submit" class="btn-primary">
+Create Invoice
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+
+<!-- PAYMENT MODAL -->
+
+<div class="modal" id="paymentModal">
+
+<div class="modal-box">
+
+<div class="modal-header">
+
+<h2>Receive Payment</h2>
+
+<button class="close" onclick="closePaymentModal()">×</button>
+
+</div>
+
+<form id="paymentForm">
+
+<div class="form-grid">
+
+<div class="form-group">
+<label>Invoice Number *</label>
+<input type="text" placeholder="INV-26001" required>
+</div>
+
+<div class="form-group">
+<label>Patient Name</label>
+<input type="text" placeholder="Patient name">
+</div>
+
+<div class="form-group">
+<label>Amount *</label>
+<input type="number" placeholder="Amount" required>
+</div>
+
+<div class="form-group">
+<label>Payment Mode *</label>
+
+<select required>
+
+<option>Cash</option>
+<option>UPI</option>
+<option>Card</option>
+<option>Bank Transfer</option>
+<option>Cheque</option>
+
+</select>
+
+</div>
+
+<div class="form-group full">
+<label>Transaction Reference</label>
+<input type="text" placeholder="UPI / Card / Bank reference">
+</div>
+
+</div>
+
+<div class="modal-footer">
+
+<button type="button" class="btn-secondary" onclick="closePaymentModal()">
+Cancel
+</button>
+
+<button type="submit" class="btn-success">
+Receive Payment
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+
+<!-- REFUND MODAL -->
+
+<div class="modal" id="refundModal">
+
+<div class="modal-box">
+
+<div class="modal-header">
+
+<h2>Process Refund</h2>
+
+<button class="close" onclick="closeRefundModal()">×</button>
+
+</div>
+
+<form id="refundForm">
+
+<div class="form-grid">
+
+<div class="form-group">
+<label>Invoice Number *</label>
+<input type="text" placeholder="INV-26001" required>
+</div>
+
+<div class="form-group">
+<label>Patient Name *</label>
+<input type="text" placeholder="Patient name" required>
+</div>
+
+<div class="form-group">
+<label>Refund Amount *</label>
+<input type="number" placeholder="₹" required>
+</div>
+
+<div class="form-group">
+<label>Refund Mode</label>
+
+<select>
+<option>Cash</option>
+<option>UPI</option>
+<option>Bank Transfer</option>
+<option>Original Payment Method</option>
+</select>
+
+</div>
+
+<div class="form-group full">
+<label>Refund Reason *</label>
+
+<textarea
+rows="4"
+placeholder="Enter refund reason"
+required></textarea>
+
+</div>
+
+</div>
+
+<div class="modal-footer">
+
+<button type="button" class="btn-secondary" onclick="closeRefundModal()">
+Cancel
+</button>
+
+<button type="submit" class="btn-danger">
+Process Refund
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+
+<!-- EXPENSE MODAL -->
+
+<div class="modal" id="expenseModal">
+
+<div class="modal-box">
+
+<div class="modal-header">
+
+<h2>Add Hospital Expense</h2>
+
+<button class="close" onclick="closeExpenseModal()">×</button>
+
+</div>
+
+<form id="expenseForm">
+
+<div class="form-grid">
+
+<div class="form-group">
+<label>Expense Category *</label>
+
+<select required>
+
+<option>Medical Supplies</option>
+<option>Salary</option>
+<option>Electricity</option>
+<option>Maintenance</option>
+<option>Rent</option>
+<option>Equipment</option>
+<option>Other</option>
+
+</select>
+
+</div>
+
+<div class="form-group">
+<label>Amount *</label>
+<input type="number" placeholder="₹" required>
+</div>
+
+<div class="form-group">
+<label>Vendor / Payee</label>
+<input type="text" placeholder="Vendor name">
+</div>
+
+<div class="form-group">
+<label>Expense Date</label>
+<input type="date">
+</div>
+
+<div class="form-group full">
+<label>Description</label>
+<textarea rows="4" placeholder="Expense details"></textarea>
+</div>
+
+</div>
+
+<div class="modal-footer">
+
+<button type="button" class="btn-secondary" onclick="closeExpenseModal()">
+Cancel
+</button>
+
+<button type="submit" class="btn-warning">
+Save Expense
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+
+<script>
+
+function showAlert(message){
+
+    const alertBox=document.getElementById("alert");
+
+    alertBox.textContent=message;
+
+    alertBox.classList.add("show");
+
+    setTimeout(()=>{
+        alertBox.classList.remove("show");
+    },3500);
+
+}
+
+
+/* INVOICE */
+
+function openInvoiceModal(){
+
+    document
+    .getElementById("invoiceModal")
+    .classList.add("active");
+
+}
+
+function closeInvoiceModal(){
+
+    document
+    .getElementById("invoiceModal")
+    .classList.remove("active");
+
+}
+
+
+function calculateInvoice(){
+
+    const gross=
+        Number(document.getElementById("grossAmount").value)||0;
+
+    const discount=
+        Number(document.getElementById("discount").value)||0;
+
+    const tax=
+        Number(document.getElementById("tax").value)||0;
+
+    const net=
+        Math.max(0,gross-discount+tax);
+
+    document.getElementById("netAmount").value=net;
+
+}
+
+
+/* PAYMENT */
+
+function openPaymentModal(){
+
+    document
+    .getElementById("paymentModal")
+    .classList.add("active");
+
+}
+
+function closePaymentModal(){
+
+    document
+    .getElementById("paymentModal")
+    .classList.remove("active");
+
+}
+
+
+/* REFUND */
+
+function openRefundModal(){
+
+    document
+    .getElementById("refundModal")
+    .classList.add("active");
+
+}
+
+function closeRefundModal(){
+
+    document
+    .getElementById("refundModal")
+    .classList.remove("active");
+
+}
+
+
+/* EXPENSE */
+
+function openExpenseModal(){
+
+    document
+    .getElementById("expenseModal")
+    .classList.add("active");
+
+}
+
+function closeExpenseModal(){
+
+    document
+    .getElementById("expenseModal")
+    .classList.remove("active");
+
+}
+
+
+/* SEARCH */
+
+function searchInvoices(){
+
+    const value=
+        document
+        .getElementById("invoiceSearch")
+        .value
+        .toLowerCase();
+
+    document
+    .querySelectorAll("#invoiceTable tbody tr")
+    .forEach(row=>{
+
+        row.style.display=
+            row.textContent
+            .toLowerCase()
+            .includes(value)
+            ? ""
+            : "none";
+
+    });
+
+}
+
+
+/* FILTER */
+
+function filterInvoices(){
+
+    const service=
+        document.getElementById("invoiceType").value;
+
+    const payment=
+        document.getElementById("paymentFilter").value;
+
+    document
+    .querySelectorAll("#invoiceTable tbody tr")
+    .forEach(row=>{
+
+        const serviceMatch=
+            service==="all" ||
+            row.dataset.service===service;
+
+        const paymentMatch=
+            payment==="all" ||
+            row.dataset.payment===payment;
+
+        row.style.display=
+            serviceMatch && paymentMatch
+            ? ""
+            : "none";
+
+    });
+
+}
+
+
+/* VIEW */
+
+function viewInvoice(id){
+
+    showAlert(
+        "Opening invoice "+id+"."
+    );
+
+}
+
+
+/* PRINT */
+
+function printInvoice(id){
+
+    showAlert(
+        "Preparing invoice "+id+" for printing..."
+    );
+
+    setTimeout(()=>{
+        window.print();
+    },500);
+
+}
+
+
+function printInvoices(){
+
+    showAlert(
+        "Preparing invoice report..."
+    );
+
+    setTimeout(()=>{
+        window.print();
+    },500);
+
+}
+
+
+/* PAYMENT COLLECTION */
+
+function collectPayment(id){
+
+    openPaymentModal();
+
+    showAlert(
+        "Payment collection started for "+id+"."
+    );
+
+}
+
+
+/* REFUND APPROVAL */
+
+function approveRefund(id){
+
+    if(confirm(
+        "Approve refund "+id+"?"
+    )){
+
+        showAlert(
+            "Refund "+id+" approved successfully."
+        );
+
+    }
+
+}
+
+
+/* REPORT */
+
+function generateReport(type){
+
+    showAlert(
+        type+" report generated successfully."
+    );
+
+}
+
+
+/* INVOICE FORM */
+
+document
+.getElementById("invoiceForm")
+.addEventListener("submit",function(e){
+
+    e.preventDefault();
+
+    const invoice=
+        "INV-"+Math.floor(
+            10000+
+            Math.random()*89999
+        );
+
+    closeInvoiceModal();
+
+    showAlert(
+        "Invoice "+invoice+
+        " created successfully."
+    );
+
+    this.reset();
+
+    document.getElementById("netAmount").value="";
+
+});
+
+
+/* PAYMENT FORM */
+
+document
+.getElementById("paymentForm")
+.addEventListener("submit",function(e){
+
+    e.preventDefault();
+
+    const receipt=
+        "REC-"+Math.floor(
+            10000+
+            Math.random()*89999
+        );
+
+    closePaymentModal();
+
+    showAlert(
+        "Payment received successfully. Receipt: "+
+        receipt
+    );
+
+    this.reset();
+
+});
+
+
+/* REFUND FORM */
+
+document
+.getElementById("refundForm")
+.addEventListener("submit",function(e){
+
+    e.preventDefault();
+
+    const refund=
+        "REF-"+Math.floor(
+            1000+
+            Math.random()*8999
+        );
+
+    closeRefundModal();
+
+    showAlert(
+        "Refund request "+refund+
+        " created successfully."
+    );
+
+    this.reset();
+
+});
+
+
+/* EXPENSE FORM */
+
+document
+.getElementById("expenseForm")
+.addEventListener("submit",function(e){
+
+    e.preventDefault();
+
+    const expense=
+        "EXP-"+Math.floor(
+            1000+
+            Math.random()*8999
+        );
+
+    closeExpenseModal();
+
+    showAlert(
+        "Expense "+expense+
+        " saved successfully."
+    );
+
+    this.reset();
+
+});
+
+
+/* OUTSIDE CLICK */
+
+window.onclick=function(e){
+
+    if(e.target===
+        document.getElementById("invoiceModal"))
+        closeInvoiceModal();
+
+    if(e.target===
+        document.getElementById("paymentModal"))
+        closePaymentModal();
+
+    if(e.target===
+        document.getElementById("refundModal"))
+        closeRefundModal();
+
+    if(e.target===
+        document.getElementById("expenseModal"))
+        closeExpenseModal();
+
+};
+
+
+/* ESCAPE */
+
+document.addEventListener("keydown",function(e){
+
+    if(e.key==="Escape"){
+
+        closeInvoiceModal();
+        closePaymentModal();
+        closeRefundModal();
+        closeExpenseModal();
+
+    }
+
+});
+
+
+/* DEFAULT DATE */
+
+const today=
+    new Date()
+    .toISOString()
+    .split("T")[0];
+
+document.getElementById("invoiceDate").value=today;
+
+</script>
+
+</body>
+</html>
