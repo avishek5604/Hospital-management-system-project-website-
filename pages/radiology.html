@@ -1,0 +1,2147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Radiology Management | Hospital Management System</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+:root{
+    --primary:#2563eb;
+    --dark:#172033;
+    --bg:#f4f7fb;
+    --border:#e5e7eb;
+    --green:#16a34a;
+    --red:#dc2626;
+    --orange:#d97706;
+    --purple:#7c3aed;
+}
+
+body{
+    background:var(--bg);
+    color:#1f2937;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+    position:fixed;
+    left:0;
+    top:0;
+    width:250px;
+    height:100vh;
+    background:var(--dark);
+    color:white;
+    padding:20px 15px;
+    overflow-y:auto;
+    z-index:1000;
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:10px;
+    margin-bottom:25px;
+}
+
+.logo-icon{
+    width:42px;
+    height:42px;
+    background:var(--primary);
+    border-radius:10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:bold;
+}
+
+.logo h2{
+    font-size:18px;
+}
+
+.logo small{
+    color:#94a3b8;
+}
+
+.menu-title{
+    color:#64748b;
+    font-size:11px;
+    margin:20px 10px 8px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+}
+
+.menu a{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    color:#cbd5e1;
+    text-decoration:none;
+    padding:12px 13px;
+    border-radius:8px;
+    margin-bottom:5px;
+    font-size:14px;
+}
+
+.menu a:hover,
+.menu a.active{
+    background:var(--primary);
+    color:white;
+}
+
+/* MAIN */
+
+.main{
+    margin-left:250px;
+    min-height:100vh;
+}
+
+.topbar{
+    height:70px;
+    background:white;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:0 25px;
+    position:sticky;
+    top:0;
+    z-index:500;
+}
+
+.topbar h1{
+    font-size:22px;
+}
+
+.top-right{
+    display:flex;
+    align-items:center;
+    gap:20px;
+}
+
+.profile{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.avatar{
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    background:var(--primary);
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:bold;
+}
+
+.content{
+    padding:25px;
+}
+
+/* BUTTONS */
+
+button{
+    border:0;
+    border-radius:7px;
+    padding:10px 15px;
+    cursor:pointer;
+    font-size:13px;
+}
+
+.btn-primary{
+    background:var(--primary);
+    color:white;
+}
+
+.btn-success{
+    background:var(--green);
+    color:white;
+}
+
+.btn-danger{
+    background:var(--red);
+    color:white;
+}
+
+.btn-warning{
+    background:var(--orange);
+    color:white;
+}
+
+.btn-secondary{
+    background:#64748b;
+    color:white;
+}
+
+/* STATISTICS */
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:18px;
+    margin-bottom:25px;
+}
+
+.stat-card{
+    background:white;
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:18px;
+}
+
+.stat-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.stat-card p{
+    color:#64748b;
+    font-size:12px;
+}
+
+.stat-card h2{
+    font-size:25px;
+    margin-top:8px;
+}
+
+.stat-icon{
+    width:44px;
+    height:44px;
+    border-radius:10px;
+    background:#dbeafe;
+    color:var(--primary);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:20px;
+}
+
+/* BANNER */
+
+.banner{
+    background:linear-gradient(120deg,#312e81,#2563eb);
+    color:white;
+    border-radius:12px;
+    padding:22px;
+    margin-bottom:25px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+}
+
+.banner h2{
+    margin-bottom:7px;
+}
+
+.banner p{
+    font-size:13px;
+    opacity:.9;
+}
+
+.banner button{
+    background:white;
+    color:#1d4ed8;
+    font-weight:bold;
+}
+
+/* QUICK ACTIONS */
+
+.quick-actions{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:12px;
+    margin-bottom:25px;
+}
+
+.quick{
+    background:white;
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:16px;
+    text-align:center;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.quick:hover{
+    transform:translateY(-2px);
+    box-shadow:0 5px 15px #0001;
+}
+
+.quick-icon{
+    font-size:25px;
+    margin-bottom:8px;
+}
+
+/* TABLE */
+
+.table-card{
+    background:white;
+    border:1px solid var(--border);
+    border-radius:12px;
+    overflow:hidden;
+    margin-bottom:25px;
+}
+
+.table-header{
+    padding:18px;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+}
+
+.table-header h3{
+    font-size:17px;
+}
+
+.table-header small{
+    color:#64748b;
+}
+
+.toolbar{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-bottom:20px;
+}
+
+.search{
+    flex:1;
+    min-width:250px;
+}
+
+input,
+select,
+textarea{
+    width:100%;
+    padding:10px 12px;
+    border:1px solid #d1d5db;
+    border-radius:7px;
+    background:white;
+    outline:none;
+}
+
+.table-responsive{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:1150px;
+}
+
+th,
+td{
+    padding:13px 15px;
+    border-bottom:1px solid var(--border);
+    text-align:left;
+    font-size:13px;
+}
+
+th{
+    background:#f8fafc;
+    color:#475569;
+    font-size:11px;
+    text-transform:uppercase;
+}
+
+tr:hover{
+    background:#f8fafc;
+}
+
+/* BADGES */
+
+.badge{
+    display:inline-block;
+    padding:5px 9px;
+    border-radius:20px;
+    font-size:10px;
+    font-weight:bold;
+}
+
+.green{
+    background:#dcfce7;
+    color:#166534;
+}
+
+.red{
+    background:#fee2e2;
+    color:#991b1b;
+}
+
+.yellow{
+    background:#fef3c7;
+    color:#92400e;
+}
+
+.blue{
+    background:#dbeafe;
+    color:#1e40af;
+}
+
+.purple{
+    background:#ede9fe;
+    color:#5b21b6;
+}
+
+.actions{
+    display:flex;
+    gap:5px;
+}
+
+.action-btn{
+    padding:6px 9px;
+    font-size:11px;
+}
+
+/* TWO COLUMN */
+
+.two-col{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+}
+
+/* ITEMS */
+
+.item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:15px;
+    border-bottom:1px solid var(--border);
+}
+
+.item:last-child{
+    border-bottom:0;
+}
+
+.item-left{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.item-icon{
+    width:40px;
+    height:40px;
+    border-radius:9px;
+    background:#eff6ff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:20px;
+}
+
+/* PROGRESS */
+
+.progress{
+    height:8px;
+    background:#e5e7eb;
+    border-radius:10px;
+    overflow:hidden;
+    margin-top:8px;
+}
+
+.progress-bar{
+    height:100%;
+    background:var(--primary);
+}
+
+/* MODAL */
+
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:#0f172aaa;
+    z-index:2000;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+}
+
+.modal.active{
+    display:flex;
+}
+
+.modal-box{
+    background:white;
+    width:900px;
+    max-width:100%;
+    max-height:90vh;
+    overflow-y:auto;
+    border-radius:12px;
+    padding:25px;
+}
+
+.modal-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.close{
+    background:#f1f5f9;
+    font-size:20px;
+    padding:5px 10px;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:15px;
+}
+
+.form-group label{
+    display:block;
+    font-size:12px;
+    font-weight:bold;
+    margin-bottom:6px;
+}
+
+.full{
+    grid-column:1/-1;
+}
+
+.modal-footer{
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+    margin-top:20px;
+}
+
+.alert{
+    display:none;
+    padding:12px 15px;
+    border-radius:8px;
+    margin-bottom:15px;
+}
+
+.alert.show{
+    display:block;
+    background:#dcfce7;
+    color:#166534;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1200px){
+
+    .stats{
+        grid-template-columns:repeat(3,1fr);
+    }
+
+    .quick-actions{
+        grid-template-columns:repeat(3,1fr);
+    }
+}
+
+@media(max-width:900px){
+
+    .sidebar{
+        width:70px;
+        padding:15px 8px;
+    }
+
+    .logo h2,
+    .logo small,
+    .menu-title,
+    .menu a span{
+        display:none;
+    }
+
+    .logo{
+        justify-content:center;
+    }
+
+    .menu a{
+        justify-content:center;
+    }
+
+    .main{
+        margin-left:70px;
+    }
+
+    .two-col{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:650px){
+
+    .content{
+        padding:15px;
+    }
+
+    .stats{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .quick-actions{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+    .full{
+        grid-column:auto;
+    }
+
+    .banner{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ================= SIDEBAR ================= -->
+
+<aside class="sidebar">
+
+<div class="logo">
+    <div class="logo-icon">H+</div>
+
+    <div>
+        <h2>Medicare HMS</h2>
+        <small>Hospital System</small>
+    </div>
+</div>
+
+<div class="menu-title">Main</div>
+
+<nav class="menu">
+
+<a href="../dashboard.html">🏠 <span>Dashboard</span></a>
+<a href="patient.html">👥 <span>Patients</span></a>
+<a href="doctor.html">👨‍⚕️ <span>Doctors</span></a>
+<a href="appointment.html">📅 <span>Appointments</span></a>
+<a href="opd.html">🏥 <span>OPD</span></a>
+<a href="ipd.html">🛏️ <span>IPD / Admission</span></a>
+<a href="emergency.html">🚑 <span>Emergency</span></a>
+<a href="nursing.html">👩‍⚕️ <span>Nursing</span></a>
+
+</nav>
+
+<div class="menu-title">Diagnostics</div>
+
+<nav class="menu">
+
+<a href="clinical.html">🩺 <span>Clinical</span></a>
+<a href="laboratory.html">🧪 <span>Laboratory</span></a>
+<a href="radiology.html" class="active">☢️ <span>Radiology</span></a>
+
+</nav>
+
+<div class="menu-title">Administration</div>
+
+<nav class="menu">
+
+<a href="billing.html">💳 <span>Billing</span></a>
+<a href="reports.html">📊 <span>Reports</span></a>
+<a href="staff.html">👨‍💼 <span>Staff</span></a>
+<a href="inventory.html">📦 <span>Inventory</span></a>
+<a href="settings.html">⚙️ <span>Settings</span></a>
+
+</nav>
+
+</aside>
+
+
+<!-- ================= MAIN ================= -->
+
+<main class="main">
+
+<header class="topbar">
+
+<h1>Radiology Management</h1>
+
+<div class="top-right">
+
+<div>🔔</div>
+
+<div class="profile">
+
+<div class="avatar">AK</div>
+
+<div>
+<strong>Admin</strong><br>
+<small>Administrator</small>
+</div>
+
+</div>
+
+</div>
+
+</header>
+
+
+<section class="content">
+
+<div id="alert" class="alert"></div>
+
+
+<!-- BANNER -->
+
+<div class="banner">
+
+<div>
+
+<h2>☢️ Radiology & Imaging Centre</h2>
+
+<p>
+Manage X-Ray, CT Scan, MRI, Ultrasound, imaging requests,
+radiology reports and diagnostic procedures.
+</p>
+
+</div>
+
+<button onclick="openRadiologyModal()">
++ New Imaging Request
+</button>
+
+</div>
+
+
+<!-- STATISTICS -->
+
+<div class="stats">
+
+<div class="stat-card">
+
+<div class="stat-top">
+
+<div>
+<p>Today's Studies</p>
+<h2>68</h2>
+</div>
+
+<div class="stat-icon">☢️</div>
+
+</div>
+
+</div>
+
+
+<div class="stat-card">
+
+<div class="stat-top">
+
+<div>
+<p>Pending Scans</p>
+<h2>14</h2>
+</div>
+
+<div class="stat-icon">📋</div>
+
+</div>
+
+</div>
+
+
+<div class="stat-card">
+
+<div class="stat-top">
+
+<div>
+<p>Reports Pending</p>
+<h2>11</h2>
+</div>
+
+<div class="stat-icon">📄</div>
+
+</div>
+
+</div>
+
+
+<div class="stat-card">
+
+<div class="stat-top">
+
+<div>
+<p>Reports Completed</p>
+<h2>43</h2>
+</div>
+
+<div class="stat-icon">✅</div>
+
+</div>
+
+</div>
+
+
+<div class="stat-card">
+
+<div class="stat-top">
+
+<div>
+<p>Urgent Studies</p>
+<h2>06</h2>
+</div>
+
+<div class="stat-icon">🚨</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- QUICK ACTIONS -->
+
+<div class="quick-actions">
+
+<div class="quick" onclick="openRadiologyModal()">
+<div class="quick-icon">☢️</div>
+<strong>New Imaging</strong>
+</div>
+
+<div class="quick" onclick="showAlert('X-Ray worklist opened.')">
+<div class="quick-icon">🩻</div>
+<strong>X-Ray</strong>
+</div>
+
+<div class="quick" onclick="showAlert('CT Scan worklist opened.')">
+<div class="quick-icon">🧠</div>
+<strong>CT Scan</strong>
+</div>
+
+<div class="quick" onclick="showAlert('MRI worklist opened.')">
+<div class="quick-icon">🧲</div>
+<strong>MRI</strong>
+</div>
+
+<div class="quick" onclick="showAlert('Ultrasound worklist opened.')">
+<div class="quick-icon">🔊</div>
+<strong>Ultrasound</strong>
+</div>
+
+</div>
+
+
+<!-- TOOLBAR -->
+
+<div class="toolbar">
+
+<div class="search">
+
+<input
+id="searchInput"
+type="text"
+placeholder="Search patient, study, radiologist..."
+onkeyup="searchStudies()">
+
+</div>
+
+
+<select
+id="statusFilter"
+onchange="filterStudies()"
+style="max-width:200px">
+
+<option value="all">All Status</option>
+<option value="Scheduled">Scheduled</option>
+<option value="Processing">Processing</option>
+<option value="Report Pending">Report Pending</option>
+<option value="Completed">Completed</option>
+
+</select>
+
+
+<select
+id="modalityFilter"
+onchange="filterModality()"
+style="max-width:180px">
+
+<option value="all">All Modalities</option>
+<option value="X-Ray">X-Ray</option>
+<option value="CT Scan">CT Scan</option>
+<option value="MRI">MRI</option>
+<option value="Ultrasound">Ultrasound</option>
+
+</select>
+
+
+<button
+class="btn-primary"
+onclick="openRadiologyModal()">
+
++ Imaging Request
+
+</button>
+
+</div>
+
+
+<!-- IMAGING REQUESTS -->
+
+<div class="table-card">
+
+<div class="table-header">
+
+<div>
+
+<h3>Radiology & Imaging Requests</h3>
+
+<small>
+Current diagnostic imaging workload
+</small>
+
+</div>
+
+<button
+class="btn-secondary"
+onclick="refreshRadiology()">
+
+Refresh
+
+</button>
+
+</div>
+
+
+<div class="table-responsive">
+
+<table id="radiologyTable">
+
+<thead>
+
+<tr>
+
+<th>Study ID</th>
+<th>Patient</th>
+<th>Modality</th>
+<th>Study</th>
+<th>Doctor</th>
+<th>Appointment</th>
+<th>Priority</th>
+<th>Status</th>
+<th>Actions</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+
+<tr data-status="Processing" data-modality="X-Ray">
+
+<td>
+<strong>RAD-00125</strong>
+</td>
+
+<td>
+Rahul Kumar<br>
+<small>UHID-10234</small>
+</td>
+
+<td>X-Ray</td>
+
+<td>Chest X-Ray AP</td>
+
+<td>Dr. Amit Sharma</td>
+
+<td>10:30 AM</td>
+
+<td>
+<span class="badge red">
+Urgent
+</span>
+</td>
+
+<td>
+<span class="badge yellow">
+Processing
+</span>
+</td>
+
+<td>
+
+<div class="actions">
+
+<button
+class="btn-primary action-btn"
+onclick="viewStudy('RAD-00125')">
+
+View
+
+</button>
+
+<button
+class="btn-success action-btn"
+onclick="completeStudy('RAD-00125')">
+
+Complete
+
+</button>
+
+</div>
+
+</td>
+
+</tr>
+
+
+<tr data-status="Scheduled" data-modality="CT Scan">
+
+<td>
+<strong>RAD-00126</strong>
+</td>
+
+<td>
+Sunita Devi<br>
+<small>UHID-10235</small>
+</td>
+
+<td>CT Scan</td>
+
+<td>CT Brain Plain</td>
+
+<td>Dr. Priya Singh</td>
+
+<td>11:15 AM</td>
+
+<td>
+<span class="badge blue">
+Routine
+</span>
+</td>
+
+<td>
+<span class="badge blue">
+Scheduled
+</span>
+</td>
+
+<td>
+
+<div class="actions">
+
+<button
+class="btn-primary action-btn"
+onclick="viewStudy('RAD-00126')">
+
+View
+
+</button>
+
+<button
+class="btn-warning action-btn"
+onclick="startStudy('RAD-00126')">
+
+Start
+
+</button>
+
+</div>
+
+</td>
+
+</tr>
+
+
+<tr data-status="Report Pending" data-modality="MRI">
+
+<td>
+<strong>RAD-00127</strong>
+</td>
+
+<td>
+Mohan Prasad<br>
+<small>UHID-10236</small>
+</td>
+
+<td>MRI</td>
+
+<td>MRI Brain</td>
+
+<td>Dr. Raj Verma</td>
+
+<td>12:00 PM</td>
+
+<td>
+<span class="badge blue">
+Routine
+</span>
+</td>
+
+<td>
+<span class="badge yellow">
+Report Pending
+</span>
+</td>
+
+<td>
+
+<div class="actions">
+
+<button
+class="btn-primary action-btn"
+onclick="viewStudy('RAD-00127')">
+
+View
+
+</button>
+
+<button
+class="btn-success action-btn"
+onclick="createReport('RAD-00127')">
+
+Report
+
+</button>
+
+</div>
+
+</td>
+
+</tr>
+
+
+<tr data-status="Completed" data-modality="Ultrasound">
+
+<td>
+<strong>RAD-00128</strong>
+</td>
+
+<td>
+Anita Kumari<br>
+<small>UHID-10237</small>
+</td>
+
+<td>Ultrasound</td>
+
+<td>USG Abdomen</td>
+
+<td>Dr. Neha Gupta</td>
+
+<td>01:00 PM</td>
+
+<td>
+<span class="badge blue">
+Routine
+</span>
+</td>
+
+<td>
+<span class="badge green">
+Completed
+</span>
+</td>
+
+<td>
+
+<div class="actions">
+
+<button
+class="btn-primary action-btn"
+onclick="viewStudy('RAD-00128')">
+
+View
+
+</button>
+
+<button
+class="btn-secondary action-btn"
+onclick="printReport('RAD-00128')">
+
+Print
+
+</button>
+
+</div>
+
+</td>
+
+</tr>
+
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+
+<!-- TWO COLUMNS -->
+
+<div class="two-col">
+
+
+<!-- MODALITY WORKLOAD -->
+
+<div class="table-card">
+
+<div class="table-header">
+
+<div>
+
+<h3>Modality Workload</h3>
+
+<small>Today's imaging utilization</small>
+
+</div>
+
+</div>
+
+
+<div class="item">
+
+<div class="item-left">
+
+<div class="item-icon">🩻</div>
+
+<div>
+
+<strong>X-Ray</strong><br>
+<small>28 studies</small>
+
+</div>
+
+</div>
+
+<span class="badge blue">72%</span>
+
+</div>
+
+
+<div class="item">
+
+<div class="item-left">
+
+<div class="item-icon">🧠</div>
+
+<div>
+
+<strong>CT Scan</strong><br>
+<small>15 studies</small>
+
+</div>
+
+</div>
+
+<span class="badge purple">58%</span>
+
+</div>
+
+
+<div class="item">
+
+<div class="item-left">
+
+<div class="item-icon">🧲</div>
+
+<div>
+
+<strong>MRI</strong><br>
+<small>9 studies</small>
+
+</div>
+
+</div>
+
+<span class="badge yellow">44%</span>
+
+</div>
+
+
+<div class="item">
+
+<div class="item-left">
+
+<div class="item-icon">🔊</div>
+
+<div>
+
+<strong>Ultrasound</strong><br>
+<small>16 studies</small>
+
+</div>
+
+</div>
+
+<span class="badge green">64%</span>
+
+</div>
+
+</div>
+
+
+<!-- PENDING REPORTS -->
+
+<div class="table-card">
+
+<div class="table-header">
+
+<div>
+
+<h3>Pending Radiology Reports</h3>
+
+<small>Reports requiring radiologist review</small>
+
+</div>
+
+</div>
+
+
+<div class="item">
+
+<div class="item-left">
+
+<div class="item-icon">📄</div>
+
+<div>
+
+<strong>MRI Brain</strong><br>
+<small>Mohan Prasad • RAD-00127</small>
+
+</div>
+
+</div>
+
+<span class="badge red">
+Urgent
+</span>
+
+</div>
+
+
+<div class="item">
+
+<div class="item-left">
+
+<div class="item-icon">🩻</div>
+
+<div>
+
+<strong>Chest X-Ray</strong><br>
+<small>Raj Kumar • RAD-00129</small>
+
+</div>
+
+</div>
+
+<span class="badge yellow">
+Pending
+</span>
+
+</div>
+
+
+<div class="item">
+
+<div class="item-left">
+
+<div class="item-icon">🧠</div>
+
+<div>
+
+<strong>CT Abdomen</strong><br>
+<small>Sunita Devi • RAD-00130</small>
+
+</div>
+
+</div>
+
+<span class="badge yellow">
+Review
+</span>
+
+</div>
+
+
+<div class="item">
+
+<div class="item-left">
+
+<div class="item-icon">🔊</div>
+
+<div>
+
+<strong>USG Pelvis</strong><br>
+<small>Neha Singh • RAD-00131</small>
+
+</div>
+
+</div>
+
+<span class="badge blue">
+Scheduled
+</span>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- EQUIPMENT -->
+
+<div class="table-card">
+
+<div class="table-header">
+
+<div>
+
+<h3>Radiology Equipment Status</h3>
+
+<small>Imaging equipment availability</small>
+
+</div>
+
+</div>
+
+
+<div class="table-responsive">
+
+<table>
+
+<thead>
+
+<tr>
+<th>Equipment</th>
+<th>Department</th>
+<th>Today's Studies</th>
+<th>Availability</th>
+<th>Status</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td><strong>Digital X-Ray</strong></td>
+<td>Radiology</td>
+<td>28</td>
+<td>92%</td>
+<td>
+<span class="badge green">Operational</span>
+</td>
+
+</tr>
+
+<tr>
+
+<td><strong>64-Slice CT Scanner</strong></td>
+<td>Radiology</td>
+<td>15</td>
+<td>86%</td>
+<td>
+<span class="badge green">Operational</span>
+</td>
+
+</tr>
+
+<tr>
+
+<td><strong>1.5T MRI</strong></td>
+<td>Radiology</td>
+<td>9</td>
+<td>74%</td>
+<td>
+<span class="badge yellow">Maintenance Due</span>
+</td>
+
+</tr>
+
+<tr>
+
+<td><strong>Ultrasound System</strong></td>
+<td>Radiology</td>
+<td>16</td>
+<td>96%</td>
+<td>
+<span class="badge green">Operational</span>
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+
+</section>
+
+</main>
+
+
+<!-- ================= NEW IMAGING MODAL ================= -->
+
+<div class="modal" id="radiologyModal">
+
+<div class="modal-box">
+
+<div class="modal-header">
+
+<div>
+
+<h2>New Imaging Request</h2>
+
+<small>
+Register a radiology investigation
+</small>
+
+</div>
+
+<button
+class="close"
+onclick="closeRadiologyModal()">
+
+×
+
+</button>
+
+</div>
+
+
+<form id="radiologyForm">
+
+<div class="form-grid">
+
+
+<div class="form-group">
+
+<label>Patient Name *</label>
+
+<input
+id="patientName"
+type="text"
+placeholder="Patient full name"
+required>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Patient ID *</label>
+
+<input
+id="patientId"
+type="text"
+placeholder="UHID / Patient ID"
+required>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Modality *</label>
+
+<select id="modality" required>
+
+<option value="">Select Modality</option>
+<option>X-Ray</option>
+<option>CT Scan</option>
+<option>MRI</option>
+<option>Ultrasound</option>
+
+</select>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Study *</label>
+
+<select id="study" required>
+
+<option value="">Select Study</option>
+<option>Chest X-Ray AP</option>
+<option>Chest X-Ray PA</option>
+<option>CT Brain Plain</option>
+<option>CT Abdomen</option>
+<option>MRI Brain</option>
+<option>MRI Spine</option>
+<option>USG Abdomen</option>
+<option>USG Pelvis</option>
+
+</select>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Referring Doctor</label>
+
+<select id="doctor">
+
+<option>Dr. Amit Sharma</option>
+<option>Dr. Priya Singh</option>
+<option>Dr. Raj Verma</option>
+<option>Dr. Neha Gupta</option>
+
+</select>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Priority</label>
+
+<select id="priority">
+
+<option>Routine</option>
+<option>Urgent</option>
+<option>Emergency</option>
+
+</select>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Appointment Date</label>
+
+<input
+type="date"
+id="appointmentDate">
+
+</div>
+
+
+<div class="form-group">
+
+<label>Appointment Time</label>
+
+<input
+type="time"
+id="appointmentTime">
+
+</div>
+
+
+<div class="form-group full">
+
+<label>Clinical History / Indication</label>
+
+<textarea
+rows="4"
+placeholder="Enter clinical history and reason for examination"></textarea>
+
+</div>
+
+
+<div class="form-group full">
+
+<label>Special Instructions</label>
+
+<textarea
+rows="3"
+placeholder="Enter special instructions for radiology department"></textarea>
+
+</div>
+
+</div>
+
+
+<div class="modal-footer">
+
+<button
+type="button"
+class="btn-secondary"
+onclick="closeRadiologyModal()">
+
+Cancel
+
+</button>
+
+<button
+type="submit"
+class="btn-primary">
+
+Register Imaging Request
+
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+
+<!-- ================= VIEW MODAL ================= -->
+
+<div class="modal" id="viewModal">
+
+<div class="modal-box">
+
+<div class="modal-header">
+
+<h2>Radiology Study Details</h2>
+
+<button
+class="close"
+onclick="closeView()">
+
+×
+
+</button>
+
+</div>
+
+<div id="studyDetails"></div>
+
+<div class="modal-footer">
+
+<button
+class="btn-secondary"
+onclick="closeView()">
+
+Close
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<script>
+
+/* ================= MODAL ================= */
+
+function openRadiologyModal(){
+
+    document
+    .getElementById("radiologyModal")
+    .classList.add("active");
+
+}
+
+function closeRadiologyModal(){
+
+    document
+    .getElementById("radiologyModal")
+    .classList.remove("active");
+
+}
+
+function closeView(){
+
+    document
+    .getElementById("viewModal")
+    .classList.remove("active");
+
+}
+
+
+/* ================= ALERT ================= */
+
+function showAlert(message){
+
+    const box =
+        document.getElementById("alert");
+
+    box.textContent = message;
+
+    box.classList.add("show");
+
+    setTimeout(function(){
+
+        box.classList.remove("show");
+
+    },3500);
+
+}
+
+
+/* ================= SEARCH ================= */
+
+function searchStudies(){
+
+    const value =
+        document
+        .getElementById("searchInput")
+        .value
+        .toLowerCase();
+
+    const rows =
+        document
+        .querySelectorAll(
+            "#radiologyTable tbody tr"
+        );
+
+    rows.forEach(function(row){
+
+        row.style.display =
+            row.textContent
+            .toLowerCase()
+            .includes(value)
+            ? ""
+            : "none";
+
+    });
+
+}
+
+
+/* ================= STATUS FILTER ================= */
+
+function filterStudies(){
+
+    const status =
+        document
+        .getElementById("statusFilter")
+        .value;
+
+    const rows =
+        document
+        .querySelectorAll(
+            "#radiologyTable tbody tr"
+        );
+
+    rows.forEach(function(row){
+
+        row.style.display =
+            status === "all" ||
+            row.dataset.status === status
+            ? ""
+            : "none";
+
+    });
+
+}
+
+
+/* ================= MODALITY FILTER ================= */
+
+function filterModality(){
+
+    const modality =
+        document
+        .getElementById("modalityFilter")
+        .value;
+
+    const rows =
+        document
+        .querySelectorAll(
+            "#radiologyTable tbody tr"
+        );
+
+    rows.forEach(function(row){
+
+        row.style.display =
+            modality === "all" ||
+            row.dataset.modality === modality
+            ? ""
+            : "none";
+
+    });
+
+}
+
+
+/* ================= VIEW STUDY ================= */
+
+function viewStudy(id){
+
+    document
+    .getElementById("studyDetails")
+    .innerHTML = `
+
+    <div style="
+        display:grid;
+        grid-template-columns:repeat(2,1fr);
+        gap:18px;
+    ">
+
+        <div>
+            <strong>Study ID</strong>
+            <p>${id}</p>
+        </div>
+
+        <div>
+            <strong>Patient</strong>
+            <p>Rahul Kumar</p>
+        </div>
+
+        <div>
+            <strong>Patient ID</strong>
+            <p>UHID-10234</p>
+        </div>
+
+        <div>
+            <strong>Modality</strong>
+            <p>X-Ray</p>
+        </div>
+
+        <div>
+            <strong>Study</strong>
+            <p>Chest X-Ray AP</p>
+        </div>
+
+        <div>
+            <strong>Referring Doctor</strong>
+            <p>Dr. Amit Sharma</p>
+        </div>
+
+        <div>
+            <strong>Priority</strong>
+            <p>
+                <span class="badge red">
+                Urgent
+                </span>
+            </p>
+        </div>
+
+        <div>
+            <strong>Status</strong>
+            <p>
+                <span class="badge yellow">
+                Processing
+                </span>
+            </p>
+        </div>
+
+        <div style="grid-column:1/-1">
+
+            <strong>Clinical Indication</strong>
+
+            <p>
+                Diagnostic imaging requested for
+                clinical evaluation.
+            </p>
+
+        </div>
+
+    </div>
+
+    `;
+
+    document
+    .getElementById("viewModal")
+    .classList.add("active");
+
+}
+
+
+/* ================= START STUDY ================= */
+
+function startStudy(id){
+
+    if(
+        confirm(
+            "Start imaging study "+id+"?"
+        )
+    ){
+
+        showAlert(
+            "Imaging study "+id+" started."
+        );
+
+    }
+
+}
+
+
+/* ================= COMPLETE STUDY ================= */
+
+function completeStudy(id){
+
+    if(
+        confirm(
+            "Mark study "+id+" as completed?"
+        )
+    ){
+
+        showAlert(
+            "Study "+id+" completed successfully."
+        );
+
+    }
+
+}
+
+
+/* ================= REPORT ================= */
+
+function createReport(id){
+
+    showAlert(
+        "Radiology report editor opened for "+id+"."
+    );
+
+}
+
+
+/* ================= PRINT ================= */
+
+function printReport(id){
+
+    showAlert(
+        "Preparing radiology report "+id+" for printing."
+    );
+
+    setTimeout(function(){
+
+        window.print();
+
+    },500);
+
+}
+
+
+/* ================= REFRESH ================= */
+
+function refreshRadiology(){
+
+    showAlert(
+        "Radiology data refreshed successfully."
+    );
+
+}
+
+
+/* ================= FORM ================= */
+
+document
+.getElementById("radiologyForm")
+.addEventListener(
+"submit",
+function(event){
+
+    event.preventDefault();
+
+    const patient =
+        document
+        .getElementById("patientName")
+        .value;
+
+    const patientId =
+        document
+        .getElementById("patientId")
+        .value;
+
+    const modality =
+        document
+        .getElementById("modality")
+        .value;
+
+    const study =
+        document
+        .getElementById("study")
+        .value;
+
+    if(
+        !patient ||
+        !patientId ||
+        !modality ||
+        !study
+    ){
+
+        alert(
+            "Please complete all required fields."
+        );
+
+        return;
+
+    }
+
+    const studyId =
+        "RAD-"+Math.floor(
+            10000+
+            Math.random()*89999
+        );
+
+    closeRadiologyModal();
+
+    showAlert(
+        "Imaging request registered successfully. "+
+        "Study ID: "+studyId
+    );
+
+    this.reset();
+
+});
+
+
+/* ================= OUTSIDE CLICK ================= */
+
+window.onclick=function(event){
+
+    const modal =
+        document.getElementById(
+            "radiologyModal"
+        );
+
+    const view =
+        document.getElementById(
+            "viewModal"
+        );
+
+    if(event.target === modal){
+        closeRadiologyModal();
+    }
+
+    if(event.target === view){
+        closeView();
+    }
+
+};
+
+
+/* ================= ESCAPE ================= */
+
+document.addEventListener(
+"keydown",
+function(event){
+
+    if(event.key === "Escape"){
+
+        closeRadiologyModal();
+        closeView();
+
+    }
+
+});
+
+</script>
+
+</body>
+</html>
