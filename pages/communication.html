@@ -1,0 +1,1920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Communication | Hospital Management System</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+:root{
+    --primary:#2563eb;
+    --dark:#0f172a;
+    --sidebar:#101a2f;
+    --bg:#f5f7fb;
+    --white:#fff;
+    --border:#e5e7eb;
+    --text:#1e293b;
+    --muted:#64748b;
+    --green:#16a34a;
+    --red:#dc2626;
+    --orange:#d97706;
+    --purple:#7c3aed;
+    --cyan:#0891b2;
+}
+
+body{
+    background:var(--bg);
+    color:var(--text);
+}
+
+/* SIDEBAR */
+
+.sidebar{
+    position:fixed;
+    left:0;
+    top:0;
+    width:250px;
+    height:100vh;
+    background:var(--sidebar);
+    color:white;
+    padding:18px 14px;
+    overflow-y:auto;
+    z-index:1000;
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:10px;
+    margin-bottom:22px;
+}
+
+.logo-icon{
+    width:42px;
+    height:42px;
+    background:#2563eb;
+    border-radius:10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:bold;
+}
+
+.logo h2{
+    font-size:18px;
+}
+
+.logo small{
+    color:#94a3b8;
+}
+
+.menu-title{
+    color:#64748b;
+    font-size:11px;
+    font-weight:bold;
+    margin:20px 10px 8px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+}
+
+.menu a{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:12px 13px;
+    margin-bottom:4px;
+    border-radius:8px;
+    color:#cbd5e1;
+    text-decoration:none;
+    font-size:14px;
+}
+
+.menu a:hover,
+.menu a.active{
+    background:#2563eb;
+    color:white;
+}
+
+/* MAIN */
+
+.main{
+    margin-left:250px;
+    min-height:100vh;
+}
+
+.topbar{
+    height:70px;
+    background:white;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 25px;
+    position:sticky;
+    top:0;
+    z-index:500;
+}
+
+.topbar h1{
+    font-size:21px;
+}
+
+.profile{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.avatar{
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    background:#2563eb;
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-weight:bold;
+}
+
+.content{
+    padding:25px;
+}
+
+/* HEADER */
+
+.page-banner{
+    background:linear-gradient(120deg,#2563eb,#4f46e5);
+    color:white;
+    padding:25px;
+    border-radius:13px;
+    margin-bottom:25px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+}
+
+.page-banner h2{
+    font-size:23px;
+    margin-bottom:7px;
+}
+
+.page-banner p{
+    font-size:13px;
+    opacity:.9;
+}
+
+button{
+    border:none;
+    border-radius:7px;
+    padding:10px 15px;
+    cursor:pointer;
+    font-size:13px;
+}
+
+.btn-primary{
+    background:#2563eb;
+    color:white;
+}
+
+.btn-success{
+    background:var(--green);
+    color:white;
+}
+
+.btn-danger{
+    background:var(--red);
+    color:white;
+}
+
+.btn-warning{
+    background:var(--orange);
+    color:white;
+}
+
+.btn-purple{
+    background:var(--purple);
+    color:white;
+}
+
+.btn-secondary{
+    background:#64748b;
+    color:white;
+}
+
+/* STATS */
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:15px;
+    margin-bottom:25px;
+}
+
+.stat{
+    background:white;
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:18px;
+}
+
+.stat-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+
+.stat p{
+    color:var(--muted);
+    font-size:12px;
+}
+
+.stat h2{
+    margin-top:7px;
+    font-size:23px;
+}
+
+.stat-icon{
+    width:43px;
+    height:43px;
+    border-radius:10px;
+    background:#dbeafe;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:20px;
+}
+
+/* GRID */
+
+.communication-grid{
+    display:grid;
+    grid-template-columns:2fr 1fr;
+    gap:20px;
+}
+
+.card{
+    background:white;
+    border:1px solid var(--border);
+    border-radius:12px;
+    overflow:hidden;
+    margin-bottom:20px;
+}
+
+.card-header{
+    padding:18px;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+}
+
+.card-header h3{
+    font-size:17px;
+}
+
+.card-header small{
+    color:var(--muted);
+}
+
+.card-body{
+    padding:18px;
+}
+
+/* MESSAGE LIST */
+
+.message{
+    display:flex;
+    gap:12px;
+    padding:15px 0;
+    border-bottom:1px solid var(--border);
+}
+
+.message:last-child{
+    border-bottom:none;
+}
+
+.message-avatar{
+    min-width:42px;
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    background:#dbeafe;
+    color:#1d4ed8;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:bold;
+}
+
+.message-content{
+    flex:1;
+}
+
+.message-top{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+}
+
+.message-top strong{
+    font-size:14px;
+}
+
+.message-top small{
+    color:var(--muted);
+}
+
+.message-content p{
+    margin-top:5px;
+    font-size:13px;
+    color:#475569;
+    line-height:1.5;
+}
+
+/* COMPOSE */
+
+.form-group{
+    margin-bottom:15px;
+}
+
+.form-group label{
+    display:block;
+    font-size:12px;
+    font-weight:bold;
+    color:#475569;
+    margin-bottom:6px;
+}
+
+input,
+select,
+textarea{
+    width:100%;
+    padding:11px 12px;
+    border:1px solid #d1d5db;
+    border-radius:7px;
+    outline:none;
+    background:white;
+}
+
+textarea{
+    min-height:130px;
+    resize:vertical;
+}
+
+.form-actions{
+    display:flex;
+    justify-content:flex-end;
+    gap:8px;
+}
+
+/* CONTACTS */
+
+.contact{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:12px 0;
+    border-bottom:1px solid var(--border);
+}
+
+.contact:last-child{
+    border-bottom:none;
+}
+
+.contact-avatar{
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    background:#ede9fe;
+    color:#6d28d9;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-weight:bold;
+}
+
+.contact-info{
+    flex:1;
+}
+
+.contact-info strong{
+    display:block;
+    font-size:13px;
+}
+
+.contact-info small{
+    color:var(--muted);
+}
+
+.online{
+    width:9px;
+    height:9px;
+    background:#22c55e;
+    border-radius:50%;
+}
+
+/* ANNOUNCEMENT */
+
+.announcement{
+    padding:14px;
+    border-radius:9px;
+    background:#f8fafc;
+    border:1px solid var(--border);
+    margin-bottom:10px;
+}
+
+.announcement strong{
+    display:block;
+    margin-bottom:5px;
+    font-size:13px;
+}
+
+.announcement p{
+    color:#64748b;
+    font-size:12px;
+    line-height:1.5;
+}
+
+/* TABLE */
+
+.table-responsive{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:700px;
+}
+
+th,
+td{
+    padding:13px 15px;
+    border-bottom:1px solid var(--border);
+    text-align:left;
+    font-size:13px;
+}
+
+th{
+    background:#f8fafc;
+    font-size:11px;
+    text-transform:uppercase;
+    color:#64748b;
+}
+
+.badge{
+    display:inline-block;
+    padding:5px 9px;
+    border-radius:20px;
+    font-size:10px;
+    font-weight:bold;
+}
+
+.green{
+    background:#dcfce7;
+    color:#166534;
+}
+
+.blue{
+    background:#dbeafe;
+    color:#1e40af;
+}
+
+.yellow{
+    background:#fef3c7;
+    color:#92400e;
+}
+
+.red{
+    background:#fee2e2;
+    color:#991b1b;
+}
+
+.purple{
+    background:#ede9fe;
+    color:#5b21b6;
+}
+
+/* MODAL */
+
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:#0f172acc;
+    z-index:2000;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+}
+
+.modal.active{
+    display:flex;
+}
+
+.modal-box{
+    width:600px;
+    max-width:100%;
+    max-height:90vh;
+    overflow-y:auto;
+    background:white;
+    border-radius:12px;
+    padding:24px;
+}
+
+.modal-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:20px;
+}
+
+.close{
+    background:#f1f5f9;
+    font-size:20px;
+    padding:5px 10px;
+}
+
+/* ALERT */
+
+.alert{
+    display:none;
+    background:#dcfce7;
+    color:#166534;
+    padding:12px 15px;
+    border-radius:8px;
+    margin-bottom:18px;
+}
+
+.alert.show{
+    display:block;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1250px){
+
+    .stats{
+        grid-template-columns:repeat(3,1fr);
+    }
+
+}
+
+@media(max-width:950px){
+
+    .sidebar{
+        width:70px;
+        padding:15px 8px;
+    }
+
+    .logo h2,
+    .logo small,
+    .menu-title,
+    .menu a span{
+        display:none;
+    }
+
+    .logo{
+        justify-content:center;
+    }
+
+    .menu a{
+        justify-content:center;
+    }
+
+    .main{
+        margin-left:70px;
+    }
+
+    .communication-grid{
+        grid-template-columns:1fr;
+    }
+
+}
+
+@media(max-width:650px){
+
+    .content{
+        padding:15px;
+    }
+
+    .stats{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .page-banner{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .topbar{
+        padding:0 15px;
+    }
+
+    .topbar h1{
+        font-size:17px;
+    }
+
+}
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+
+<aside class="sidebar">
+
+<div class="logo">
+
+<div class="logo-icon">H+</div>
+
+<div>
+<h2>Medicare HMS</h2>
+<small>Hospital System</small>
+</div>
+
+</div>
+
+
+<div class="menu-title">Main</div>
+
+<nav class="menu">
+
+<a href="../dashboard.html">
+🏠 <span>Dashboard</span>
+</a>
+
+<a href="patient.html">
+👥 <span>Patients</span>
+</a>
+
+<a href="doctors.html">
+👨‍⚕️ <span>Doctors</span>
+</a>
+
+<a href="appointments.html">
+📅 <span>Appointments</span>
+</a>
+
+<a href="opd.html">
+🏥 <span>OPD</span>
+</a>
+
+<a href="ipd.html">
+🛏️ <span>IPD / Admission</span>
+</a>
+
+<a href="emergency.html">
+🚨 <span>Emergency</span>
+</a>
+
+<a href="ambulance.html">
+🚑 <span>Ambulance</span>
+</a>
+
+<a href="nursing.html">
+👩‍⚕️ <span>Nursing</span>
+</a>
+
+</nav>
+
+
+<div class="menu-title">Diagnostics</div>
+
+<nav class="menu">
+
+<a href="laboratory.html">
+🧪 <span>Laboratory</span>
+</a>
+
+<a href="radiology.html">
+☢️ <span>Radiology</span>
+</a>
+
+<a href="blood-bank.html">
+🩸 <span>Blood Bank</span>
+</a>
+
+</nav>
+
+
+<div class="menu-title">Operations</div>
+
+<nav class="menu">
+
+<a href="pharmacy.html">
+💊 <span>Pharmacy</span>
+</a>
+
+<a href="billing.html">
+💰 <span>Billing & Finance</span>
+</a>
+
+<a href="insurance-tpa.html">
+📄 <span>Insurance / TPA</span>
+</a>
+
+<a href="inventory.html">
+📦 <span>Inventory</span>
+</a>
+
+<a href="ambulance.html">
+🚑 <span>Ambulance</span>
+</a>
+
+</nav>
+
+
+<div class="menu-title">Administration</div>
+
+<nav class="menu">
+
+<a href="hr-staff.html">
+👥 <span>HR & Staff</span>
+</a>
+
+<a href="reports.html">
+📊 <span>Reports</span>
+</a>
+
+<a href="communication.html" class="active">
+✉️ <span>Communication</span>
+</a>
+
+<a href="settings.html">
+⚙️ <span>Settings</span>
+</a>
+
+</nav>
+
+
+<div class="menu-title">Account</div>
+
+<nav class="menu">
+
+<a href="#" onclick="logout()">
+🚪 <span>Logout</span>
+</a>
+
+</nav>
+
+</aside>
+
+
+<!-- MAIN -->
+
+<main class="main">
+
+
+<header class="topbar">
+
+<h1>Communication</h1>
+
+<div class="profile">
+
+<div>🔔</div>
+
+<div class="avatar">AK</div>
+
+<div>
+<strong>Administrator</strong>
+<br>
+<small style="color:#64748b;">
+Hospital Administrator
+</small>
+</div>
+
+</div>
+
+</header>
+
+
+<section class="content">
+
+
+<div id="alert" class="alert"></div>
+
+
+<!-- BANNER -->
+
+<div class="page-banner">
+
+<div>
+
+<h2>✉️ Hospital Communication Center</h2>
+
+<p>
+Send messages, announcements, notifications and internal
+communications to hospital staff and departments.
+</p>
+
+</div>
+
+<button
+onclick="openCompose()"
+style="background:white;color:#2563eb;">
+✉ Compose Message
+</button>
+
+</div>
+
+
+<!-- STATS -->
+
+<div class="stats">
+
+
+<div class="stat">
+
+<div class="stat-top">
+
+<div>
+
+<p>Total Messages</p>
+
+<h2>1,284</h2>
+
+</div>
+
+<div class="stat-icon">
+✉️
+</div>
+
+</div>
+
+</div>
+
+
+<div class="stat">
+
+<div class="stat-top">
+
+<div>
+
+<p>Unread</p>
+
+<h2>37</h2>
+
+</div>
+
+<div class="stat-icon">
+📩
+</div>
+
+</div>
+
+</div>
+
+
+<div class="stat">
+
+<div class="stat-top">
+
+<div>
+
+<p>Announcements</p>
+
+<h2>18</h2>
+
+</div>
+
+<div class="stat-icon">
+📢
+</div>
+
+</div>
+
+</div>
+
+
+<div class="stat">
+
+<div class="stat-top">
+
+<div>
+
+<p>Staff Online</p>
+
+<h2>164</h2>
+
+</div>
+
+<div class="stat-icon">
+🟢
+</div>
+
+</div>
+
+</div>
+
+
+<div class="stat">
+
+<div class="stat-top">
+
+<div>
+
+<p>Notifications</p>
+
+<h2>76</h2>
+
+</div>
+
+<div class="stat-icon">
+🔔
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- COMMUNICATION AREA -->
+
+<div class="communication-grid">
+
+
+<!-- LEFT -->
+
+<div>
+
+
+<div class="card">
+
+<div class="card-header">
+
+<div>
+
+<h3>📨 Recent Messages</h3>
+
+<small>Latest internal communication</small>
+
+</div>
+
+<button
+class="btn-primary"
+onclick="openCompose()">
+New Message
+</button>
+
+</div>
+
+
+<div class="card-body">
+
+
+<div class="message">
+
+<div class="message-avatar">
+RS
+</div>
+
+<div class="message-content">
+
+<div class="message-top">
+
+<strong>Dr. Rajesh Sharma</strong>
+
+<small>10:42 AM</small>
+
+</div>
+
+<p>
+Please review today's cardiology department
+schedule before the afternoon OPD.
+</p>
+
+<span class="badge blue">Medical</span>
+
+</div>
+
+</div>
+
+
+<div class="message">
+
+<div class="message-avatar">
+PS
+</div>
+
+<div class="message-content">
+
+<div class="message-top">
+
+<strong>Priya Singh</strong>
+
+<small>10:15 AM</small>
+
+</div>
+
+<p>
+Nursing staff meeting has been scheduled for
+4:00 PM in Conference Room 2.
+</p>
+
+<span class="badge purple">Nursing</span>
+
+</div>
+
+</div>
+
+
+<div class="message">
+
+<div class="message-avatar">
+AM
+</div>
+
+<div class="message-content">
+
+<div class="message-top">
+
+<strong>Amit Kumar</strong>
+
+<small>09:48 AM</small>
+
+</div>
+
+<p>
+Laboratory equipment maintenance will take place
+tomorrow from 11 AM to 1 PM.
+</p>
+
+<span class="badge yellow">Laboratory</span>
+
+</div>
+
+</div>
+
+
+<div class="message">
+
+<div class="message-avatar">
+SK
+</div>
+
+<div class="message-content">
+
+<div class="message-top">
+
+<strong>Sunita Kumari</strong>
+
+<small>09:20 AM</small>
+
+</div>
+
+<p>
+Please submit pending employee attendance corrections
+before payroll processing.
+</p>
+
+<span class="badge green">HR</span>
+
+</div>
+
+</div>
+
+
+<div class="message">
+
+<div class="message-avatar">
+VK
+</div>
+
+<div class="message-content">
+
+<div class="message-top">
+
+<strong>Vikash Kumar</strong>
+
+<small>08:55 AM</small>
+
+</div>
+
+<p>
+Emergency department ambulance availability has
+been updated in the system.
+</p>
+
+<span class="badge red">Emergency</span>
+
+</div>
+
+</div>
+
+
+</div>
+
+</div>
+
+
+<!-- SENT MESSAGES -->
+
+<div class="card">
+
+<div class="card-header">
+
+<div>
+
+<h3>📤 Sent Messages</h3>
+
+<small>Your recent communication</small>
+
+</div>
+
+</div>
+
+
+<div class="table-responsive">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Subject</th>
+<th>Recipients</th>
+<th>Date</th>
+<th>Status</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>Monthly Staff Meeting</td>
+
+<td>All Staff</td>
+
+<td>27-Sep-2026</td>
+
+<td>
+<span class="badge green">Delivered</span>
+</td>
+
+</tr>
+
+
+<tr>
+
+<td>Hospital Safety Guidelines</td>
+
+<td>All Departments</td>
+
+<td>26-Sep-2026</td>
+
+<td>
+<span class="badge green">Delivered</span>
+</td>
+
+</tr>
+
+
+<tr>
+
+<td>Payroll Processing Notice</td>
+
+<td>HR Department</td>
+
+<td>25-Sep-2026</td>
+
+<td>
+<span class="badge blue">Read</span>
+</td>
+
+</tr>
+
+
+<tr>
+
+<td>Emergency Duty Roster</td>
+
+<td>Emergency Staff</td>
+
+<td>24-Sep-2026</td>
+
+<td>
+<span class="badge green">Delivered</span>
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- RIGHT -->
+
+<div>
+
+
+<!-- QUICK MESSAGE -->
+
+<div class="card">
+
+<div class="card-header">
+
+<div>
+
+<h3>⚡ Quick Message</h3>
+
+<small>Send a short message</small>
+
+</div>
+
+</div>
+
+
+<div class="card-body">
+
+<div class="form-group">
+
+<label>Recipient</label>
+
+<select id="quickRecipient">
+
+<option>All Staff</option>
+<option>Doctors</option>
+<option>Nursing</option>
+<option>Emergency</option>
+<option>Laboratory</option>
+<option>Radiology</option>
+<option>Pharmacy</option>
+<option>Administration</option>
+<option>HR Department</option>
+
+</select>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Message</label>
+
+<textarea
+id="quickMessage"
+placeholder="Type your message..."></textarea>
+
+</div>
+
+
+<div class="form-actions">
+
+<button
+class="btn-primary"
+onclick="sendQuickMessage()">
+Send Message
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- ONLINE STAFF -->
+
+<div class="card">
+
+<div class="card-header">
+
+<div>
+
+<h3>🟢 Staff Online</h3>
+
+<small>Currently available</small>
+
+</div>
+
+<span class="badge green">164 Online</span>
+
+</div>
+
+
+<div class="card-body">
+
+
+<div class="contact">
+
+<div class="contact-avatar">RS</div>
+
+<div class="contact-info">
+
+<strong>Dr. Rajesh Sharma</strong>
+
+<small>Cardiology</small>
+
+</div>
+
+<div class="online"></div>
+
+</div>
+
+
+<div class="contact">
+
+<div class="contact-avatar">PS</div>
+
+<div class="contact-info">
+
+<strong>Priya Singh</strong>
+
+<small>Nursing</small>
+
+</div>
+
+<div class="online"></div>
+
+</div>
+
+
+<div class="contact">
+
+<div class="contact-avatar">SK</div>
+
+<div class="contact-info">
+
+<strong>Sunita Kumari</strong>
+
+<small>HR</small>
+
+</div>
+
+<div class="online"></div>
+
+</div>
+
+
+<div class="contact">
+
+<div class="contact-avatar">AM</div>
+
+<div class="contact-info">
+
+<strong>Amit Kumar</strong>
+
+<small>Laboratory</small>
+
+</div>
+
+<div class="online"></div>
+
+</div>
+
+
+</div>
+
+</div>
+
+
+<!-- ANNOUNCEMENTS -->
+
+<div class="card">
+
+<div class="card-header">
+
+<div>
+
+<h3>📢 Announcements</h3>
+
+<small>Hospital-wide notices</small>
+
+</div>
+
+<button
+class="btn-purple"
+onclick="newAnnouncement()">
++
+</button>
+
+</div>
+
+
+<div class="card-body">
+
+
+<div class="announcement">
+
+<strong>Hospital Safety Drill</strong>
+
+<p>
+Emergency safety drill scheduled for
+30 September at 11:00 AM.
+</p>
+
+</div>
+
+
+<div class="announcement">
+
+<strong>Staff Meeting</strong>
+
+<p>
+Monthly staff meeting will be held
+on 1 October at 4:00 PM.
+</p>
+
+</div>
+
+
+<div class="announcement">
+
+<strong>System Maintenance</strong>
+
+<p>
+HMS maintenance window scheduled for
+28 September from 11 PM to 1 AM.
+</p>
+
+</div>
+
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- NOTIFICATION CENTER -->
+
+<div class="card">
+
+<div class="card-header">
+
+<div>
+
+<h3>🔔 Notification Center</h3>
+
+<small>Hospital system notifications</small>
+
+</div>
+
+<button
+class="btn-secondary"
+onclick="markAllRead()">
+Mark All Read
+</button>
+
+</div>
+
+
+<div class="table-responsive">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Notification</th>
+<th>Department</th>
+<th>Time</th>
+<th>Priority</th>
+<th>Status</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>Emergency duty roster updated</td>
+
+<td>Emergency</td>
+
+<td>10:30 AM</td>
+
+<td>
+<span class="badge red">High</span>
+</td>
+
+<td>
+<span class="badge blue">Unread</span>
+</td>
+
+</tr>
+
+
+<tr>
+
+<td>New laboratory report available</td>
+
+<td>Laboratory</td>
+
+<td>10:05 AM</td>
+
+<td>
+<span class="badge yellow">Medium</span>
+</td>
+
+<td>
+<span class="badge blue">Unread</span>
+</td>
+
+</tr>
+
+
+<tr>
+
+<td>Employee leave approved</td>
+
+<td>HR</td>
+
+<td>09:45 AM</td>
+
+<td>
+<span class="badge green">Normal</span>
+</td>
+
+<td>
+<span class="badge green">Read</span>
+</td>
+
+</tr>
+
+
+<tr>
+
+<td>Blood bank inventory alert</td>
+
+<td>Blood Bank</td>
+
+<td>09:20 AM</td>
+
+<td>
+<span class="badge red">High</span>
+</td>
+
+<td>
+<span class="badge green">Read</span>
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+
+</section>
+
+</main>
+
+
+<!-- COMPOSE MESSAGE MODAL -->
+
+<div class="modal" id="composeModal">
+
+<div class="modal-box">
+
+<div class="modal-header">
+
+<h2>✉️ Compose Message</h2>
+
+<button
+class="close"
+onclick="closeCompose()">
+×
+</button>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Recipients *</label>
+
+<select id="recipient">
+
+<option value="">Select Recipient</option>
+<option>All Staff</option>
+<option>Doctors</option>
+<option>Nursing Department</option>
+<option>Emergency Department</option>
+<option>Laboratory</option>
+<option>Radiology</option>
+<option>Pharmacy</option>
+<option>HR Department</option>
+<option>Administration</option>
+
+</select>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Subject *</label>
+
+<input
+type="text"
+id="subject"
+placeholder="Enter message subject">
+
+</div>
+
+
+<div class="form-group">
+
+<label>Priority</label>
+
+<select id="priority">
+
+<option>Normal</option>
+<option>High</option>
+<option>Urgent</option>
+
+</select>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Message *</label>
+
+<textarea
+id="message"
+placeholder="Write your message here..."></textarea>
+
+</div>
+
+
+<div class="form-actions">
+
+<button
+class="btn-secondary"
+onclick="closeCompose()">
+Cancel
+</button>
+
+<button
+class="btn-primary"
+onclick="sendMessage()">
+📤 Send Message
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<script>
+
+/* ALERT */
+
+function showAlert(message){
+
+    const alert =
+        document.getElementById("alert");
+
+    alert.textContent = message;
+
+    alert.classList.add("show");
+
+    setTimeout(function(){
+
+        alert.classList.remove("show");
+
+    },3000);
+
+}
+
+
+/* COMPOSE */
+
+function openCompose(){
+
+    document
+    .getElementById("composeModal")
+    .classList.add("active");
+
+}
+
+
+function closeCompose(){
+
+    document
+    .getElementById("composeModal")
+    .classList.remove("active");
+
+}
+
+
+/* SEND MESSAGE */
+
+function sendMessage(){
+
+    const recipient =
+        document
+        .getElementById("recipient")
+        .value;
+
+    const subject =
+        document
+        .getElementById("subject")
+        .value
+        .trim();
+
+    const message =
+        document
+        .getElementById("message")
+        .value
+        .trim();
+
+    if(!recipient || !subject || !message){
+
+        alert(
+            "Please select recipient and enter subject and message."
+        );
+
+        return;
+
+    }
+
+    closeCompose();
+
+    document
+    .getElementById("recipient")
+    .value="";
+
+    document
+    .getElementById("subject")
+    .value="";
+
+    document
+    .getElementById("message")
+    .value="";
+
+    showAlert(
+        "Message sent successfully to " +
+        recipient + "."
+    );
+
+}
+
+
+/* QUICK MESSAGE */
+
+function sendQuickMessage(){
+
+    const recipient =
+        document
+        .getElementById("quickRecipient")
+        .value;
+
+    const message =
+        document
+        .getElementById("quickMessage")
+        .value
+        .trim();
+
+    if(!message){
+
+        alert("Please enter a message.");
+
+        return;
+
+    }
+
+    document
+    .getElementById("quickMessage")
+    .value="";
+
+    showAlert(
+        "Quick message sent to " +
+        recipient + "."
+    );
+
+}
+
+
+/* ANNOUNCEMENT */
+
+function newAnnouncement(){
+
+    const title =
+        prompt(
+            "Enter announcement title:"
+        );
+
+    if(!title){
+        return;
+    }
+
+    showAlert(
+        "Announcement '" +
+        title +
+        "' created successfully."
+    );
+
+}
+
+
+/* MARK ALL READ */
+
+function markAllRead(){
+
+    showAlert(
+        "All notifications marked as read."
+    );
+
+}
+
+
+/* LOGOUT */
+
+function logout(){
+
+    if(
+        confirm(
+            "Are you sure you want to logout?"
+        )
+    ){
+
+        window.location.href =
+            "../index.html";
+
+    }
+
+}
+
+
+/* CLOSE MODAL OUTSIDE */
+
+window.addEventListener(
+    "click",
+    function(event){
+
+        const modal =
+            document.getElementById(
+                "composeModal"
+            );
+
+        if(event.target === modal){
+
+            closeCompose();
+
+        }
+
+    }
+);
+
+
+/* ESC */
+
+document.addEventListener(
+    "keydown",
+    function(event){
+
+        if(event.key === "Escape"){
+
+            closeCompose();
+
+        }
+
+    }
+);
+
+</script>
+
+</body>
+</html>
