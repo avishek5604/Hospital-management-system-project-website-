@@ -1,0 +1,3135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Inventory Management | Hospital Management System</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+:root{
+    --primary:#2563eb;
+    --dark:#172033;
+    --bg:#f4f7fb;
+    --border:#e5e7eb;
+    --green:#16a34a;
+    --red:#dc2626;
+    --orange:#d97706;
+    --purple:#7c3aed;
+    --cyan:#0891b2;
+}
+
+body{
+    background:var(--bg);
+    color:#1f2937;
+}
+
+.sidebar{
+    position:fixed;
+    left:0;
+    top:0;
+    width:250px;
+    height:100vh;
+    background:var(--dark);
+    color:white;
+    padding:20px 15px;
+    overflow-y:auto;
+    z-index:1000;
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:10px;
+    margin-bottom:25px;
+}
+
+.logo-icon{
+    width:42px;
+    height:42px;
+    background:var(--primary);
+    border-radius:10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:bold;
+}
+
+.logo h2{
+    font-size:18px;
+}
+
+.logo small{
+    color:#94a3b8;
+}
+
+.menu-title{
+    color:#64748b;
+    font-size:11px;
+    margin:20px 10px 8px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+}
+
+.menu a{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    color:#cbd5e1;
+    text-decoration:none;
+    padding:12px 13px;
+    border-radius:8px;
+    margin-bottom:5px;
+    font-size:14px;
+}
+
+.menu a:hover,
+.menu a.active{
+    background:var(--primary);
+    color:white;
+}
+
+.main{
+    margin-left:250px;
+    min-height:100vh;
+}
+
+.topbar{
+    height:70px;
+    background:white;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:0 25px;
+    position:sticky;
+    top:0;
+    z-index:500;
+}
+
+.topbar h1{
+    font-size:22px;
+}
+
+.top-right{
+    display:flex;
+    align-items:center;
+    gap:20px;
+}
+
+.profile{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.avatar{
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    background:var(--primary);
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:bold;
+}
+
+.content{
+    padding:25px;
+}
+
+button{
+    border:0;
+    border-radius:7px;
+    padding:10px 15px;
+    cursor:pointer;
+    font-size:13px;
+}
+
+.btn-primary{
+    background:var(--primary);
+    color:white;
+}
+
+.btn-success{
+    background:var(--green);
+    color:white;
+}
+
+.btn-danger{
+    background:var(--red);
+    color:white;
+}
+
+.btn-warning{
+    background:var(--orange);
+    color:white;
+}
+
+.btn-purple{
+    background:var(--purple);
+    color:white;
+}
+
+.btn-secondary{
+    background:#64748b;
+    color:white;
+}
+
+.banner{
+    background:linear-gradient(120deg,#1e40af,#2563eb);
+    color:white;
+    border-radius:12px;
+    padding:22px;
+    margin-bottom:25px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+}
+
+.banner h2{
+    margin-bottom:7px;
+}
+
+.banner p{
+    font-size:13px;
+    opacity:.9;
+}
+
+.banner button{
+    background:white;
+    color:#1d4ed8;
+    font-weight:bold;
+}
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(6,1fr);
+    gap:15px;
+    margin-bottom:25px;
+}
+
+.stat-card{
+    background:white;
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:17px;
+}
+
+.stat-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:8px;
+}
+
+.stat-card p{
+    color:#64748b;
+    font-size:12px;
+}
+
+.stat-card h2{
+    font-size:22px;
+    margin-top:8px;
+}
+
+.stat-icon{
+    width:42px;
+    height:42px;
+    border-radius:10px;
+    background:#dbeafe;
+    color:var(--primary);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:19px;
+}
+
+.quick-actions{
+    display:grid;
+    grid-template-columns:repeat(7,1fr);
+    gap:10px;
+    margin-bottom:25px;
+}
+
+.quick{
+    background:white;
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:14px 8px;
+    text-align:center;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.quick:hover{
+    transform:translateY(-2px);
+    box-shadow:0 5px 15px #0001;
+}
+
+.quick-icon{
+    font-size:23px;
+    margin-bottom:6px;
+}
+
+.toolbar{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-bottom:20px;
+}
+
+.search{
+    flex:1;
+    min-width:220px;
+}
+
+input,
+select,
+textarea{
+    width:100%;
+    padding:10px 12px;
+    border:1px solid #d1d5db;
+    border-radius:7px;
+    background:white;
+    outline:none;
+}
+
+.table-card{
+    background:white;
+    border:1px solid var(--border);
+    border-radius:12px;
+    overflow:hidden;
+    margin-bottom:25px;
+}
+
+.table-header{
+    padding:18px;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+}
+
+.table-header h3{
+    font-size:17px;
+}
+
+.table-header small{
+    color:#64748b;
+}
+
+.table-responsive{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:1200px;
+}
+
+th,
+td{
+    padding:13px 15px;
+    border-bottom:1px solid var(--border);
+    text-align:left;
+    font-size:13px;
+}
+
+th{
+    background:#f8fafc;
+    color:#475569;
+    font-size:11px;
+    text-transform:uppercase;
+}
+
+tr:hover{
+    background:#f8fafc;
+}
+
+.badge{
+    display:inline-block;
+    padding:5px 9px;
+    border-radius:20px;
+    font-size:10px;
+    font-weight:bold;
+}
+
+.green{
+    background:#dcfce7;
+    color:#166534;
+}
+
+.red{
+    background:#fee2e2;
+    color:#991b1b;
+}
+
+.yellow{
+    background:#fef3c7;
+    color:#92400e;
+}
+
+.blue{
+    background:#dbeafe;
+    color:#1e40af;
+}
+
+.purple{
+    background:#ede9fe;
+    color:#5b21b6;
+}
+
+.cyan{
+    background:#cffafe;
+    color:#155e75;
+}
+
+.actions{
+    display:flex;
+    gap:5px;
+}
+
+.action-btn{
+    padding:6px 9px;
+    font-size:11px;
+}
+
+.two-col{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+}
+
+.item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:15px;
+    border-bottom:1px solid var(--border);
+}
+
+.item:last-child{
+    border-bottom:0;
+}
+
+.item-left{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.item-icon{
+    width:42px;
+    height:42px;
+    border-radius:9px;
+    background:#dbeafe;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:20px;
+}
+
+.alert{
+    display:none;
+    padding:12px 15px;
+    border-radius:8px;
+    margin-bottom:15px;
+    background:#dcfce7;
+    color:#166534;
+}
+
+.alert.show{
+    display:block;
+}
+
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:#0f172aaa;
+    z-index:2000;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+}
+
+.modal.active{
+    display:flex;
+}
+
+.modal-box{
+    background:white;
+    width:950px;
+    max-width:100%;
+    max-height:90vh;
+    overflow-y:auto;
+    border-radius:12px;
+    padding:25px;
+}
+
+.modal-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.close{
+    background:#f1f5f9;
+    font-size:20px;
+    padding:5px 10px;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:15px;
+}
+
+.form-group label{
+    display:block;
+    font-size:12px;
+    font-weight:bold;
+    margin-bottom:6px;
+}
+
+.full{
+    grid-column:1/-1;
+}
+
+.modal-footer{
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+    margin-top:20px;
+}
+
+.summary-box{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
+    padding:20px;
+}
+
+.summary{
+    padding:18px;
+    border-radius:10px;
+    background:#f8fafc;
+}
+
+.summary small{
+    color:#64748b;
+}
+
+.summary h2{
+    margin-top:7px;
+}
+
+.stock-bar{
+    width:100px;
+    height:7px;
+    background:#e5e7eb;
+    border-radius:10px;
+    overflow:hidden;
+}
+
+.stock-fill{
+    height:100%;
+    background:var(--green);
+}
+
+.stock-low{
+    background:var(--orange);
+}
+
+.stock-critical{
+    background:var(--red);
+}
+
+@media(max-width:1300px){
+
+    .stats{
+        grid-template-columns:repeat(3,1fr);
+    }
+
+    .quick-actions{
+        grid-template-columns:repeat(4,1fr);
+    }
+}
+
+@media(max-width:900px){
+
+    .sidebar{
+        width:70px;
+        padding:15px 8px;
+    }
+
+    .logo h2,
+    .logo small,
+    .menu-title,
+    .menu a span{
+        display:none;
+    }
+
+    .logo{
+        justify-content:center;
+    }
+
+    .menu a{
+        justify-content:center;
+    }
+
+    .main{
+        margin-left:70px;
+    }
+
+    .two-col{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:650px){
+
+    .content{
+        padding:15px;
+    }
+
+    .stats{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .quick-actions{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .summary-box{
+        grid-template-columns:1fr;
+    }
+
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+    .full{
+        grid-column:auto;
+    }
+
+    .banner{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+
+<aside class="sidebar">
+
+<div class="logo">
+
+<div class="logo-icon">
+H+
+</div>
+
+<div>
+<h2>Medicare HMS</h2>
+<small>Hospital System</small>
+</div>
+
+</div>
+
+<div class="menu-title">
+Main
+</div>
+
+<nav class="menu">
+
+<a href="../dashboard.html">
+🏠 <span>Dashboard</span>
+</a>
+
+<a href="patient.html">
+👥 <span>Patients</span>
+</a>
+
+<a href="doctor.html">
+👨‍⚕️ <span>Doctors</span>
+</a>
+
+<a href="appointment.html">
+📅 <span>Appointments</span>
+</a>
+
+<a href="opd.html">
+🏥 <span>OPD</span>
+</a>
+
+<a href="ipd.html">
+🛏️ <span>IPD / Admission</span>
+</a>
+
+<a href="emergency.html">
+🚑 <span>Emergency</span>
+</a>
+
+<a href="nursing.html">
+👩‍⚕️ <span>Nursing</span>
+</a>
+
+</nav>
+
+<div class="menu-title">
+Diagnostics
+</div>
+
+<nav class="menu">
+
+<a href="clinical.html">
+🩺 <span>Clinical</span>
+</a>
+
+<a href="laboratory.html">
+🧪 <span>Laboratory</span>
+</a>
+
+<a href="radiology.html">
+☢️ <span>Radiology</span>
+</a>
+
+<a href="blood-bank.html">
+🩸 <span>Blood Bank</span>
+</a>
+
+<a href="pharmacy.html">
+💊 <span>Pharmacy</span>
+</a>
+
+</nav>
+
+<div class="menu-title">
+Finance & Administration
+</div>
+
+<nav class="menu">
+
+<a href="billing.html">
+💳 <span>Billing & Finance</span>
+</a>
+
+<a href="insurance-tpa.html">
+🏦 <span>Insurance / TPA</span>
+</a>
+
+<a href="reports.html">
+📊 <span>Reports</span>
+</a>
+
+<a href="staff.html">
+👨‍💼 <span>Staff</span>
+</a>
+
+<a href="inventory.html" class="active">
+📦 <span>Inventory</span>
+</a>
+
+<a href="settings.html">
+⚙️ <span>Settings</span>
+</a>
+
+</nav>
+
+</aside>
+
+
+<!-- MAIN -->
+
+<main class="main">
+
+<header class="topbar">
+
+<h1>Inventory Management</h1>
+
+<div class="top-right">
+
+<div>🔔</div>
+
+<div class="profile">
+
+<div class="avatar">
+AK
+</div>
+
+<div>
+<strong>Admin</strong><br>
+<small>Inventory Administrator</small>
+</div>
+
+</div>
+
+</div>
+
+</header>
+
+
+<section class="content">
+
+<div id="alert" class="alert"></div>
+
+
+<!-- BANNER -->
+
+<div class="banner">
+
+<div>
+
+<h2>📦 Hospital Inventory Management</h2>
+
+<p>
+Manage medicines, medical supplies, equipment, stock movement,
+purchase orders, vendors, batches and expiry.
+</p>
+
+</div>
+
+<button onclick="openStockModal()">
++ Add Stock
+</button>
+
+</div>
+
+
+<!-- STATISTICS -->
+
+<div class="stats">
+
+<div class="stat-card">
+
+<div class="stat-top">
+
+<div>
+<p>Total Items</p>
+<h2>2,846</h2>
+</div>
+
+<div class="stat-icon">
+📦
+</div>
+
+</div>
+
+</div>
+
+
+<div class="stat-card">
+
+<div class="stat-top">
+
+<div>
+<p>Stock Value</p>
+<h2>₹48.6L</h2>
+</div>
+
+<div class="stat-icon">
+💰
+</div>
+
+</div>
+
+</div>
+
+
+<div class="stat-card">
+
+<div class="stat-top">
+
+<div>
+<p>Low Stock</p>
+<h2>84</h2>
+</div>
+
+<div class="stat-icon">
+⚠️
+</div>
+
+</div>
+
+</div>
+
+
+<div class="stat-card">
+
+<div class="stat-top">
+
+<div>
+<p>Expiring Soon</p>
+<h2>31</h2>
+</div>
+
+<div class="stat-icon">
+⏰
+</div>
+
+</div>
+
+</div>
+
+
+<div class="stat-card">
+
+<div class="stat-top">
+
+<div>
+<p>Purchase Orders</p>
+<h2>27</h2>
+</div>
+
+<div class="stat-icon">
+🧾
+</div>
+
+</div>
+
+</div>
+
+
+<div class="stat-card">
+
+<div class="stat-top">
+
+<div>
+<p>Vendors</p>
+<h2>64</h2>
+</div>
+
+<div class="stat-icon">
+🏢
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- QUICK ACTIONS -->
+
+<div class="quick-actions">
+
+<div class="quick" onclick="openItemModal()">
+<div class="quick-icon">➕</div>
+<strong>Add Item</strong>
+</div>
+
+<div class="quick" onclick="openStockModal()">
+<div class="quick-icon">📥</div>
+<strong>Stock In</strong>
+</div>
+
+<div class="quick" onclick="openStockOutModal()">
+<div class="quick-icon">📤</div>
+<strong>Stock Out</strong>
+</div>
+
+<div class="quick" onclick="openPurchaseModal()">
+<div class="quick-icon">🧾</div>
+<strong>Purchase Order</strong>
+</div>
+
+<div class="quick" onclick="showAlert('Low-stock inventory displayed.')">
+<div class="quick-icon">⚠️</div>
+<strong>Low Stock</strong>
+</div>
+
+<div class="quick" onclick="showAlert('Expiry tracking opened.')">
+<div class="quick-icon">⏰</div>
+<strong>Expiry</strong>
+</div>
+
+<div class="quick" onclick="generateInventoryReport()">
+<div class="quick-icon">📊</div>
+<strong>Reports</strong>
+</div>
+
+</div>
+
+
+<!-- INVENTORY SUMMARY -->
+
+<div class="table-card">
+
+<div class="table-header">
+
+<div>
+
+<h3>Inventory Summary</h3>
+
+<small>Current stock position</small>
+
+</div>
+
+<select
+style="width:180px"
+onchange="showAlert('Inventory period updated.')">
+
+<option>Current Month</option>
+<option>Previous Month</option>
+<option>Current Quarter</option>
+<option>Current Year</option>
+
+</select>
+
+</div>
+
+<div class="summary-box">
+
+<div class="summary">
+
+<small>Medicines</small>
+
+<h2>1,284</h2>
+
+<span class="badge blue">
+Items
+</span>
+
+</div>
+
+<div class="summary">
+
+<small>Medical Supplies</small>
+
+<h2>942</h2>
+
+<span class="badge cyan">
+Items
+</span>
+
+</div>
+
+<div class="summary">
+
+<small>Consumables</small>
+
+<h2>518</h2>
+
+<span class="badge purple">
+Items
+</span>
+
+</div>
+
+<div class="summary">
+
+<small>Equipment</small>
+
+<h2>102</h2>
+
+<span class="badge green">
+Items
+</span>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- SEARCH -->
+
+<div class="toolbar">
+
+<div class="search">
+
+<input
+type="text"
+id="inventorySearch"
+placeholder="Search item, batch, category, supplier..."
+onkeyup="searchInventory()">
+
+</div>
+
+<select
+id="categoryFilter"
+style="max-width:180px"
+onchange="filterInventory()">
+
+<option value="all">
+All Categories
+</option>
+
+<option value="Medicine">
+Medicine
+</option>
+
+<option value="Medical Supply">
+Medical Supply
+</option>
+
+<option value="Consumable">
+Consumable
+</option>
+
+<option value="Equipment">
+Equipment
+</option>
+
+</select>
+
+<select
+id="stockFilter"
+style="max-width:180px"
+onchange="filterInventory()">
+
+<option value="all">
+All Stock Status
+</option>
+
+<option value="In Stock">
+In Stock
+</option>
+
+<option value="Low Stock">
+Low Stock
+</option>
+
+<option value="Critical">
+Critical
+</option>
+
+<option value="Out of Stock">
+Out of Stock
+</option>
+
+</select>
+
+<button
+class="btn-primary"
+onclick="openItemModal()">
+
++ Add Item
+
+</button>
+
+</div>
+
+
+<!-- INVENTORY TABLE -->
+
+<div class="table-card">
+
+<div class="table-header">
+
+<div>
+
+<h3>Inventory Items</h3>
+
+<small>All hospital stock items</small>
+
+</div>
+
+<button
+class="btn-secondary"
+onclick="printInventory()">
+
+Print
+
+</button>
+
+</div>
+
+<div class="table-responsive">
+
+<table id="inventoryTable">
+
+<thead>
+
+<tr>
+
+<th>Item Code</th>
+
+<th>Item Name</th>
+
+<th>Category</th>
+
+<th>Batch No.</th>
+
+<th>Expiry</th>
+
+<th>Available</th>
+
+<th>Reorder Level</th>
+
+<th>Stock Level</th>
+
+<th>Unit Price</th>
+
+<th>Status</th>
+
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr
+data-category="Medicine"
+data-stock="In Stock">
+
+<td>
+<strong>MED-1001</strong>
+</td>
+
+<td>
+Paracetamol 500mg
+</td>
+
+<td>Medicine</td>
+
+<td>PCM26081</td>
+
+<td>Aug 2028</td>
+
+<td>4,850</td>
+
+<td>1,000</td>
+
+<td>
+
+<div class="stock-bar">
+<div
+class="stock-fill"
+style="width:85%">
+</div>
+</div>
+
+</td>
+
+<td>₹1.20</td>
+
+<td>
+<span class="badge green">
+In Stock
+</span>
+</td>
+
+<td>
+
+<div class="actions">
+
+<button
+class="btn-primary action-btn"
+onclick="viewItem('MED-1001')">
+View
+</button>
+
+<button
+class="btn-warning action-btn"
+onclick="adjustStock('MED-1001')">
+Adjust
+</button>
+
+</div>
+
+</td>
+
+</tr>
+
+
+<tr
+data-category="Medicine"
+data-stock="Low Stock">
+
+<td>
+<strong>MED-1002</strong>
+</td>
+
+<td>
+Amoxicillin 500mg
+</td>
+
+<td>Medicine</td>
+
+<td>AMX26031</td>
+
+<td>Mar 2027</td>
+
+<td>480</td>
+
+<td>500</td>
+
+<td>
+
+<div class="stock-bar">
+<div
+class="stock-fill stock-low"
+style="width:28%">
+</div>
+</div>
+
+</td>
+
+<td>₹4.80</td>
+
+<td>
+<span class="badge yellow">
+Low Stock
+</span>
+</td>
+
+<td>
+
+<div class="actions">
+
+<button
+class="btn-primary action-btn"
+onclick="viewItem('MED-1002')">
+View
+</button>
+
+<button
+class="btn-success action-btn"
+onclick="openPurchaseModal()">
+Order
+</button>
+
+</div>
+
+</td>
+
+</tr>
+
+
+<tr
+data-category="Medical Supply"
+data-stock="In Stock">
+
+<td>
+<strong>SUP-2001</strong>
+</td>
+
+<td>
+Disposable Syringe 5ml
+</td>
+
+<td>Medical Supply</td>
+
+<td>SYR26044</td>
+
+<td>Dec 2029</td>
+
+<td>12,400</td>
+
+<td>3,000</td>
+
+<td>
+
+<div class="stock-bar">
+<div
+class="stock-fill"
+style="width:92%">
+</div>
+</div>
+
+</td>
+
+<td>₹3.50</td>
+
+<td>
+<span class="badge green">
+In Stock
+</span>
+</td>
+
+<td>
+
+<button
+class="btn-primary action-btn"
+onclick="viewItem('SUP-2001')">
+View
+</button>
+
+</td>
+
+</tr>
+
+
+<tr
+data-category="Consumable"
+data-stock="Critical">
+
+<td>
+<strong>CON-3001</strong>
+</td>
+
+<td>
+Surgical Gloves
+</td>
+
+<td>Consumable</td>
+
+<td>GLV26011</td>
+
+<td>Nov 2026</td>
+
+<td>180</td>
+
+<td>1,000</td>
+
+<td>
+
+<div class="stock-bar">
+<div
+class="stock-fill stock-critical"
+style="width:10%">
+</div>
+</div>
+
+</td>
+
+<td>₹12.00</td>
+
+<td>
+<span class="badge red">
+Critical
+</span>
+</td>
+
+<td>
+
+<button
+class="btn-danger action-btn"
+onclick="openPurchaseModal()">
+Urgent Order
+</button>
+
+</td>
+
+</tr>
+
+
+<tr
+data-category="Medicine"
+data-stock="Out of Stock">
+
+<td>
+<strong>MED-1005</strong>
+</td>
+
+<td>
+Insulin Injection
+</td>
+
+<td>Medicine</td>
+
+<td>INS26007</td>
+
+<td>Jan 2027</td>
+
+<td>0</td>
+
+<td>100</td>
+
+<td>
+
+<div class="stock-bar">
+<div
+class="stock-fill stock-critical"
+style="width:0%">
+</div>
+</div>
+
+</td>
+
+<td>₹185.00</td>
+
+<td>
+<span class="badge red">
+Out of Stock
+</span>
+</td>
+
+<td>
+
+<button
+class="btn-danger action-btn"
+onclick="openPurchaseModal()">
+Order Now
+</button>
+
+</td>
+
+</tr>
+
+
+<tr
+data-category="Equipment"
+data-stock="In Stock">
+
+<td>
+<strong>EQP-4001</strong>
+</td>
+
+<td>
+Digital BP Monitor
+</td>
+
+<td>Equipment</td>
+
+<td>BP26002</td>
+
+<td>—</td>
+
+<td>35</td>
+
+<td>10</td>
+
+<td>
+
+<div class="stock-bar">
+<div
+class="stock-fill"
+style="width:78%">
+</div>
+</div>
+
+</td>
+
+<td>₹1,850</td>
+
+<td>
+<span class="badge green">
+In Stock
+</span>
+</td>
+
+<td>
+
+<button
+class="btn-primary action-btn"
+onclick="viewItem('EQP-4001')">
+View
+</button>
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+
+<!-- LOW STOCK + EXPIRY -->
+
+<div class="two-col">
+
+
+<div class="table-card">
+
+<div class="table-header">
+
+<div>
+
+<h3>⚠️ Low Stock Alerts</h3>
+
+<small>Items requiring replenishment</small>
+
+</div>
+
+<button
+class="btn-warning action-btn"
+onclick="showAlert('All low-stock items displayed.')">
+View All
+</button>
+
+</div>
+
+
+<div class="item">
+
+<div class="item-left">
+
+<div class="item-icon">
+💊
+</div>
+
+<div>
+<strong>Amoxicillin 500mg</strong>
+<br>
+<small>Available: 480 / Reorder: 500</small>
+</div>
+
+</div>
+
+<span class="badge yellow">
+Low
+</span>
+
+</div>
+
+
+<div class="item">
+
+<div class="item-left">
+
+<div class="item-icon">
+🧤
+</div>
+
+<div>
+<strong>Surgical Gloves</strong>
+<br>
+<small>Available: 180 / Reorder: 1,000</small>
+</div>
+
+</div>
+
+<span class="badge red">
+Critical
+</span>
+
+</div>
+
+
+<div class="item">
+
+<div class="item-left">
+
+<div class="item-icon">
+💉
+</div>
+
+<div>
+<strong>Insulin Injection</strong>
+<br>
+<small>Available: 0 / Reorder: 100</small>
+</div>
+
+</div>
+
+<span class="badge red">
+Out
+</span>
+
+</div>
+
+
+<div class="item">
+
+<div class="item-left">
+
+<div class="item-icon">
+🩹
+</div>
+
+<div>
+<strong>Gauze Roll</strong>
+<br>
+<small>Available: 350 / Reorder: 500</small>
+</div>
+
+</div>
+
+<span class="badge yellow">
+Low
+</span>
+
+</div>
+
+</div>
+
+
+<div class="table-card">
+
+<div class="table-header">
+
+<div>
+
+<h3>⏰ Expiry Alerts</h3>
+
+<small>Items expiring soon</small>
+
+</div>
+
+<button
+class="btn-danger action-btn"
+onclick="showAlert('Expiry list opened.')">
+View All
+</button>
+
+</div>
+
+
+<div class="item">
+
+<div class="item-left">
+
+<div class="item-icon">
+💊
+</div>
+
+<div>
+<strong>Diclofenac Injection</strong>
+<br>
+<small>Expiry: Oct 2026</small>
+</div>
+
+</div>
+
+<span class="badge red">
+30 Days
+</span>
+
+</div>
+
+
+<div class="item">
+
+<div class="item-left">
+
+<div class="item-icon">
+💊
+</div>
+
+<div>
+<strong>Ceftriaxone 1g</strong>
+<br>
+<small>Expiry: Nov 2026</small>
+</div>
+
+</div>
+
+<span class="badge yellow">
+60 Days
+</span>
+
+</div>
+
+
+<div class="item">
+
+<div class="item-left">
+
+<div class="item-icon">
+🧪
+</div>
+
+<div>
+<strong>IV Fluid</strong>
+<br>
+<small>Expiry: Dec 2026</small>
+</div>
+
+</div>
+
+<span class="badge yellow">
+90 Days
+</span>
+
+</div>
+
+
+<div class="item">
+
+<div class="item-left">
+
+<div class="item-icon">
+💉
+</div>
+
+<div>
+<strong>Insulin</strong>
+<br>
+<small>Expiry: Jan 2027</small>
+</div>
+
+</div>
+
+<span class="badge blue">
+120 Days
+</span>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- STOCK MOVEMENT -->
+
+<div class="table-card">
+
+<div class="table-header">
+
+<div>
+
+<h3>📦 Recent Stock Movement</h3>
+
+<small>Stock in / stock out transactions</small>
+
+</div>
+
+<button
+class="btn-primary action-btn"
+onclick="showAlert('Stock movement report opened.')">
+View All
+</button>
+
+</div>
+
+<div class="table-responsive">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Transaction ID</th>
+
+<th>Date</th>
+
+<th>Item</th>
+
+<th>Batch</th>
+
+<th>Type</th>
+
+<th>Quantity</th>
+
+<th>Department</th>
+
+<th>User</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>TRX-9001</td>
+
+<td>27 Sep 2026</td>
+
+<td>Paracetamol 500mg</td>
+
+<td>PCM26081</td>
+
+<td>
+<span class="badge green">
+Stock In
+</span>
+</td>
+
+<td>2,000</td>
+
+<td>Central Store</td>
+
+<td>Admin</td>
+
+</tr>
+
+<tr>
+
+<td>TRX-9002</td>
+
+<td>27 Sep 2026</td>
+
+<td>Surgical Gloves</td>
+
+<td>GLV26011</td>
+
+<td>
+<span class="badge red">
+Stock Out
+</span>
+</td>
+
+<td>500</td>
+
+<td>OT</td>
+
+<td>Store Manager</td>
+
+</tr>
+
+<tr>
+
+<td>TRX-9003</td>
+
+<td>26 Sep 2026</td>
+
+<td>IV Fluid</td>
+
+<td>IV26018</td>
+
+<td>
+<span class="badge red">
+Stock Out
+</span>
+</td>
+
+<td>120</td>
+
+<td>Emergency</td>
+
+<td>Nursing</td>
+
+</tr>
+
+<tr>
+
+<td>TRX-9004</td>
+
+<td>26 Sep 2026</td>
+
+<td>Amoxicillin</td>
+
+<td>AMX26031</td>
+
+<td>
+<span class="badge green">
+Stock In
+</span>
+</td>
+
+<td>1,000</td>
+
+<td>Pharmacy</td>
+
+<td>Admin</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+
+<!-- PURCHASE ORDERS -->
+
+<div class="table-card">
+
+<div class="table-header">
+
+<div>
+
+<h3>🧾 Purchase Orders</h3>
+
+<small>Recent inventory purchase orders</small>
+
+</div>
+
+<button
+class="btn-primary"
+onclick="openPurchaseModal()">
++ New Purchase Order
+</button>
+
+</div>
+
+<div class="table-responsive">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>PO Number</th>
+
+<th>Vendor</th>
+
+<th>Order Date</th>
+
+<th>Items</th>
+
+<th>Amount</th>
+
+<th>Expected Delivery</th>
+
+<th>Status</th>
+
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td><strong>PO-2026-001</strong></td>
+
+<td>MedPlus Suppliers</td>
+
+<td>25 Sep 2026</td>
+
+<td>18</td>
+
+<td>₹2,45,800</td>
+
+<td>30 Sep 2026</td>
+
+<td>
+<span class="badge yellow">
+Pending
+</span>
+</td>
+
+<td>
+
+<button
+class="btn-primary action-btn"
+onclick="showAlert('Purchase order opened.')">
+View
+</button>
+
+</td>
+
+</tr>
+
+
+<tr>
+
+<td><strong>PO-2026-002</strong></td>
+
+<td>HealthCare Distributors</td>
+
+<td>23 Sep 2026</td>
+
+<td>32</td>
+
+<td>₹4,80,500</td>
+
+<td>28 Sep 2026</td>
+
+<td>
+<span class="badge blue">
+In Transit
+</span>
+</td>
+
+<td>
+
+<button
+class="btn-primary action-btn"
+onclick="showAlert('Purchase order tracking opened.')">
+Track
+</button>
+
+</td>
+
+</tr>
+
+
+<tr>
+
+<td><strong>PO-2026-003</strong></td>
+
+<td>Global Medical Store</td>
+
+<td>20 Sep 2026</td>
+
+<td>12</td>
+
+<td>₹1,85,400</td>
+
+<td>25 Sep 2026</td>
+
+<td>
+<span class="badge green">
+Received
+</span>
+</td>
+
+<td>
+
+<button
+class="btn-primary action-btn"
+onclick="showAlert('Purchase order details opened.')">
+View
+</button>
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+
+<!-- VENDORS -->
+
+<div class="table-card">
+
+<div class="table-header">
+
+<div>
+
+<h3>🏢 Suppliers / Vendors</h3>
+
+<small>Registered inventory suppliers</small>
+
+</div>
+
+<button
+class="btn-primary action-btn"
+onclick="showAlert('Vendor registration opened.')">
++ Add Vendor
+</button>
+
+</div>
+
+<div class="table-responsive">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Vendor ID</th>
+
+<th>Vendor Name</th>
+
+<th>Contact Person</th>
+
+<th>Phone</th>
+
+<th>Category</th>
+
+<th>Outstanding</th>
+
+<th>Status</th>
+
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>VEN-001</td>
+
+<td>MedPlus Suppliers</td>
+
+<td>Rakesh Sharma</td>
+
+<td>9876543210</td>
+
+<td>Medicines</td>
+
+<td>₹2,45,000</td>
+
+<td>
+<span class="badge green">
+Active
+</span>
+</td>
+
+<td>
+
+<button
+class="btn-primary action-btn"
+onclick="showAlert('Vendor profile opened.')">
+View
+</button>
+
+</td>
+
+</tr>
+
+<tr>
+
+<td>VEN-002</td>
+
+<td>HealthCare Distributors</td>
+
+<td>Manoj Kumar</td>
+
+<td>9812345678</td>
+
+<td>Medical Supplies</td>
+
+<td>₹1,82,500</td>
+
+<td>
+<span class="badge green">
+Active
+</span>
+</td>
+
+<td>
+
+<button
+class="btn-primary action-btn"
+onclick="showAlert('Vendor profile opened.')">
+View
+</button>
+
+</td>
+
+</tr>
+
+<tr>
+
+<td>VEN-003</td>
+
+<td>Global Medical Store</td>
+
+<td>Anil Gupta</td>
+
+<td>9898989898</td>
+
+<td>Equipment</td>
+
+<td>₹95,000</td>
+
+<td>
+<span class="badge green">
+Active
+</span>
+</td>
+
+<td>
+
+<button
+class="btn-primary action-btn"
+onclick="showAlert('Vendor profile opened.')">
+View
+</button>
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+
+<!-- REPORTS -->
+
+<div class="table-card">
+
+<div class="table-header">
+
+<div>
+
+<h3>📊 Inventory Reports</h3>
+
+<small>Generate inventory and stock reports</small>
+
+</div>
+
+</div>
+
+<div class="quick-actions"
+style="padding:18px;margin:0">
+
+<div class="quick"
+onclick="generateReport('Stock Report')">
+<div class="quick-icon">📦</div>
+<strong>Stock Report</strong>
+</div>
+
+<div class="quick"
+onclick="generateReport('Low Stock Report')">
+<div class="quick-icon">⚠️</div>
+<strong>Low Stock</strong>
+</div>
+
+<div class="quick"
+onclick="generateReport('Expiry Report')">
+<div class="quick-icon">⏰</div>
+<strong>Expiry Report</strong>
+</div>
+
+<div class="quick"
+onclick="generateReport('Purchase Report')">
+<div class="quick-icon">🧾</div>
+<strong>Purchase Report</strong>
+</div>
+
+<div class="quick"
+onclick="generateReport('Stock Movement')">
+<div class="quick-icon">🔄</div>
+<strong>Stock Movement</strong>
+</div>
+
+<div class="quick"
+onclick="generateReport('Vendor Report')">
+<div class="quick-icon">🏢</div>
+<strong>Vendor Report</strong>
+</div>
+
+<div class="quick"
+onclick="generateReport('Stock Valuation')">
+<div class="quick-icon">💰</div>
+<strong>Stock Valuation</strong>
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+</main>
+
+
+<!-- ADD ITEM MODAL -->
+
+<div class="modal" id="itemModal">
+
+<div class="modal-box">
+
+<div class="modal-header">
+
+<h2>Add Inventory Item</h2>
+
+<button
+class="close"
+onclick="closeItemModal()">
+×
+</button>
+
+</div>
+
+<form id="itemForm">
+
+<div class="form-grid">
+
+<div class="form-group">
+<label>Item Name *</label>
+<input type="text" placeholder="Item name" required>
+</div>
+
+<div class="form-group">
+<label>Item Code *</label>
+<input type="text" placeholder="Item code" required>
+</div>
+
+<div class="form-group">
+<label>Category *</label>
+<select required>
+<option value="">Select Category</option>
+<option>Medicine</option>
+<option>Medical Supply</option>
+<option>Consumable</option>
+<option>Equipment</option>
+<option>Laboratory</option>
+<option>Radiology</option>
+<option>Other</option>
+</select>
+</div>
+
+<div class="form-group">
+<label>Unit</label>
+<select>
+<option>Piece</option>
+<option>Box</option>
+<option>Pack</option>
+<option>Strip</option>
+<option>Bottle</option>
+<option>Vial</option>
+<option>Kg</option>
+<option>Liter</option>
+</select>
+</div>
+
+<div class="form-group">
+<label>Batch Number</label>
+<input type="text" placeholder="Batch number">
+</div>
+
+<div class="form-group">
+<label>Expiry Date</label>
+<input type="date">
+</div>
+
+<div class="form-group">
+<label>Opening Quantity</label>
+<input type="number" min="0">
+</div>
+
+<div class="form-group">
+<label>Reorder Level</label>
+<input type="number" min="0">
+</div>
+
+<div class="form-group">
+<label>Purchase Price</label>
+<input type="number" step="0.01" placeholder="₹">
+</div>
+
+<div class="form-group">
+<label>Sale / Issue Price</label>
+<input type="number" step="0.01" placeholder="₹">
+</div>
+
+<div class="form-group">
+<label>Supplier</label>
+<select>
+<option>MedPlus Suppliers</option>
+<option>HealthCare Distributors</option>
+<option>Global Medical Store</option>
+<option>Other</option>
+</select>
+</div>
+
+<div class="form-group">
+<label>Storage Location</label>
+<select>
+<option>Central Store</option>
+<option>Pharmacy</option>
+<option>Laboratory</option>
+<option>OT Store</option>
+<option>Emergency Store</option>
+</select>
+</div>
+
+<div class="form-group full">
+<label>Description</label>
+<textarea rows="3" placeholder="Item description"></textarea>
+</div>
+
+</div>
+
+<div class="modal-footer">
+
+<button
+type="button"
+class="btn-secondary"
+onclick="closeItemModal()">
+Cancel
+</button>
+
+<button
+type="submit"
+class="btn-primary">
+Save Item
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+
+<!-- STOCK IN MODAL -->
+
+<div class="modal" id="stockModal">
+
+<div class="modal-box">
+
+<div class="modal-header">
+
+<h2>📥 Stock In</h2>
+
+<button
+class="close"
+onclick="closeStockModal()">
+×
+</button>
+
+</div>
+
+<form id="stockForm">
+
+<div class="form-grid">
+
+<div class="form-group">
+<label>Item *</label>
+<select required>
+<option value="">Select Item</option>
+<option>Paracetamol 500mg</option>
+<option>Amoxicillin 500mg</option>
+<option>Surgical Gloves</option>
+<option>IV Fluid</option>
+<option>Insulin Injection</option>
+</select>
+</div>
+
+<div class="form-group">
+<label>Batch Number *</label>
+<input type="text" required placeholder="Batch number">
+</div>
+
+<div class="form-group">
+<label>Quantity *</label>
+<input type="number" required min="1">
+</div>
+
+<div class="form-group">
+<label>Purchase Price</label>
+<input type="number" step="0.01">
+</div>
+
+<div class="form-group">
+<label>Expiry Date</label>
+<input type="date">
+</div>
+
+<div class="form-group">
+<label>Supplier</label>
+<select>
+<option>MedPlus Suppliers</option>
+<option>HealthCare Distributors</option>
+<option>Global Medical Store</option>
+</select>
+</div>
+
+<div class="form-group">
+<label>Invoice Number</label>
+<input type="text" placeholder="Invoice number">
+</div>
+
+<div class="form-group">
+<label>Storage Location</label>
+<select>
+<option>Central Store</option>
+<option>Pharmacy</option>
+<option>OT Store</option>
+<option>Emergency Store</option>
+</select>
+</div>
+
+<div class="form-group full">
+<label>Remarks</label>
+<textarea rows="3"></textarea>
+</div>
+
+</div>
+
+<div class="modal-footer">
+
+<button
+type="button"
+class="btn-secondary"
+onclick="closeStockModal()">
+Cancel
+</button>
+
+<button
+type="submit"
+class="btn-success">
+Add Stock
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+
+<!-- STOCK OUT MODAL -->
+
+<div class="modal" id="stockOutModal">
+
+<div class="modal-box">
+
+<div class="modal-header">
+
+<h2>📤 Stock Out / Issue</h2>
+
+<button
+class="close"
+onclick="closeStockOutModal()">
+×
+</button>
+
+</div>
+
+<form id="stockOutForm">
+
+<div class="form-grid">
+
+<div class="form-group">
+<label>Item *</label>
+<select required>
+<option value="">Select Item</option>
+<option>Paracetamol 500mg</option>
+<option>Amoxicillin 500mg</option>
+<option>Surgical Gloves</option>
+<option>IV Fluid</option>
+</select>
+</div>
+
+<div class="form-group">
+<label>Batch Number</label>
+<input type="text" placeholder="Batch number">
+</div>
+
+<div class="form-group">
+<label>Quantity *</label>
+<input type="number" min="1" required>
+</div>
+
+<div class="form-group">
+<label>Issue To *</label>
+<select required>
+<option>Pharmacy</option>
+<option>Emergency</option>
+<option>OPD</option>
+<option>IPD</option>
+<option>OT</option>
+<option>Laboratory</option>
+<option>Nursing</option>
+</select>
+</div>
+
+<div class="form-group">
+<label>Requested By</label>
+<input type="text" placeholder="Employee / department">
+</div>
+
+<div class="form-group">
+<label>Issue Date</label>
+<input type="date">
+</div>
+
+<div class="form-group full">
+<label>Reason / Remarks</label>
+<textarea rows="3" placeholder="Reason for stock issue"></textarea>
+</div>
+
+</div>
+
+<div class="modal-footer">
+
+<button
+type="button"
+class="btn-secondary"
+onclick="closeStockOutModal()">
+Cancel
+</button>
+
+<button
+type="submit"
+class="btn-danger">
+Issue Stock
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+
+<!-- PURCHASE ORDER MODAL -->
+
+<div class="modal" id="purchaseModal">
+
+<div class="modal-box">
+
+<div class="modal-header">
+
+<h2>🧾 New Purchase Order</h2>
+
+<button
+class="close"
+onclick="closePurchaseModal()">
+×
+</button>
+
+</div>
+
+<form id="purchaseForm">
+
+<div class="form-grid">
+
+<div class="form-group">
+<label>Vendor *</label>
+<select required>
+<option value="">Select Vendor</option>
+<option>MedPlus Suppliers</option>
+<option>HealthCare Distributors</option>
+<option>Global Medical Store</option>
+</select>
+</div>
+
+<div class="form-group">
+<label>PO Date</label>
+<input type="date">
+</div>
+
+<div class="form-group">
+<label>Expected Delivery</label>
+<input type="date">
+</div>
+
+<div class="form-group">
+<label>Priority</label>
+<select>
+<option>Normal</option>
+<option>High</option>
+<option>Urgent</option>
+</select>
+</div>
+
+<div class="form-group">
+<label>Item</label>
+<select>
+<option>Paracetamol 500mg</option>
+<option>Amoxicillin 500mg</option>
+<option>Surgical Gloves</option>
+<option>Insulin Injection</option>
+<option>IV Fluid</option>
+</select>
+</div>
+
+<div class="form-group">
+<label>Quantity</label>
+<input type="number" min="1">
+</div>
+
+<div class="form-group">
+<label>Unit Price</label>
+<input type="number" step="0.01">
+</div>
+
+<div class="form-group">
+<label>Tax %</label>
+<input type="number" value="5">
+</div>
+
+<div class="form-group full">
+<label>Remarks</label>
+<textarea rows="3" placeholder="Purchase order remarks"></textarea>
+</div>
+
+</div>
+
+<div class="modal-footer">
+
+<button
+type="button"
+class="btn-secondary"
+onclick="closePurchaseModal()">
+Cancel
+</button>
+
+<button
+type="submit"
+class="btn-primary">
+Create Purchase Order
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+
+<script>
+
+/* ALERT */
+
+function showAlert(message){
+
+    const box=document.getElementById("alert");
+
+    box.textContent=message;
+
+    box.classList.add("show");
+
+    setTimeout(function(){
+
+        box.classList.remove("show");
+
+    },3500);
+}
+
+
+/* MODALS */
+
+function openItemModal(){
+
+    document
+    .getElementById("itemModal")
+    .classList.add("active");
+
+}
+
+function closeItemModal(){
+
+    document
+    .getElementById("itemModal")
+    .classList.remove("active");
+
+}
+
+
+function openStockModal(){
+
+    document
+    .getElementById("stockModal")
+    .classList.add("active");
+
+}
+
+function closeStockModal(){
+
+    document
+    .getElementById("stockModal")
+    .classList.remove("active");
+
+}
+
+
+function openStockOutModal(){
+
+    document
+    .getElementById("stockOutModal")
+    .classList.add("active");
+
+}
+
+function closeStockOutModal(){
+
+    document
+    .getElementById("stockOutModal")
+    .classList.remove("active");
+
+}
+
+
+function openPurchaseModal(){
+
+    document
+    .getElementById("purchaseModal")
+    .classList.add("active");
+
+}
+
+function closePurchaseModal(){
+
+    document
+    .getElementById("purchaseModal")
+    .classList.remove("active");
+
+}
+
+
+/* SEARCH */
+
+function searchInventory(){
+
+    const value=
+        document
+        .getElementById("inventorySearch")
+        .value
+        .toLowerCase();
+
+    document
+    .querySelectorAll("#inventoryTable tbody tr")
+    .forEach(function(row){
+
+        row.style.display=
+            row.textContent
+            .toLowerCase()
+            .includes(value)
+            ? ""
+            : "none";
+
+    });
+
+}
+
+
+/* FILTER */
+
+function filterInventory(){
+
+    const category=
+        document
+        .getElementById("categoryFilter")
+        .value;
+
+    const stock=
+        document
+        .getElementById("stockFilter")
+        .value;
+
+    document
+    .querySelectorAll("#inventoryTable tbody tr")
+    .forEach(function(row){
+
+        const categoryMatch=
+            category==="all" ||
+            row.dataset.category===category;
+
+        const stockMatch=
+            stock==="all" ||
+            row.dataset.stock===stock;
+
+        row.style.display=
+            categoryMatch && stockMatch
+            ? ""
+            : "none";
+
+    });
+
+}
+
+
+/* ITEM */
+
+function viewItem(code){
+
+    showAlert(
+        "Opening inventory item "+code+"."
+    );
+
+}
+
+
+function adjustStock(code){
+
+    showAlert(
+        "Stock adjustment opened for "+code+"."
+    );
+
+}
+
+
+/* PRINT */
+
+function printInventory(){
+
+    showAlert(
+        "Preparing inventory report..."
+    );
+
+    setTimeout(function(){
+
+        window.print();
+
+    },500);
+
+}
+
+
+/* REPORTS */
+
+function generateReport(type){
+
+    showAlert(
+        type+" generated successfully."
+    );
+
+}
+
+
+function generateInventoryReport(){
+
+    showAlert(
+        "Inventory report generated successfully."
+    );
+
+}
+
+
+/* FORMS */
+
+document
+.getElementById("itemForm")
+.addEventListener("submit",function(e){
+
+    e.preventDefault();
+
+    closeItemModal();
+
+    showAlert(
+        "Inventory item added successfully."
+    );
+
+    this.reset();
+
+});
+
+
+document
+.getElementById("stockForm")
+.addEventListener("submit",function(e){
+
+    e.preventDefault();
+
+    closeStockModal();
+
+    const id=
+        "TRX-"+Math.floor(
+            1000+
+            Math.random()*8999
+        );
+
+    showAlert(
+        "Stock received successfully. Transaction: "+id
+    );
+
+    this.reset();
+
+});
+
+
+document
+.getElementById("stockOutForm")
+.addEventListener("submit",function(e){
+
+    e.preventDefault();
+
+    closeStockOutModal();
+
+    const id=
+        "TRX-"+Math.floor(
+            1000+
+            Math.random()*8999
+        );
+
+    showAlert(
+        "Stock issued successfully. Transaction: "+id
+    );
+
+    this.reset();
+
+});
+
+
+document
+.getElementById("purchaseForm")
+.addEventListener("submit",function(e){
+
+    e.preventDefault();
+
+    closePurchaseModal();
+
+    const po=
+        "PO-2026-"+Math.floor(
+            100+
+            Math.random()*899
+        );
+
+    showAlert(
+        "Purchase order "+po+
+        " created successfully."
+    );
+
+    this.reset();
+
+});
+
+
+/* OUTSIDE CLICK */
+
+window.onclick=function(e){
+
+    if(
+        e.target===
+        document.getElementById("itemModal")
+    ){
+        closeItemModal();
+    }
+
+    if(
+        e.target===
+        document.getElementById("stockModal")
+    ){
+        closeStockModal();
+    }
+
+    if(
+        e.target===
+        document.getElementById("stockOutModal")
+    ){
+        closeStockOutModal();
+    }
+
+    if(
+        e.target===
+        document.getElementById("purchaseModal")
+    ){
+        closePurchaseModal();
+    }
+
+};
+
+
+/* ESC */
+
+document.addEventListener(
+"keydown",
+function(e){
+
+    if(e.key==="Escape"){
+
+        closeItemModal();
+        closeStockModal();
+        closeStockOutModal();
+        closePurchaseModal();
+
+    }
+
+});
+
+</script>
+
+</body>
+</html>
