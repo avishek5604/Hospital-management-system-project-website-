@@ -1,0 +1,2557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Ambulance Management | Hospital Management System</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+:root{
+    --primary:#2563eb;
+    --dark:#172033;
+    --bg:#f4f7fb;
+    --border:#e5e7eb;
+    --green:#16a34a;
+    --red:#dc2626;
+    --orange:#d97706;
+    --purple:#7c3aed;
+}
+
+body{
+    background:var(--bg);
+    color:#1f2937;
+}
+
+.sidebar{
+    position:fixed;
+    left:0;
+    top:0;
+    width:250px;
+    height:100vh;
+    background:var(--dark);
+    color:white;
+    padding:20px 15px;
+    overflow-y:auto;
+    z-index:1000;
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:10px;
+    margin-bottom:25px;
+}
+
+.logo-icon{
+    width:42px;
+    height:42px;
+    background:var(--primary);
+    border-radius:10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:bold;
+}
+
+.logo h2{
+    font-size:18px;
+}
+
+.logo small{
+    color:#94a3b8;
+}
+
+.menu-title{
+    color:#64748b;
+    font-size:11px;
+    margin:20px 10px 8px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+}
+
+.menu a{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    color:#cbd5e1;
+    text-decoration:none;
+    padding:12px 13px;
+    border-radius:8px;
+    margin-bottom:5px;
+    font-size:14px;
+}
+
+.menu a:hover,
+.menu a.active{
+    background:var(--primary);
+    color:white;
+}
+
+.main{
+    margin-left:250px;
+    min-height:100vh;
+}
+
+.topbar{
+    height:70px;
+    background:white;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:0 25px;
+    position:sticky;
+    top:0;
+    z-index:500;
+}
+
+.topbar h1{
+    font-size:22px;
+}
+
+.top-right{
+    display:flex;
+    align-items:center;
+    gap:20px;
+}
+
+.profile{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.avatar{
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    background:var(--primary);
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:bold;
+}
+
+.content{
+    padding:25px;
+}
+
+button{
+    border:0;
+    border-radius:7px;
+    padding:10px 15px;
+    cursor:pointer;
+    font-size:13px;
+}
+
+.btn-primary{
+    background:var(--primary);
+    color:white;
+}
+
+.btn-success{
+    background:var(--green);
+    color:white;
+}
+
+.btn-danger{
+    background:var(--red);
+    color:white;
+}
+
+.btn-warning{
+    background:var(--orange);
+    color:white;
+}
+
+.btn-purple{
+    background:var(--purple);
+    color:white;
+}
+
+.btn-secondary{
+    background:#64748b;
+    color:white;
+}
+
+.banner{
+    background:linear-gradient(120deg,#991b1b,#dc2626);
+    color:white;
+    border-radius:12px;
+    padding:22px;
+    margin-bottom:25px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+}
+
+.banner h2{
+    margin-bottom:7px;
+}
+
+.banner p{
+    font-size:13px;
+    opacity:.9;
+}
+
+.banner button{
+    background:white;
+    color:#b91c1c;
+    font-weight:bold;
+}
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(6,1fr);
+    gap:15px;
+    margin-bottom:25px;
+}
+
+.stat-card{
+    background:white;
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:17px;
+}
+
+.stat-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.stat-card p{
+    color:#64748b;
+    font-size:12px;
+}
+
+.stat-card h2{
+    font-size:22px;
+    margin-top:8px;
+}
+
+.stat-icon{
+    width:42px;
+    height:42px;
+    border-radius:10px;
+    background:#fee2e2;
+    color:#dc2626;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:19px;
+}
+
+.quick-actions{
+    display:grid;
+    grid-template-columns:repeat(7,1fr);
+    gap:10px;
+    margin-bottom:25px;
+}
+
+.quick{
+    background:white;
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:14px 8px;
+    text-align:center;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.quick:hover{
+    transform:translateY(-2px);
+    box-shadow:0 5px 15px #0001;
+}
+
+.quick-icon{
+    font-size:23px;
+    margin-bottom:6px;
+}
+
+.toolbar{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-bottom:20px;
+}
+
+.search{
+    flex:1;
+    min-width:220px;
+}
+
+input,
+select,
+textarea{
+    width:100%;
+    padding:10px 12px;
+    border:1px solid #d1d5db;
+    border-radius:7px;
+    background:white;
+    outline:none;
+}
+
+.table-card{
+    background:white;
+    border:1px solid var(--border);
+    border-radius:12px;
+    overflow:hidden;
+    margin-bottom:25px;
+}
+
+.table-header{
+    padding:18px;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+}
+
+.table-header h3{
+    font-size:17px;
+}
+
+.table-header small{
+    color:#64748b;
+}
+
+.table-responsive{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:1100px;
+}
+
+th,
+td{
+    padding:13px 15px;
+    border-bottom:1px solid var(--border);
+    text-align:left;
+    font-size:13px;
+}
+
+th{
+    background:#f8fafc;
+    color:#475569;
+    font-size:11px;
+    text-transform:uppercase;
+}
+
+tr:hover{
+    background:#f8fafc;
+}
+
+.badge{
+    display:inline-block;
+    padding:5px 9px;
+    border-radius:20px;
+    font-size:10px;
+    font-weight:bold;
+}
+
+.green{
+    background:#dcfce7;
+    color:#166534;
+}
+
+.red{
+    background:#fee2e2;
+    color:#991b1b;
+}
+
+.yellow{
+    background:#fef3c7;
+    color:#92400e;
+}
+
+.blue{
+    background:#dbeafe;
+    color:#1e40af;
+}
+
+.purple{
+    background:#ede9fe;
+    color:#5b21b6;
+}
+
+.actions{
+    display:flex;
+    gap:5px;
+}
+
+.action-btn{
+    padding:6px 9px;
+    font-size:11px;
+}
+
+.two-col{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+}
+
+.item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:15px;
+    border-bottom:1px solid var(--border);
+}
+
+.item:last-child{
+    border-bottom:0;
+}
+
+.item-left{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.item-icon{
+    width:42px;
+    height:42px;
+    border-radius:9px;
+    background:#fee2e2;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:20px;
+}
+
+.alert{
+    display:none;
+    padding:12px 15px;
+    border-radius:8px;
+    margin-bottom:15px;
+    background:#dcfce7;
+    color:#166534;
+}
+
+.alert.show{
+    display:block;
+}
+
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:#0f172aaa;
+    z-index:2000;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+}
+
+.modal.active{
+    display:flex;
+}
+
+.modal-box{
+    background:white;
+    width:900px;
+    max-width:100%;
+    max-height:90vh;
+    overflow-y:auto;
+    border-radius:12px;
+    padding:25px;
+}
+
+.modal-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.close{
+    background:#f1f5f9;
+    font-size:20px;
+    padding:5px 10px;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:15px;
+}
+
+.form-group label{
+    display:block;
+    font-size:12px;
+    font-weight:bold;
+    margin-bottom:6px;
+}
+
+.full{
+    grid-column:1/-1;
+}
+
+.modal-footer{
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+    margin-top:20px;
+}
+
+.progress{
+    width:120px;
+    height:7px;
+    background:#e5e7eb;
+    border-radius:10px;
+    overflow:hidden;
+}
+
+.progress span{
+    display:block;
+    height:100%;
+    background:var(--green);
+}
+
+@media(max-width:1300px){
+
+    .stats{
+        grid-template-columns:repeat(3,1fr);
+    }
+
+    .quick-actions{
+        grid-template-columns:repeat(4,1fr);
+    }
+}
+
+@media(max-width:900px){
+
+    .sidebar{
+        width:70px;
+        padding:15px 8px;
+    }
+
+    .logo h2,
+    .logo small,
+    .menu-title,
+    .menu a span{
+        display:none;
+    }
+
+    .logo{
+        justify-content:center;
+    }
+
+    .menu a{
+        justify-content:center;
+    }
+
+    .main{
+        margin-left:70px;
+    }
+
+    .two-col{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:650px){
+
+    .content{
+        padding:15px;
+    }
+
+    .stats{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .quick-actions{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+    .full{
+        grid-column:auto;
+    }
+
+    .banner{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+
+<aside class="sidebar">
+
+<div class="logo">
+
+<div class="logo-icon">
+H+
+</div>
+
+<div>
+<h2>Medicare HMS</h2>
+<small>Hospital System</small>
+</div>
+
+</div>
+
+<div class="menu-title">Main</div>
+
+<nav class="menu">
+
+<a href="../dashboard.html">
+🏠 <span>Dashboard</span>
+</a>
+
+<a href="patient.html">
+👥 <span>Patients</span>
+</a>
+
+<a href="doctor.html">
+👨‍⚕️ <span>Doctors</span>
+</a>
+
+<a href="appointment.html">
+📅 <span>Appointments</span>
+</a>
+
+<a href="opd.html">
+🏥 <span>OPD</span>
+</a>
+
+<a href="ipd.html">
+🛏️ <span>IPD / Admission</span>
+</a>
+
+<a href="emergency.html">
+🚑 <span>Emergency</span>
+</a>
+
+<a href="ambulance.html" class="active">
+🚑 <span>Ambulance</span>
+</a>
+
+<a href="nursing.html">
+👩‍⚕️ <span>Nursing</span>
+</a>
+
+</nav>
+
+<div class="menu-title">Diagnostics</div>
+
+<nav class="menu">
+
+<a href="clinical.html">
+🩺 <span>Clinical</span>
+</a>
+
+<a href="laboratory.html">
+🧪 <span>Laboratory</span>
+</a>
+
+<a href="radiology.html">
+☢️ <span>Radiology</span>
+</a>
+
+<a href="blood-bank.html">
+🩸 <span>Blood Bank</span>
+</a>
+
+<a href="pharmacy.html">
+💊 <span>Pharmacy</span>
+</a>
+
+</nav>
+
+<div class="menu-title">Finance & Administration</div>
+
+<nav class="menu">
+
+<a href="billing.html">
+💳 <span>Billing & Finance</span>
+</a>
+
+<a href="insurance-tpa.html">
+🏦 <span>Insurance / TPA</span>
+</a>
+
+<a href="reports.html">
+📊 <span>Reports</span>
+</a>
+
+<a href="staff.html">
+👨‍💼 <span>Staff</span>
+</a>
+
+<a href="inventory.html">
+📦 <span>Inventory</span>
+</a>
+
+<a href="settings.html">
+⚙️ <span>Settings</span>
+</a>
+
+</nav>
+
+</aside>
+
+
+<!-- MAIN -->
+
+<main class="main">
+
+<header class="topbar">
+
+<h1>Ambulance Management</h1>
+
+<div class="top-right">
+
+<div>🔔</div>
+
+<div class="profile">
+
+<div class="avatar">
+AK
+</div>
+
+<div>
+<strong>Admin</strong><br>
+<small>Ambulance Coordinator</small>
+</div>
+
+</div>
+
+</div>
+
+</header>
+
+
+<section class="content">
+
+<div id="alert" class="alert"></div>
+
+
+<!-- BANNER -->
+
+<div class="banner">
+
+<div>
+
+<h2>🚑 Emergency Ambulance Services</h2>
+
+<p>
+Manage ambulance fleet, emergency calls, drivers,
+dispatches, trips, maintenance and availability.
+</p>
+
+</div>
+
+<button onclick="openRequestModal()">
++ Emergency Request
+</button>
+
+</div>
+
+
+<!-- STATS -->
+
+<div class="stats">
+
+<div class="stat-card">
+
+<div class="stat-top">
+
+<div>
+<p>Total Ambulances</p>
+<h2>18</h2>
+</div>
+
+<div class="stat-icon">🚑</div>
+
+</div>
+
+</div>
+
+
+<div class="stat-card">
+
+<div class="stat-top">
+
+<div>
+<p>Available</p>
+<h2>11</h2>
+</div>
+
+<div class="stat-icon">✅</div>
+
+</div>
+
+</div>
+
+
+<div class="stat-card">
+
+<div class="stat-top">
+
+<div>
+<p>On Trip</p>
+<h2>4</h2>
+</div>
+
+<div class="stat-icon">🚨</div>
+
+</div>
+
+</div>
+
+
+<div class="stat-card">
+
+<div class="stat-top">
+
+<div>
+<p>Under Maintenance</p>
+<h2>2</h2>
+</div>
+
+<div class="stat-icon">🔧</div>
+
+</div>
+
+</div>
+
+
+<div class="stat-card">
+
+<div class="stat-top">
+
+<div>
+<p>Drivers</p>
+<h2>26</h2>
+</div>
+
+<div class="stat-icon">👨‍✈️</div>
+
+</div>
+
+</div>
+
+
+<div class="stat-card">
+
+<div class="stat-top">
+
+<div>
+<p>Today's Trips</p>
+<h2>37</h2>
+</div>
+
+<div class="stat-icon">📍</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- QUICK ACTIONS -->
+
+<div class="quick-actions">
+
+<div class="quick" onclick="openRequestModal()">
+<div class="quick-icon">🚨</div>
+<strong>Emergency Request</strong>
+</div>
+
+<div class="quick" onclick="openDispatchModal()">
+<div class="quick-icon">📡</div>
+<strong>Dispatch</strong>
+</div>
+
+<div class="quick" onclick="openAmbulanceModal()">
+<div class="quick-icon">🚑</div>
+<strong>Add Ambulance</strong>
+</div>
+
+<div class="quick" onclick="openDriverModal()">
+<div class="quick-icon">👨‍✈️</div>
+<strong>Add Driver</strong>
+</div>
+
+<div class="quick" onclick="showAlert('Trip management opened.')">
+<div class="quick-icon">📍</div>
+<strong>Trips</strong>
+</div>
+
+<div class="quick" onclick="showAlert('Maintenance schedule opened.')">
+<div class="quick-icon">🔧</div>
+<strong>Maintenance</strong>
+</div>
+
+<div class="quick" onclick="generateReport()">
+<div class="quick-icon">📊</div>
+<strong>Reports</strong>
+</div>
+
+</div>
+
+
+<!-- AMBULANCE STATUS -->
+
+<div class="table-card">
+
+<div class="table-header">
+
+<div>
+
+<h3>🚑 Ambulance Fleet Status</h3>
+
+<small>Real-time ambulance availability</small>
+
+</div>
+
+<div class="toolbar" style="margin:0">
+
+<select
+id="statusFilter"
+style="width:170px"
+onchange="filterAmbulances()">
+
+<option value="all">All Status</option>
+<option value="Available">Available</option>
+<option value="On Trip">On Trip</option>
+<option value="Maintenance">Maintenance</option>
+<option value="Offline">Offline</option>
+
+</select>
+
+</div>
+
+</div>
+
+
+<div class="table-responsive">
+
+<table id="ambulanceTable">
+
+<thead>
+
+<tr>
+
+<th>Ambulance ID</th>
+
+<th>Vehicle No.</th>
+
+<th>Type</th>
+
+<th>Driver</th>
+
+<th>Location</th>
+
+<th>Equipment</th>
+
+<th>Fuel</th>
+
+<th>Status</th>
+
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+
+<tr data-status="Available">
+
+<td><strong>AMB-001</strong></td>
+
+<td>BR-01-AB-1025</td>
+
+<td>Advanced Life Support</td>
+
+<td>Rajesh Kumar</td>
+
+<td>Hospital Campus</td>
+
+<td>Full</td>
+
+<td>
+
+<div class="progress">
+<span style="width:82%"></span>
+</div>
+
+82%
+
+</td>
+
+<td>
+<span class="badge green">Available</span>
+</td>
+
+<td>
+
+<div class="actions">
+
+<button
+class="btn-primary action-btn"
+onclick="dispatch('AMB-001')">
+Dispatch
+</button>
+
+<button
+class="btn-secondary action-btn"
+onclick="viewAmbulance('AMB-001')">
+View
+</button>
+
+</div>
+
+</td>
+
+</tr>
+
+
+<tr data-status="On Trip">
+
+<td><strong>AMB-002</strong></td>
+
+<td>BR-01-AB-2034</td>
+
+<td>Basic Life Support</td>
+
+<td>Sanjay Singh</td>
+
+<td>Patna Junction</td>
+
+<td>Standard</td>
+
+<td>
+
+<div class="progress">
+<span style="width:61%"></span>
+</div>
+
+61%
+
+</td>
+
+<td>
+<span class="badge blue">On Trip</span>
+</td>
+
+<td>
+
+<button
+class="btn-primary action-btn"
+onclick="trackTrip('AMB-002')">
+Track
+</button>
+
+</td>
+
+</tr>
+
+
+<tr data-status="Available">
+
+<td><strong>AMB-003</strong></td>
+
+<td>BR-01-AB-3055</td>
+
+<td>ICU Ambulance</td>
+
+<td>Manoj Kumar</td>
+
+<td>Hospital Campus</td>
+
+<td>ICU Equipped</td>
+
+<td>
+
+<div class="progress">
+<span style="width:91%"></span>
+</div>
+
+91%
+
+</td>
+
+<td>
+<span class="badge green">Available</span>
+</td>
+
+<td>
+
+<button
+class="btn-primary action-btn"
+onclick="dispatch('AMB-003')">
+Dispatch
+</button>
+
+</td>
+
+</tr>
+
+
+<tr data-status="Maintenance">
+
+<td><strong>AMB-004</strong></td>
+
+<td>BR-01-AB-4067</td>
+
+<td>Basic Life Support</td>
+
+<td>—</td>
+
+<td>Workshop</td>
+
+<td>Standard</td>
+
+<td>
+
+<div class="progress">
+<span style="width:45%"></span>
+</div>
+
+45%
+
+</td>
+
+<td>
+<span class="badge yellow">Maintenance</span>
+</td>
+
+<td>
+
+<button
+class="btn-warning action-btn"
+onclick="showAlert('Maintenance record opened.')">
+Service
+</button>
+
+</td>
+
+</tr>
+
+
+<tr data-status="Available">
+
+<td><strong>AMB-005</strong></td>
+
+<td>BR-01-AB-5088</td>
+
+<td>Neonatal Ambulance</td>
+
+<td>Vikash Kumar</td>
+
+<td>Hospital Campus</td>
+
+<td>NICU Equipped</td>
+
+<td>
+
+<div class="progress">
+<span style="width:76%"></span>
+</div>
+
+76%
+
+</td>
+
+<td>
+<span class="badge green">Available</span>
+</td>
+
+<td>
+
+<button
+class="btn-primary action-btn"
+onclick="dispatch('AMB-005')">
+Dispatch
+</button>
+
+</td>
+
+</tr>
+
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+
+<!-- EMERGENCY REQUESTS + MAINTENANCE -->
+
+<div class="two-col">
+
+
+<div class="table-card">
+
+<div class="table-header">
+
+<div>
+
+<h3>🚨 Emergency Requests</h3>
+
+<small>Latest ambulance requests</small>
+
+</div>
+
+<button
+class="btn-danger action-btn"
+onclick="openRequestModal()">
+New Request
+</button>
+
+</div>
+
+
+<div class="item">
+
+<div class="item-left">
+
+<div class="item-icon">
+🚨
+</div>
+
+<div>
+<strong>Emergency Pickup</strong>
+<br>
+<small>Rajendra Nagar • 08:20 AM</small>
+</div>
+
+</div>
+
+<span class="badge red">Urgent</span>
+
+</div>
+
+
+<div class="item">
+
+<div class="item-left">
+
+<div class="item-icon">
+🏥
+</div>
+
+<div>
+<strong>Hospital Transfer</strong>
+<br>
+<small>PMCH → Hospital • 08:05 AM</small>
+</div>
+
+</div>
+
+<span class="badge blue">Assigned</span>
+
+</div>
+
+
+<div class="item">
+
+<div class="item-left">
+
+<div class="item-icon">
+❤️
+</div>
+
+<div>
+<strong>Cardiac Emergency</strong>
+<br>
+<small>Kankarbagh • 07:52 AM</small>
+</div>
+
+</div>
+
+<span class="badge green">Completed</span>
+
+</div>
+
+
+<div class="item">
+
+<div class="item-left">
+
+<div class="item-icon">
+👶
+</div>
+
+<div>
+<strong>Neonatal Transfer</strong>
+<br>
+<small>Danapur • 07:35 AM</small>
+</div>
+
+</div>
+
+<span class="badge yellow">Waiting</span>
+
+</div>
+
+</div>
+
+
+<div class="table-card">
+
+<div class="table-header">
+
+<div>
+
+<h3>🔧 Maintenance Alerts</h3>
+
+<small>Vehicle service schedule</small>
+
+</div>
+
+<button
+class="btn-warning action-btn"
+onclick="showAlert('Maintenance schedule opened.')">
+View All
+</button>
+
+</div>
+
+
+<div class="item">
+
+<div class="item-left">
+
+<div class="item-icon">
+🚑
+</div>
+
+<div>
+<strong>AMB-004</strong>
+<br>
+<small>Engine service due</small>
+</div>
+
+</div>
+
+<span class="badge red">Overdue</span>
+
+</div>
+
+
+<div class="item">
+
+<div class="item-left">
+
+<div class="item-icon">
+🚑
+</div>
+
+<div>
+<strong>AMB-009</strong>
+<br>
+<small>Tyre replacement</small>
+</div>
+
+</div>
+
+<span class="badge yellow">Due Soon</span>
+
+</div>
+
+
+<div class="item">
+
+<div class="item-left">
+
+<div class="item-icon">
+🚑
+</div>
+
+<div>
+<strong>AMB-012</strong>
+<br>
+<small>Annual service</small>
+</div>
+
+</div>
+
+<span class="badge blue">15 Days</span>
+
+</div>
+
+
+<div class="item">
+
+<div class="item-left">
+
+<div class="item-icon">
+🚑
+</div>
+
+<div>
+<strong>AMB-015</strong>
+<br>
+<small>Insurance renewal</small>
+</div>
+
+</div>
+
+<span class="badge yellow">20 Days</span>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- TODAY'S TRIPS -->
+
+<div class="table-card">
+
+<div class="table-header">
+
+<div>
+
+<h3>📍 Today's Ambulance Trips</h3>
+
+<small>Trip and dispatch history</small>
+
+</div>
+
+<button
+class="btn-primary action-btn"
+onclick="showAlert('Complete trip history opened.')">
+View All
+</button>
+
+</div>
+
+<div class="table-responsive">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Trip ID</th>
+
+<th>Ambulance</th>
+
+<th>Patient</th>
+
+<th>Pickup</th>
+
+<th>Destination</th>
+
+<th>Driver</th>
+
+<th>Time</th>
+
+<th>Status</th>
+
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>TRP-1001</td>
+
+<td>AMB-002</td>
+
+<td>Rahul Kumar</td>
+
+<td>Patna Junction</td>
+
+<td>Medicare Hospital</td>
+
+<td>Sanjay Singh</td>
+
+<td>08:10 AM</td>
+
+<td>
+<span class="badge blue">In Progress</span>
+</td>
+
+<td>
+
+<button
+class="btn-primary action-btn"
+onclick="trackTrip('TRP-1001')">
+Track
+</button>
+
+</td>
+
+</tr>
+
+
+<tr>
+
+<td>TRP-1002</td>
+
+<td>AMB-005</td>
+
+<td>Anjali Devi</td>
+
+<td>Danapur</td>
+
+<td>Medicare Hospital</td>
+
+<td>Vikash Kumar</td>
+
+<td>07:35 AM</td>
+
+<td>
+<span class="badge green">Completed</span>
+</td>
+
+<td>
+
+<button
+class="btn-secondary action-btn"
+onclick="showAlert('Trip details opened.')">
+View
+</button>
+
+</td>
+
+</tr>
+
+
+<tr>
+
+<td>TRP-1003</td>
+
+<td>AMB-003</td>
+
+<td>Ramesh Singh</td>
+
+<td>Kankarbagh</td>
+
+<td>Medicare Hospital</td>
+
+<td>Manoj Kumar</td>
+
+<td>07:20 AM</td>
+
+<td>
+<span class="badge green">Completed</span>
+</td>
+
+<td>
+
+<button
+class="btn-secondary action-btn"
+onclick="showAlert('Trip details opened.')">
+View
+</button>
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+
+<!-- DRIVERS -->
+
+<div class="table-card">
+
+<div class="table-header">
+
+<div>
+
+<h3>👨‍✈️ Ambulance Drivers</h3>
+
+<small>Driver availability and assignments</small>
+
+</div>
+
+<button
+class="btn-primary"
+onclick="openDriverModal()">
++ Add Driver
+</button>
+
+</div>
+
+<div class="table-responsive">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Driver ID</th>
+
+<th>Name</th>
+
+<th>Phone</th>
+
+<th>License No.</th>
+
+<th>Assigned Ambulance</th>
+
+<th>Experience</th>
+
+<th>Shift</th>
+
+<th>Status</th>
+
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>DRV-001</td>
+
+<td>Rajesh Kumar</td>
+
+<td>9876543210</td>
+
+<td>BR-DL-98231</td>
+
+<td>AMB-001</td>
+
+<td>8 Years</td>
+
+<td>Morning</td>
+
+<td>
+<span class="badge green">Available</span>
+</td>
+
+<td>
+
+<button
+class="btn-primary action-btn"
+onclick="showAlert('Driver profile opened.')">
+View
+</button>
+
+</td>
+
+</tr>
+
+
+<tr>
+
+<td>DRV-002</td>
+
+<td>Sanjay Singh</td>
+
+<td>9812345678</td>
+
+<td>BR-DL-72341</td>
+
+<td>AMB-002</td>
+
+<td>11 Years</td>
+
+<td>Morning</td>
+
+<td>
+<span class="badge blue">On Trip</span>
+</td>
+
+<td>
+
+<button
+class="btn-primary action-btn"
+onclick="showAlert('Driver trip opened.')">
+View
+</button>
+
+</td>
+
+</tr>
+
+
+<tr>
+
+<td>DRV-003</td>
+
+<td>Manoj Kumar</td>
+
+<td>9898989898</td>
+
+<td>BR-DL-61328</td>
+
+<td>AMB-003</td>
+
+<td>6 Years</td>
+
+<td>Evening</td>
+
+<td>
+<span class="badge green">Available</span>
+</td>
+
+<td>
+
+<button
+class="btn-primary action-btn"
+onclick="showAlert('Driver profile opened.')">
+View
+</button>
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+
+<!-- REPORTS -->
+
+<div class="table-card">
+
+<div class="table-header">
+
+<div>
+
+<h3>📊 Ambulance Reports</h3>
+
+<small>Generate ambulance operational reports</small>
+
+</div>
+
+</div>
+
+<div class="quick-actions"
+style="padding:18px;margin:0">
+
+<div class="quick"
+onclick="generateReportType('Trip Report')">
+<div class="quick-icon">📍</div>
+<strong>Trip Report</strong>
+</div>
+
+<div class="quick"
+onclick="generateReportType('Fleet Report')">
+<div class="quick-icon">🚑</div>
+<strong>Fleet Report</strong>
+</div>
+
+<div class="quick"
+onclick="generateReportType('Driver Report')">
+<div class="quick-icon">👨‍✈️</div>
+<strong>Driver Report</strong>
+</div>
+
+<div class="quick"
+onclick="generateReportType('Fuel Report')">
+<div class="quick-icon">⛽</div>
+<strong>Fuel Report</strong>
+</div>
+
+<div class="quick"
+onclick="generateReportType('Maintenance Report')">
+<div class="quick-icon">🔧</div>
+<strong>Maintenance</strong>
+</div>
+
+<div class="quick"
+onclick="generateReportType('Emergency Report')">
+<div class="quick-icon">🚨</div>
+<strong>Emergency Report</strong>
+</div>
+
+<div class="quick"
+onclick="generateReportType('Revenue Report')">
+<div class="quick-icon">💰</div>
+<strong>Revenue</strong>
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+</main>
+
+
+<!-- EMERGENCY REQUEST MODAL -->
+
+<div class="modal" id="requestModal">
+
+<div class="modal-box">
+
+<div class="modal-header">
+
+<h2>🚨 Emergency Ambulance Request</h2>
+
+<button
+class="close"
+onclick="closeRequestModal()">
+×
+</button>
+
+</div>
+
+<form id="requestForm">
+
+<div class="form-grid">
+
+<div class="form-group">
+<label>Patient Name *</label>
+<input type="text" required placeholder="Patient name">
+</div>
+
+<div class="form-group">
+<label>Patient Mobile *</label>
+<input type="tel" required placeholder="Mobile number">
+</div>
+
+<div class="form-group">
+<label>Emergency Type *</label>
+<select required>
+<option value="">Select</option>
+<option>Medical Emergency</option>
+<option>Cardiac Emergency</option>
+<option>Trauma / Accident</option>
+<option>Pregnancy</option>
+<option>Neonatal</option>
+<option>Hospital Transfer</option>
+<option>Other</option>
+</select>
+</div>
+
+<div class="form-group">
+<label>Priority *</label>
+<select required>
+<option>Critical</option>
+<option>Urgent</option>
+<option>Normal</option>
+</select>
+</div>
+
+<div class="form-group full">
+<label>Pickup Address *</label>
+<input type="text" required placeholder="Complete pickup location">
+</div>
+
+<div class="form-group full">
+<label>Destination Hospital</label>
+<input type="text" value="Medicare Hospital">
+</div>
+
+<div class="form-group">
+<label>Required Ambulance</label>
+<select>
+<option>Any Available</option>
+<option>Advanced Life Support</option>
+<option>Basic Life Support</option>
+<option>ICU Ambulance</option>
+<option>Neonatal Ambulance</option>
+</select>
+</div>
+
+<div class="form-group">
+<label>Requested Time</label>
+<input type="datetime-local">
+</div>
+
+<div class="form-group full">
+<label>Additional Information</label>
+<textarea rows="3"></textarea>
+</div>
+
+</div>
+
+<div class="modal-footer">
+
+<button
+type="button"
+class="btn-secondary"
+onclick="closeRequestModal()">
+Cancel
+</button>
+
+<button
+type="submit"
+class="btn-danger">
+Create Emergency Request
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+
+<!-- DISPATCH MODAL -->
+
+<div class="modal" id="dispatchModal">
+
+<div class="modal-box">
+
+<div class="modal-header">
+
+<h2>📡 Ambulance Dispatch</h2>
+
+<button
+class="close"
+onclick="closeDispatchModal()">
+×
+</button>
+
+</div>
+
+<form id="dispatchForm">
+
+<div class="form-grid">
+
+<div class="form-group">
+<label>Ambulance *</label>
+<select required>
+<option>AMB-001 — Available</option>
+<option>AMB-003 — Available</option>
+<option>AMB-005 — Available</option>
+</select>
+</div>
+
+<div class="form-group">
+<label>Driver *</label>
+<select required>
+<option>Rajesh Kumar</option>
+<option>Manoj Kumar</option>
+<option>Vikash Kumar</option>
+</select>
+</div>
+
+<div class="form-group full">
+<label>Pickup Location *</label>
+<input type="text" required placeholder="Pickup location">
+</div>
+
+<div class="form-group full">
+<label>Destination *</label>
+<input type="text" required placeholder="Destination">
+</div>
+
+<div class="form-group">
+<label>Priority</label>
+<select>
+<option>Emergency</option>
+<option>Urgent</option>
+<option>Normal</option>
+</select>
+</div>
+
+<div class="form-group">
+<label>Dispatch Time</label>
+<input type="datetime-local">
+</div>
+
+</div>
+
+<div class="modal-footer">
+
+<button
+type="button"
+class="btn-secondary"
+onclick="closeDispatchModal()">
+Cancel
+</button>
+
+<button
+type="submit"
+class="btn-primary">
+Dispatch Ambulance
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+
+<!-- ADD AMBULANCE MODAL -->
+
+<div class="modal" id="ambulanceModal">
+
+<div class="modal-box">
+
+<div class="modal-header">
+
+<h2>🚑 Add Ambulance</h2>
+
+<button
+class="close"
+onclick="closeAmbulanceModal()">
+×
+</button>
+
+</div>
+
+<form id="ambulanceForm">
+
+<div class="form-grid">
+
+<div class="form-group">
+<label>Ambulance ID *</label>
+<input type="text" required placeholder="AMB-019">
+</div>
+
+<div class="form-group">
+<label>Vehicle Number *</label>
+<input type="text" required placeholder="BR-01-AB-XXXX">
+</div>
+
+<div class="form-group">
+<label>Ambulance Type *</label>
+<select required>
+<option>Basic Life Support</option>
+<option>Advanced Life Support</option>
+<option>ICU Ambulance</option>
+<option>Neonatal Ambulance</option>
+<option>Patient Transport</option>
+</select>
+</div>
+
+<div class="form-group">
+<label>Manufacturer</label>
+<input type="text" placeholder="Vehicle manufacturer">
+</div>
+
+<div class="form-group">
+<label>Model</label>
+<input type="text" placeholder="Vehicle model">
+</div>
+
+<div class="form-group">
+<label>Registration Date</label>
+<input type="date">
+</div>
+
+<div class="form-group">
+<label>Insurance Expiry</label>
+<input type="date">
+</div>
+
+<div class="form-group">
+<label>Fitness Expiry</label>
+<input type="date">
+</div>
+
+<div class="form-group">
+<label>Odometer</label>
+<input type="number" placeholder="KM">
+</div>
+
+<div class="form-group">
+<label>Assigned Driver</label>
+<select>
+<option>Unassigned</option>
+<option>Rajesh Kumar</option>
+<option>Sanjay Singh</option>
+<option>Manoj Kumar</option>
+<option>Vikash Kumar</option>
+</select>
+</div>
+
+<div class="form-group full">
+<label>Equipment / Remarks</label>
+<textarea rows="3" placeholder="List ambulance equipment"></textarea>
+</div>
+
+</div>
+
+<div class="modal-footer">
+
+<button
+type="button"
+class="btn-secondary"
+onclick="closeAmbulanceModal()">
+Cancel
+</button>
+
+<button
+type="submit"
+class="btn-primary">
+Save Ambulance
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+
+<!-- DRIVER MODAL -->
+
+<div class="modal" id="driverModal">
+
+<div class="modal-box">
+
+<div class="modal-header">
+
+<h2>👨‍✈️ Add Ambulance Driver</h2>
+
+<button
+class="close"
+onclick="closeDriverModal()">
+×
+</button>
+
+</div>
+
+<form id="driverForm">
+
+<div class="form-grid">
+
+<div class="form-group">
+<label>Driver Name *</label>
+<input type="text" required>
+</div>
+
+<div class="form-group">
+<label>Mobile *</label>
+<input type="tel" required>
+</div>
+
+<div class="form-group">
+<label>License Number *</label>
+<input type="text" required>
+</div>
+
+<div class="form-group">
+<label>License Expiry</label>
+<input type="date">
+</div>
+
+<div class="form-group">
+<label>Experience</label>
+<input type="number" min="0" placeholder="Years">
+</div>
+
+<div class="form-group">
+<label>Shift</label>
+<select>
+<option>Morning</option>
+<option>Evening</option>
+<option>Night</option>
+<option>Rotational</option>
+</select>
+</div>
+
+<div class="form-group">
+<label>Assigned Ambulance</label>
+<select>
+<option>Unassigned</option>
+<option>AMB-001</option>
+<option>AMB-003</option>
+<option>AMB-005</option>
+</select>
+</div>
+
+<div class="form-group">
+<label>Status</label>
+<select>
+<option>Available</option>
+<option>On Leave</option>
+<option>Inactive</option>
+</select>
+</div>
+
+<div class="form-group full">
+<label>Address</label>
+<textarea rows="3"></textarea>
+</div>
+
+</div>
+
+<div class="modal-footer">
+
+<button
+type="button"
+class="btn-secondary"
+onclick="closeDriverModal()">
+Cancel
+</button>
+
+<button
+type="submit"
+class="btn-primary">
+Save Driver
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+
+<script>
+
+/* ALERT */
+
+function showAlert(message){
+
+    const alertBox =
+        document.getElementById("alert");
+
+    alertBox.textContent = message;
+
+    alertBox.classList.add("show");
+
+    setTimeout(function(){
+
+        alertBox.classList.remove("show");
+
+    },3500);
+}
+
+
+/* REQUEST */
+
+function openRequestModal(){
+
+    document
+    .getElementById("requestModal")
+    .classList.add("active");
+
+}
+
+function closeRequestModal(){
+
+    document
+    .getElementById("requestModal")
+    .classList.remove("active");
+
+}
+
+
+/* DISPATCH */
+
+function openDispatchModal(){
+
+    document
+    .getElementById("dispatchModal")
+    .classList.add("active");
+
+}
+
+function closeDispatchModal(){
+
+    document
+    .getElementById("dispatchModal")
+    .classList.remove("active");
+
+}
+
+
+/* AMBULANCE */
+
+function openAmbulanceModal(){
+
+    document
+    .getElementById("ambulanceModal")
+    .classList.add("active");
+
+}
+
+function closeAmbulanceModal(){
+
+    document
+    .getElementById("ambulanceModal")
+    .classList.remove("active");
+
+}
+
+
+/* DRIVER */
+
+function openDriverModal(){
+
+    document
+    .getElementById("driverModal")
+    .classList.add("active");
+
+}
+
+function closeDriverModal(){
+
+    document
+    .getElementById("driverModal")
+    .classList.remove("active");
+
+}
+
+
+/* FILTER */
+
+function filterAmbulances(){
+
+    const filter =
+        document.getElementById("statusFilter").value;
+
+    document
+    .querySelectorAll("#ambulanceTable tbody tr")
+    .forEach(function(row){
+
+        const status =
+            row.dataset.status;
+
+        row.style.display =
+            filter === "all" ||
+            status === filter
+            ? ""
+            : "none";
+
+    });
+
+}
+
+
+/* ACTIONS */
+
+function dispatch(id){
+
+    showAlert(
+        "Dispatch request created for " + id + "."
+    );
+
+}
+
+
+function trackTrip(id){
+
+    showAlert(
+        "Live trip tracking opened for " + id + "."
+    );
+
+}
+
+
+function viewAmbulance(id){
+
+    showAlert(
+        "Ambulance profile " + id + " opened."
+    );
+
+}
+
+
+function generateReport(){
+
+    showAlert(
+        "Ambulance operational report generated."
+    );
+
+}
+
+
+function generateReportType(type){
+
+    showAlert(
+        type + " generated successfully."
+    );
+
+}
+
+
+/* FORMS */
+
+document
+.getElementById("requestForm")
+.addEventListener("submit",function(e){
+
+    e.preventDefault();
+
+    closeRequestModal();
+
+    const id =
+        "REQ-" +
+        Math.floor(
+            1000 + Math.random()*8999
+        );
+
+    showAlert(
+        "Emergency request " +
+        id +
+        " created successfully."
+    );
+
+    this.reset();
+
+});
+
+
+document
+.getElementById("dispatchForm")
+.addEventListener("submit",function(e){
+
+    e.preventDefault();
+
+    closeDispatchModal();
+
+    const id =
+        "DSP-" +
+        Math.floor(
+            1000 + Math.random()*8999
+        );
+
+    showAlert(
+        "Ambulance dispatched successfully. Dispatch ID: " +
+        id
+    );
+
+    this.reset();
+
+});
+
+
+document
+.getElementById("ambulanceForm")
+.addEventListener("submit",function(e){
+
+    e.preventDefault();
+
+    closeAmbulanceModal();
+
+    showAlert(
+        "Ambulance added successfully."
+    );
+
+    this.reset();
+
+});
+
+
+document
+.getElementById("driverForm")
+.addEventListener("submit",function(e){
+
+    e.preventDefault();
+
+    closeDriverModal();
+
+    showAlert(
+        "Ambulance driver added successfully."
+    );
+
+    this.reset();
+
+});
+
+
+/* OUTSIDE CLICK */
+
+window.onclick=function(e){
+
+    if(
+        e.target ===
+        document.getElementById("requestModal")
+    ){
+        closeRequestModal();
+    }
+
+    if(
+        e.target ===
+        document.getElementById("dispatchModal")
+    ){
+        closeDispatchModal();
+    }
+
+    if(
+        e.target ===
+        document.getElementById("ambulanceModal")
+    ){
+        closeAmbulanceModal();
+    }
+
+    if(
+        e.target ===
+        document.getElementById("driverModal")
+    ){
+        closeDriverModal();
+    }
+
+};
+
+
+/* ESCAPE */
+
+document.addEventListener(
+"keydown",
+function(e){
+
+    if(e.key === "Escape"){
+
+        closeRequestModal();
+        closeDispatchModal();
+        closeAmbulanceModal();
+        closeDriverModal();
+
+    }
+
+});
+
+</script>
+
+</body>
+</html>
