@@ -1,0 +1,3105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Insurance & TPA | Hospital Management System</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+:root{
+    --primary:#2563eb;
+    --dark:#172033;
+    --bg:#f4f7fb;
+    --border:#e5e7eb;
+    --green:#16a34a;
+    --red:#dc2626;
+    --orange:#d97706;
+    --purple:#7c3aed;
+    --cyan:#0891b2;
+}
+
+body{
+    background:var(--bg);
+    color:#1f2937;
+}
+
+.sidebar{
+    position:fixed;
+    left:0;
+    top:0;
+    width:250px;
+    height:100vh;
+    background:var(--dark);
+    color:white;
+    padding:20px 15px;
+    overflow-y:auto;
+    z-index:1000;
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:10px;
+    margin-bottom:25px;
+}
+
+.logo-icon{
+    width:42px;
+    height:42px;
+    background:var(--primary);
+    border-radius:10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:bold;
+}
+
+.logo h2{
+    font-size:18px;
+}
+
+.logo small{
+    color:#94a3b8;
+}
+
+.menu-title{
+    color:#64748b;
+    font-size:11px;
+    margin:20px 10px 8px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+}
+
+.menu a{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    color:#cbd5e1;
+    text-decoration:none;
+    padding:12px 13px;
+    border-radius:8px;
+    margin-bottom:5px;
+    font-size:14px;
+}
+
+.menu a:hover,
+.menu a.active{
+    background:var(--primary);
+    color:white;
+}
+
+.main{
+    margin-left:250px;
+    min-height:100vh;
+}
+
+.topbar{
+    height:70px;
+    background:white;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:0 25px;
+    position:sticky;
+    top:0;
+    z-index:500;
+}
+
+.topbar h1{
+    font-size:22px;
+}
+
+.top-right{
+    display:flex;
+    align-items:center;
+    gap:20px;
+}
+
+.profile{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.avatar{
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    background:var(--primary);
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:bold;
+}
+
+.content{
+    padding:25px;
+}
+
+button{
+    border:0;
+    border-radius:7px;
+    padding:10px 15px;
+    cursor:pointer;
+    font-size:13px;
+}
+
+.btn-primary{
+    background:var(--primary);
+    color:white;
+}
+
+.btn-success{
+    background:var(--green);
+    color:white;
+}
+
+.btn-danger{
+    background:var(--red);
+    color:white;
+}
+
+.btn-warning{
+    background:var(--orange);
+    color:white;
+}
+
+.btn-purple{
+    background:var(--purple);
+    color:white;
+}
+
+.btn-secondary{
+    background:#64748b;
+    color:white;
+}
+
+.banner{
+    background:linear-gradient(120deg,#1e40af,#2563eb);
+    color:white;
+    border-radius:12px;
+    padding:22px;
+    margin-bottom:25px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+}
+
+.banner h2{
+    margin-bottom:7px;
+}
+
+.banner p{
+    font-size:13px;
+    opacity:.9;
+}
+
+.banner button{
+    background:white;
+    color:#1d4ed8;
+    font-weight:bold;
+}
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:18px;
+    margin-bottom:25px;
+}
+
+.stat-card{
+    background:white;
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:18px;
+}
+
+.stat-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.stat-card p{
+    color:#64748b;
+    font-size:12px;
+}
+
+.stat-card h2{
+    font-size:23px;
+    margin-top:8px;
+}
+
+.stat-icon{
+    width:44px;
+    height:44px;
+    border-radius:10px;
+    background:#dbeafe;
+    color:var(--primary);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:20px;
+}
+
+.quick-actions{
+    display:grid;
+    grid-template-columns:repeat(6,1fr);
+    gap:12px;
+    margin-bottom:25px;
+}
+
+.quick{
+    background:white;
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:15px 10px;
+    text-align:center;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.quick:hover{
+    transform:translateY(-2px);
+    box-shadow:0 5px 15px #0001;
+}
+
+.quick-icon{
+    font-size:24px;
+    margin-bottom:7px;
+}
+
+.toolbar{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-bottom:20px;
+}
+
+.search{
+    flex:1;
+    min-width:240px;
+}
+
+input,
+select,
+textarea{
+    width:100%;
+    padding:10px 12px;
+    border:1px solid #d1d5db;
+    border-radius:7px;
+    background:white;
+    outline:none;
+}
+
+.table-card{
+    background:white;
+    border:1px solid var(--border);
+    border-radius:12px;
+    overflow:hidden;
+    margin-bottom:25px;
+}
+
+.table-header{
+    padding:18px;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+}
+
+.table-header h3{
+    font-size:17px;
+}
+
+.table-header small{
+    color:#64748b;
+}
+
+.table-responsive{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:1100px;
+}
+
+th,
+td{
+    padding:13px 15px;
+    border-bottom:1px solid var(--border);
+    text-align:left;
+    font-size:13px;
+}
+
+th{
+    background:#f8fafc;
+    color:#475569;
+    font-size:11px;
+    text-transform:uppercase;
+}
+
+tr:hover{
+    background:#f8fafc;
+}
+
+.badge{
+    display:inline-block;
+    padding:5px 9px;
+    border-radius:20px;
+    font-size:10px;
+    font-weight:bold;
+}
+
+.green{
+    background:#dcfce7;
+    color:#166534;
+}
+
+.red{
+    background:#fee2e2;
+    color:#991b1b;
+}
+
+.yellow{
+    background:#fef3c7;
+    color:#92400e;
+}
+
+.blue{
+    background:#dbeafe;
+    color:#1e40af;
+}
+
+.purple{
+    background:#ede9fe;
+    color:#5b21b6;
+}
+
+.cyan{
+    background:#cffafe;
+    color:#155e75;
+}
+
+.actions{
+    display:flex;
+    gap:5px;
+}
+
+.action-btn{
+    padding:6px 9px;
+    font-size:11px;
+}
+
+.two-col{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+}
+
+.item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:15px;
+    border-bottom:1px solid var(--border);
+}
+
+.item:last-child{
+    border-bottom:0;
+}
+
+.item-left{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.item-icon{
+    width:42px;
+    height:42px;
+    border-radius:9px;
+    background:#dbeafe;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:20px;
+}
+
+.alert{
+    display:none;
+    padding:12px 15px;
+    border-radius:8px;
+    margin-bottom:15px;
+    background:#dcfce7;
+    color:#166534;
+}
+
+.alert.show{
+    display:block;
+}
+
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:#0f172aaa;
+    z-index:2000;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+}
+
+.modal.active{
+    display:flex;
+}
+
+.modal-box{
+    background:white;
+    width:950px;
+    max-width:100%;
+    max-height:90vh;
+    overflow-y:auto;
+    border-radius:12px;
+    padding:25px;
+}
+
+.modal-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.close{
+    background:#f1f5f9;
+    font-size:20px;
+    padding:5px 10px;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:15px;
+}
+
+.form-group label{
+    display:block;
+    font-size:12px;
+    font-weight:bold;
+    margin-bottom:6px;
+}
+
+.full{
+    grid-column:1/-1;
+}
+
+.modal-footer{
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+    margin-top:20px;
+}
+
+.summary-box{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
+    padding:20px;
+}
+
+.summary{
+    padding:18px;
+    border-radius:10px;
+    background:#f8fafc;
+}
+
+.summary small{
+    color:#64748b;
+}
+
+.summary h2{
+    margin-top:7px;
+}
+
+@media(max-width:1200px){
+
+    .stats{
+        grid-template-columns:repeat(3,1fr);
+    }
+
+    .quick-actions{
+        grid-template-columns:repeat(3,1fr);
+    }
+
+    .summary-box{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+@media(max-width:900px){
+
+    .sidebar{
+        width:70px;
+        padding:15px 8px;
+    }
+
+    .logo h2,
+    .logo small,
+    .menu-title,
+    .menu a span{
+        display:none;
+    }
+
+    .logo{
+        justify-content:center;
+    }
+
+    .menu a{
+        justify-content:center;
+    }
+
+    .main{
+        margin-left:70px;
+    }
+
+    .two-col{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:650px){
+
+    .content{
+        padding:15px;
+    }
+
+    .stats{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .quick-actions{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .summary-box{
+        grid-template-columns:1fr;
+    }
+
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+    .full{
+        grid-column:auto;
+    }
+
+    .banner{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+
+<aside class="sidebar">
+
+<div class="logo">
+
+<div class="logo-icon">
+H+
+</div>
+
+<div>
+<h2>Medicare HMS</h2>
+<small>Hospital System</small>
+</div>
+
+</div>
+
+
+<div class="menu-title">
+Main
+</div>
+
+<nav class="menu">
+
+<a href="../dashboard.html">
+🏠 <span>Dashboard</span>
+</a>
+
+<a href="patient.html">
+👥 <span>Patients</span>
+</a>
+
+<a href="doctor.html">
+👨‍⚕️ <span>Doctors</span>
+</a>
+
+<a href="appointment.html">
+📅 <span>Appointments</span>
+</a>
+
+<a href="opd.html">
+🏥 <span>OPD</span>
+</a>
+
+<a href="ipd.html">
+🛏️ <span>IPD / Admission</span>
+</a>
+
+<a href="emergency.html">
+🚑 <span>Emergency</span>
+</a>
+
+<a href="nursing.html">
+👩‍⚕️ <span>Nursing</span>
+</a>
+
+</nav>
+
+
+<div class="menu-title">
+Diagnostics
+</div>
+
+<nav class="menu">
+
+<a href="clinical.html">
+🩺 <span>Clinical</span>
+</a>
+
+<a href="laboratory.html">
+🧪 <span>Laboratory</span>
+</a>
+
+<a href="radiology.html">
+☢️ <span>Radiology</span>
+</a>
+
+<a href="blood-bank.html">
+🩸 <span>Blood Bank</span>
+</a>
+
+<a href="pharmacy.html">
+💊 <span>Pharmacy</span>
+</a>
+
+</nav>
+
+
+<div class="menu-title">
+Finance
+</div>
+
+<nav class="menu">
+
+<a href="billing.html">
+💳 <span>Billing & Finance</span>
+</a>
+
+<a href="insurance-tpa.html" class="active">
+🏦 <span>Insurance / TPA</span>
+</a>
+
+<a href="reports.html">
+📊 <span>Reports</span>
+</a>
+
+<a href="staff.html">
+👨‍💼 <span>Staff</span>
+</a>
+
+<a href="inventory.html">
+📦 <span>Inventory</span>
+</a>
+
+<a href="settings.html">
+⚙️ <span>Settings</span>
+</a>
+
+</nav>
+
+</aside>
+
+
+<!-- MAIN -->
+
+<main class="main">
+
+<header class="topbar">
+
+<h1>Insurance & TPA</h1>
+
+<div class="top-right">
+
+<div>🔔</div>
+
+<div class="profile">
+
+<div class="avatar">
+AK
+</div>
+
+<div>
+<strong>Admin</strong><br>
+<small>Insurance Administrator</small>
+</div>
+
+</div>
+
+</div>
+
+</header>
+
+
+<section class="content">
+
+<div id="alert" class="alert"></div>
+
+
+<!-- BANNER -->
+
+<div class="banner">
+
+<div>
+
+<h2>🏦 Insurance & TPA Management</h2>
+
+<p>
+Manage patient insurance, TPA companies, pre-authorisation,
+claims, approvals, rejections and settlement.
+</p>
+
+</div>
+
+<button onclick="openClaimModal()">
++ New Insurance Claim
+</button>
+
+</div>
+
+
+<!-- STATS -->
+
+<div class="stats">
+
+<div class="stat-card">
+
+<div class="stat-top">
+
+<div>
+
+<p>Total Claims</p>
+
+<h2>186</h2>
+
+</div>
+
+<div class="stat-icon">
+📄
+</div>
+
+</div>
+
+</div>
+
+
+<div class="stat-card">
+
+<div class="stat-top">
+
+<div>
+
+<p>Pending Claims</p>
+
+<h2>42</h2>
+
+</div>
+
+<div class="stat-icon">
+⏳
+</div>
+
+</div>
+
+</div>
+
+
+<div class="stat-card">
+
+<div class="stat-top">
+
+<div>
+
+<p>Approved</p>
+
+<h2>119</h2>
+
+</div>
+
+<div class="stat-icon">
+✅
+</div>
+
+</div>
+
+</div>
+
+
+<div class="stat-card">
+
+<div class="stat-top">
+
+<div>
+
+<p>Rejected</p>
+
+<h2>8</h2>
+
+</div>
+
+<div class="stat-icon">
+❌
+</div>
+
+</div>
+
+</div>
+
+
+<div class="stat-card">
+
+<div class="stat-top">
+
+<div>
+
+<p>Settlement Due</p>
+
+<h2>₹18.6 L</h2>
+
+</div>
+
+<div class="stat-icon">
+💰
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- QUICK ACTIONS -->
+
+<div class="quick-actions">
+
+<div class="quick" onclick="openInsuranceModal()">
+
+<div class="quick-icon">
+🏥
+</div>
+
+<strong>Patient Insurance</strong>
+
+</div>
+
+
+<div class="quick" onclick="openPreAuthModal()">
+
+<div class="quick-icon">
+📋
+</div>
+
+<strong>Pre-Authorisation</strong>
+
+</div>
+
+
+<div class="quick" onclick="openClaimModal()">
+
+<div class="quick-icon">
+📄
+</div>
+
+<strong>New Claim</strong>
+
+</div>
+
+
+<div class="quick" onclick="showAlert('Approval queue opened.')">
+
+<div class="quick-icon">
+✅
+</div>
+
+<strong>Approvals</strong>
+
+</div>
+
+
+<div class="quick" onclick="showAlert('TPA settlement module opened.')">
+
+<div class="quick-icon">
+💰
+</div>
+
+<strong>Settlement</strong>
+
+</div>
+
+
+<div class="quick" onclick="generateInsuranceReport()">
+
+<div class="quick-icon">
+📊
+</div>
+
+<strong>Reports</strong>
+
+</div>
+
+</div>
+
+
+<!-- INSURANCE SUMMARY -->
+
+<div class="table-card">
+
+<div class="table-header">
+
+<div>
+
+<h3>Insurance & TPA Summary</h3>
+
+<small>Current financial status</small>
+
+</div>
+
+<select
+style="width:160px"
+onchange="showAlert('Reporting period updated.')">
+
+<option>Current Month</option>
+<option>Previous Month</option>
+<option>Current Quarter</option>
+<option>Current Year</option>
+
+</select>
+
+</div>
+
+
+<div class="summary-box">
+
+<div class="summary">
+
+<small>Total Claimed</small>
+
+<h2>₹42.8 L</h2>
+
+<span class="badge blue">
+186 Claims
+</span>
+
+</div>
+
+
+<div class="summary">
+
+<small>Approved Amount</small>
+
+<h2>₹31.4 L</h2>
+
+<span class="badge green">
+73.4%
+</span>
+
+</div>
+
+
+<div class="summary">
+
+<small>Rejected Amount</small>
+
+<h2>₹2.1 L</h2>
+
+<span class="badge red">
+4.9%
+</span>
+
+</div>
+
+
+<div class="summary">
+
+<small>Settlement Pending</small>
+
+<h2>₹9.3 L</h2>
+
+<span class="badge yellow">
+22 Claims
+</span>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- SEARCH / FILTER -->
+
+<div class="toolbar">
+
+<div class="search">
+
+<input
+type="text"
+id="claimSearch"
+placeholder="Search claim, patient, UHID, policy..."
+onkeyup="searchClaims()">
+
+</div>
+
+
+<select
+id="claimType"
+style="max-width:180px"
+onchange="filterClaims()">
+
+<option value="all">
+All Claim Types
+</option>
+
+<option value="IPD">
+IPD
+</option>
+
+<option value="OPD">
+OPD
+</option>
+
+<option value="Emergency">
+Emergency
+</option>
+
+<option value="Day Care">
+Day Care
+</option>
+
+</select>
+
+
+<select
+id="claimStatus"
+style="max-width:180px"
+onchange="filterClaims()">
+
+<option value="all">
+All Status
+</option>
+
+<option value="Submitted">
+Submitted
+</option>
+
+<option value="Under Review">
+Under Review
+</option>
+
+<option value="Approved">
+Approved
+</option>
+
+<option value="Rejected">
+Rejected
+</option>
+
+<option value="Settled">
+Settled
+</option>
+
+</select>
+
+
+<button
+class="btn-primary"
+onclick="openClaimModal()">
+
++ New Claim
+
+</button>
+
+</div>
+
+
+<!-- CLAIM TABLE -->
+
+<div class="table-card">
+
+<div class="table-header">
+
+<div>
+
+<h3>Insurance Claims</h3>
+
+<small>Patient insurance claims and TPA processing</small>
+
+</div>
+
+<button
+class="btn-secondary"
+onclick="printClaims()">
+
+Print
+
+</button>
+
+</div>
+
+
+<div class="table-responsive">
+
+<table id="claimTable">
+
+<thead>
+
+<tr>
+
+<th>Claim ID</th>
+
+<th>Patient</th>
+
+<th>UHID</th>
+
+<th>Insurance / TPA</th>
+
+<th>Claim Type</th>
+
+<th>Claim Amount</th>
+
+<th>Approved</th>
+
+<th>Status</th>
+
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+
+<tbody>
+
+
+<tr
+data-type="IPD"
+data-status="Approved">
+
+<td>
+<strong>CLM-26001</strong>
+</td>
+
+<td>
+Rahul Kumar
+</td>
+
+<td>
+UHID-10234
+</td>
+
+<td>
+MediAssist TPA
+</td>
+
+<td>
+IPD
+</td>
+
+<td>
+₹2,85,000
+</td>
+
+<td>
+₹2,65,000
+</td>
+
+<td>
+<span class="badge green">
+Approved
+</span>
+</td>
+
+<td>
+
+<div class="actions">
+
+<button
+class="btn-primary action-btn"
+onclick="viewClaim('CLM-26001')">
+
+View
+
+</button>
+
+<button
+class="btn-secondary action-btn"
+onclick="printClaim('CLM-26001')">
+
+Print
+
+</button>
+
+</div>
+
+</td>
+
+</tr>
+
+
+<tr
+data-type="IPD"
+data-status="Under Review">
+
+<td>
+<strong>CLM-26002</strong>
+</td>
+
+<td>
+Sunita Devi
+</td>
+
+<td>
+UHID-10235
+</td>
+
+<td>
+Star Health TPA
+</td>
+
+<td>
+IPD
+</td>
+
+<td>
+₹4,50,000
+</td>
+
+<td>
+—
+</td>
+
+<td>
+<span class="badge yellow">
+Under Review
+</span>
+</td>
+
+<td>
+
+<div class="actions">
+
+<button
+class="btn-primary action-btn"
+onclick="viewClaim('CLM-26002')">
+
+View
+
+</button>
+
+<button
+class="btn-success action-btn"
+onclick="uploadDocuments('CLM-26002')">
+
+Docs
+
+</button>
+
+</div>
+
+</td>
+
+</tr>
+
+
+<tr
+data-type="Emergency"
+data-status="Submitted">
+
+<td>
+<strong>CLM-26003</strong>
+</td>
+
+<td>
+Amit Singh
+</td>
+
+<td>
+UHID-10238
+</td>
+
+<td>
+ICICI Lombard TPA
+</td>
+
+<td>
+Emergency
+</td>
+
+<td>
+₹85,500
+</td>
+
+<td>
+—
+</td>
+
+<td>
+<span class="badge blue">
+Submitted
+</span>
+</td>
+
+<td>
+
+<div class="actions">
+
+<button
+class="btn-primary action-btn"
+onclick="viewClaim('CLM-26003')">
+
+View
+
+</button>
+
+<button
+class="btn-purple action-btn"
+onclick="openPreAuthModal()">
+
+Pre-Auth
+
+</button>
+
+</div>
+
+</td>
+
+</tr>
+
+
+<tr
+data-type="OPD"
+data-status="Settled">
+
+<td>
+<strong>CLM-26004</strong>
+</td>
+
+<td>
+Neha Singh
+</td>
+
+<td>
+UHID-10240
+</td>
+
+<td>
+HDFC ERGO TPA
+</td>
+
+<td>
+OPD
+</td>
+
+<td>
+₹18,500
+</td>
+
+<td>
+₹17,800
+</td>
+
+<td>
+<span class="badge green">
+Settled
+</span>
+
+</td>
+
+<td>
+
+<div class="actions">
+
+<button
+class="btn-primary action-btn"
+onclick="viewClaim('CLM-26004')">
+
+View
+
+</button>
+
+<button
+class="btn-secondary action-btn"
+onclick="printClaim('CLM-26004')">
+
+Receipt
+
+</button>
+
+</div>
+
+</td>
+
+</tr>
+
+
+<tr
+data-type="Day Care"
+data-status="Rejected">
+
+<td>
+<strong>CLM-26005</strong>
+</td>
+
+<td>
+Raj Verma
+</td>
+
+<td>
+UHID-10241
+</td>
+
+<td>
+Care Health TPA
+</td>
+
+<td>
+Day Care
+</td>
+
+<td>
+₹72,000
+</td>
+
+<td>
+₹0
+</td>
+
+<td>
+<span class="badge red">
+Rejected
+</span>
+
+</td>
+
+<td>
+
+<div class="actions">
+
+<button
+class="btn-primary action-btn"
+onclick="viewClaim('CLM-26005')">
+
+View
+
+</button>
+
+<button
+class="btn-warning action-btn"
+onclick="showAlert('Reconsideration request opened.')">
+
+Reconsider
+
+</button>
+
+</div>
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+
+<!-- TWO COLUMN -->
+
+<div class="two-col">
+
+
+<!-- TPA COMPANIES -->
+
+<div class="table-card">
+
+<div class="table-header">
+
+<div>
+
+<h3>🏦 TPA / Insurance Partners</h3>
+
+<small>Active insurance companies</small>
+
+</div>
+
+<button
+class="btn-primary action-btn"
+onclick="showAlert('TPA company registration opened.')">
+
++ Add
+
+</button>
+
+</div>
+
+
+<div class="item">
+
+<div class="item-left">
+
+<div class="item-icon">
+🏦
+</div>
+
+<div>
+
+<strong>MediAssist TPA</strong>
+
+<br>
+
+<small>42 active claims</small>
+
+</div>
+
+</div>
+
+<span class="badge green">
+Active
+</span>
+
+</div>
+
+
+<div class="item">
+
+<div class="item-left">
+
+<div class="item-icon">
+🏦
+</div>
+
+<div>
+
+<strong>Star Health TPA</strong>
+
+<br>
+
+<small>31 active claims</small>
+
+</div>
+
+</div>
+
+<span class="badge green">
+Active
+</span>
+
+</div>
+
+
+<div class="item">
+
+<div class="item-left">
+
+<div class="item-icon">
+🏦
+</div>
+
+<div>
+
+<strong>HDFC ERGO TPA</strong>
+
+<br>
+
+<small>27 active claims</small>
+
+</div>
+
+</div>
+
+<span class="badge green">
+Active
+</span>
+
+</div>
+
+
+<div class="item">
+
+<div class="item-left">
+
+<div class="item-icon">
+🏦
+</div>
+
+<div>
+
+<strong>ICICI Lombard</strong>
+
+<br>
+
+<small>18 active claims</small>
+
+</div>
+
+</div>
+
+<span class="badge green">
+Active
+</span>
+
+</div>
+
+</div>
+
+
+<!-- PRE AUTH -->
+
+<div class="table-card">
+
+<div class="table-header">
+
+<div>
+
+<h3>📋 Pre-Authorisation</h3>
+
+<small>Recent requests</small>
+
+</div>
+
+<button
+class="btn-purple action-btn"
+onclick="openPreAuthModal()">
+
++ Request
+
+</button>
+
+</div>
+
+
+<div class="item">
+
+<div class="item-left">
+
+<div class="item-icon">
+⏳
+</div>
+
+<div>
+
+<strong>PA-26001</strong>
+
+<br>
+
+<small>Sunita Devi • IPD</small>
+
+</div>
+
+</div>
+
+<span class="badge yellow">
+Pending
+</span>
+
+</div>
+
+
+<div class="item">
+
+<div class="item-left">
+
+<div class="item-icon">
+✅
+</div>
+
+<div>
+
+<strong>PA-26002</strong>
+
+<br>
+
+<small>Rahul Kumar • Surgery</small>
+
+</div>
+
+</div>
+
+<span class="badge green">
+Approved
+</span>
+
+</div>
+
+
+<div class="item">
+
+<div class="item-left">
+
+<div class="item-icon">
+⏳
+</div>
+
+<div>
+
+<strong>PA-26003</strong>
+
+<br>
+
+<small>Amit Singh • Emergency</small>
+
+</div>
+
+</div>
+
+<span class="badge yellow">
+Pending
+</span>
+
+</div>
+
+
+<div class="item">
+
+<div class="item-left">
+
+<div class="item-icon">
+❌
+</div>
+
+<div>
+
+<strong>PA-26004</strong>
+
+<br>
+
+<small>Raj Verma • Day Care</small>
+
+</div>
+
+</div>
+
+<span class="badge red">
+Rejected
+</span>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- SETTLEMENT TABLE -->
+
+<div class="table-card">
+
+<div class="table-header">
+
+<div>
+
+<h3>💰 TPA Settlements</h3>
+
+<small>Recent claim settlement transactions</small>
+
+</div>
+
+<button
+class="btn-success"
+onclick="showAlert('Settlement entry opened.')">
+
++ Settlement
+
+</button>
+
+</div>
+
+
+<div class="table-responsive">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Settlement ID</th>
+
+<th>Claim ID</th>
+
+<th>TPA</th>
+
+<th>Claimed</th>
+
+<th>Approved</th>
+
+<th>Deduction</th>
+
+<th>Settlement</th>
+
+<th>Status</th>
+
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+
+<tbody>
+
+
+<tr>
+
+<td>SET-5001</td>
+
+<td>CLM-26001</td>
+
+<td>MediAssist TPA</td>
+
+<td>₹2,85,000</td>
+
+<td>₹2,65,000</td>
+
+<td>₹20,000</td>
+
+<td><strong>₹2,65,000</strong></td>
+
+<td>
+<span class="badge green">
+Received
+</span>
+</td>
+
+<td>
+
+<button
+class="btn-primary action-btn"
+onclick="showAlert('Settlement details opened.')">
+
+View
+
+</button>
+
+</td>
+
+</tr>
+
+
+<tr>
+
+<td>SET-5002</td>
+
+<td>CLM-25982</td>
+
+<td>Star Health TPA</td>
+
+<td>₹3,20,000</td>
+
+<td>₹3,05,000</td>
+
+<td>₹15,000</td>
+
+<td><strong>₹3,05,000</strong></td>
+
+<td>
+<span class="badge yellow">
+Pending
+</span>
+</td>
+
+<td>
+
+<button
+class="btn-primary action-btn"
+onclick="showAlert('Settlement follow-up opened.')">
+
+Follow Up
+
+</button>
+
+</td>
+
+</tr>
+
+
+<tr>
+
+<td>SET-5003</td>
+
+<td>CLM-25941</td>
+
+<td>HDFC ERGO</td>
+
+<td>₹1,85,000</td>
+
+<td>₹1,72,500</td>
+
+<td>₹12,500</td>
+
+<td><strong>₹1,72,500</strong></td>
+
+<td>
+<span class="badge green">
+Received
+</span>
+</td>
+
+<td>
+
+<button
+class="btn-primary action-btn"
+onclick="showAlert('Settlement details opened.')">
+
+View
+
+</button>
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+
+<!-- DOCUMENT CHECKLIST -->
+
+<div class="table-card">
+
+<div class="table-header">
+
+<div>
+
+<h3>📁 Claim Document Checklist</h3>
+
+<small>Documents required for insurance processing</small>
+
+</div>
+
+</div>
+
+
+<div class="summary-box">
+
+<div class="summary">
+
+<strong>Patient ID</strong>
+
+<p>
+<span class="badge green">
+Required
+</span>
+</p>
+
+</div>
+
+
+<div class="summary">
+
+<strong>Insurance Card</strong>
+
+<p>
+<span class="badge green">
+Required
+</span>
+</p>
+
+</div>
+
+
+<div class="summary">
+
+<strong>Discharge Summary</strong>
+
+<p>
+<span class="badge green">
+Required
+</span>
+</p>
+
+</div>
+
+
+<div class="summary">
+
+<strong>Final Bill</strong>
+
+<p>
+<span class="badge green">
+Required
+</span>
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- REPORTS -->
+
+<div class="table-card">
+
+<div class="table-header">
+
+<div>
+
+<h3>📊 Insurance Reports</h3>
+
+<small>Generate insurance and TPA reports</small>
+
+</div>
+
+</div>
+
+
+<div class="quick-actions"
+style="padding:18px;margin:0">
+
+
+<div class="quick"
+onclick="generateReport('Claim Register')">
+
+<div class="quick-icon">
+📄
+</div>
+
+<strong>Claim Register</strong>
+
+</div>
+
+
+<div class="quick"
+onclick="generateReport('Pending Claims')">
+
+<div class="quick-icon">
+⏳
+</div>
+
+<strong>Pending Claims</strong>
+
+</div>
+
+
+<div class="quick"
+onclick="generateReport('Approved Claims')">
+
+<div class="quick-icon">
+✅
+</div>
+
+<strong>Approved Claims</strong>
+
+</div>
+
+
+<div class="quick"
+onclick="generateReport('Rejected Claims')">
+
+<div class="quick-icon">
+❌
+</div>
+
+<strong>Rejected Claims</strong>
+
+</div>
+
+
+<div class="quick"
+onclick="generateReport('Settlement Report')">
+
+<div class="quick-icon">
+💰
+</div>
+
+<strong>Settlement</strong>
+
+</div>
+
+
+<div class="quick"
+onclick="generateReport('TPA Performance')">
+
+<div class="quick-icon">
+📈
+</div>
+
+<strong>TPA Performance</strong>
+
+</div>
+
+</div>
+
+</div>
+
+
+</section>
+
+</main>
+
+
+<!-- INSURANCE MODAL -->
+
+<div class="modal" id="insuranceModal">
+
+<div class="modal-box">
+
+<div class="modal-header">
+
+<h2>Patient Insurance Details</h2>
+
+<button
+class="close"
+onclick="closeInsuranceModal()">
+×
+</button>
+
+</div>
+
+
+<form id="insuranceForm">
+
+<div class="form-grid">
+
+<div class="form-group">
+
+<label>Patient Name *</label>
+
+<input
+type="text"
+placeholder="Patient name"
+required>
+
+</div>
+
+
+<div class="form-group">
+
+<label>UHID *</label>
+
+<input
+type="text"
+placeholder="UHID"
+required>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Insurance Company *</label>
+
+<select required>
+
+<option value="">
+Select Insurance
+</option>
+
+<option>
+Star Health
+</option>
+
+<option>
+HDFC ERGO
+</option>
+
+<option>
+ICICI Lombard
+</option>
+
+<option>
+Care Health
+</option>
+
+<option>
+New India Assurance
+</option>
+
+<option>
+Other
+</option>
+
+</select>
+
+</div>
+
+
+<div class="form-group">
+
+<label>TPA</label>
+
+<select>
+
+<option>
+MediAssist TPA
+</option>
+
+<option>
+FHPL
+</option>
+
+<option>
+Health India TPA
+</option>
+
+<option>
+Paramount TPA
+</option>
+
+<option>
+Other
+</option>
+
+</select>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Policy Number *</label>
+
+<input
+type="text"
+placeholder="Policy number"
+required>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Member ID</label>
+
+<input
+type="text"
+placeholder="Member ID">
+
+</div>
+
+
+<div class="form-group">
+
+<label>Policy Start Date</label>
+
+<input type="date">
+
+</div>
+
+
+<div class="form-group">
+
+<label>Policy Expiry Date</label>
+
+<input type="date">
+
+</div>
+
+
+<div class="form-group">
+
+<label>Sum Insured</label>
+
+<input
+type="number"
+placeholder="₹">
+
+</div>
+
+
+<div class="form-group">
+
+<label>Available Balance</label>
+
+<input
+type="number"
+placeholder="₹">
+
+</div>
+
+
+<div class="form-group full">
+
+<label>Remarks</label>
+
+<textarea
+rows="4"
+placeholder="Insurance remarks"></textarea>
+
+</div>
+
+</div>
+
+
+<div class="modal-footer">
+
+<button
+type="button"
+class="btn-secondary"
+onclick="closeInsuranceModal()">
+
+Cancel
+
+</button>
+
+<button
+type="submit"
+class="btn-primary">
+
+Save Insurance
+
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+
+<!-- PRE AUTH MODAL -->
+
+<div class="modal" id="preAuthModal">
+
+<div class="modal-box">
+
+<div class="modal-header">
+
+<h2>Pre-Authorisation Request</h2>
+
+<button
+class="close"
+onclick="closePreAuthModal()">
+×
+</button>
+
+</div>
+
+
+<form id="preAuthForm">
+
+<div class="form-grid">
+
+<div class="form-group">
+
+<label>Patient Name *</label>
+
+<input
+type="text"
+placeholder="Patient name"
+required>
+
+</div>
+
+
+<div class="form-group">
+
+<label>UHID *</label>
+
+<input
+type="text"
+placeholder="UHID"
+required>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Insurance / TPA *</label>
+
+<select required>
+
+<option>
+MediAssist TPA
+</option>
+
+<option>
+Star Health TPA
+</option>
+
+<option>
+HDFC ERGO
+</option>
+
+<option>
+ICICI Lombard
+</option>
+
+<option>
+Other
+</option>
+
+</select>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Policy Number *</label>
+
+<input
+type="text"
+placeholder="Policy number"
+required>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Admission Type</label>
+
+<select>
+
+<option>IPD</option>
+<option>Emergency</option>
+<option>Day Care</option>
+<option>Surgery</option>
+
+</select>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Estimated Amount</label>
+
+<input
+type="number"
+placeholder="₹">
+
+</div>
+
+
+<div class="form-group full">
+
+<label>Diagnosis</label>
+
+<textarea
+rows="3"
+placeholder="Diagnosis"></textarea>
+
+</div>
+
+
+<div class="form-group full">
+
+<label>Proposed Treatment</label>
+
+<textarea
+rows="3"
+placeholder="Treatment / procedure details"></textarea>
+
+</div>
+
+</div>
+
+
+<div class="modal-footer">
+
+<button
+type="button"
+class="btn-secondary"
+onclick="closePreAuthModal()">
+
+Cancel
+
+</button>
+
+<button
+type="submit"
+class="btn-purple">
+
+Submit Pre-Auth
+
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+
+<!-- CLAIM MODAL -->
+
+<div class="modal" id="claimModal">
+
+<div class="modal-box">
+
+<div class="modal-header">
+
+<h2>New Insurance Claim</h2>
+
+<button
+class="close"
+onclick="closeClaimModal()">
+×
+</button>
+
+</div>
+
+
+<form id="claimForm">
+
+<div class="form-grid">
+
+<div class="form-group">
+
+<label>Patient Name *</label>
+
+<input
+type="text"
+placeholder="Patient name"
+required>
+
+</div>
+
+
+<div class="form-group">
+
+<label>UHID *</label>
+
+<input
+type="text"
+placeholder="UHID"
+required>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Insurance / TPA *</label>
+
+<select required>
+
+<option>
+MediAssist TPA
+</option>
+
+<option>
+Star Health TPA
+</option>
+
+<option>
+HDFC ERGO
+</option>
+
+<option>
+ICICI Lombard
+</option>
+
+<option>
+Care Health
+</option>
+
+</select>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Policy Number *</label>
+
+<input
+type="text"
+placeholder="Policy number"
+required>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Claim Type</label>
+
+<select>
+
+<option>IPD</option>
+<option>OPD</option>
+<option>Emergency</option>
+<option>Day Care</option>
+
+</select>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Claim Amount *</label>
+
+<input
+type="number"
+placeholder="₹"
+required>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Admission Date</label>
+
+<input type="date">
+
+</div>
+
+
+<div class="form-group">
+
+<label>Discharge Date</label>
+
+<input type="date">
+
+</div>
+
+
+<div class="form-group full">
+
+<label>Diagnosis</label>
+
+<textarea
+rows="3"
+placeholder="Diagnosis details"></textarea>
+
+</div>
+
+
+<div class="form-group full">
+
+<label>Claim Remarks</label>
+
+<textarea
+rows="3"
+placeholder="Claim remarks"></textarea>
+
+</div>
+
+</div>
+
+
+<div class="modal-footer">
+
+<button
+type="button"
+class="btn-secondary"
+onclick="closeClaimModal()">
+
+Cancel
+
+</button>
+
+<button
+type="submit"
+class="btn-primary">
+
+Submit Claim
+
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+
+<script>
+
+
+/* ALERT */
+
+function showAlert(message){
+
+    const alertBox=
+        document.getElementById("alert");
+
+    alertBox.textContent=message;
+
+    alertBox.classList.add("show");
+
+    setTimeout(()=>{
+
+        alertBox.classList.remove("show");
+
+    },3500);
+
+}
+
+
+/* INSURANCE */
+
+function openInsuranceModal(){
+
+    document
+    .getElementById("insuranceModal")
+    .classList.add("active");
+
+}
+
+function closeInsuranceModal(){
+
+    document
+    .getElementById("insuranceModal")
+    .classList.remove("active");
+
+}
+
+
+/* PRE AUTH */
+
+function openPreAuthModal(){
+
+    document
+    .getElementById("preAuthModal")
+    .classList.add("active");
+
+}
+
+function closePreAuthModal(){
+
+    document
+    .getElementById("preAuthModal")
+    .classList.remove("active");
+
+}
+
+
+/* CLAIM */
+
+function openClaimModal(){
+
+    document
+    .getElementById("claimModal")
+    .classList.add("active");
+
+}
+
+function closeClaimModal(){
+
+    document
+    .getElementById("claimModal")
+    .classList.remove("active");
+
+}
+
+
+/* SEARCH */
+
+function searchClaims(){
+
+    const value=
+        document
+        .getElementById("claimSearch")
+        .value
+        .toLowerCase();
+
+    document
+    .querySelectorAll("#claimTable tbody tr")
+    .forEach(row=>{
+
+        row.style.display=
+            row.textContent
+            .toLowerCase()
+            .includes(value)
+            ? ""
+            : "none";
+
+    });
+
+}
+
+
+/* FILTER */
+
+function filterClaims(){
+
+    const type=
+        document
+        .getElementById("claimType")
+        .value;
+
+    const status=
+        document
+        .getElementById("claimStatus")
+        .value;
+
+    document
+    .querySelectorAll("#claimTable tbody tr")
+    .forEach(row=>{
+
+        const typeMatch=
+            type==="all" ||
+            row.dataset.type===type;
+
+        const statusMatch=
+            status==="all" ||
+            row.dataset.status===status;
+
+        row.style.display=
+            typeMatch && statusMatch
+            ? ""
+            : "none";
+
+    });
+
+}
+
+
+/* VIEW CLAIM */
+
+function viewClaim(id){
+
+    showAlert(
+        "Opening claim "+id+" details."
+    );
+
+}
+
+
+/* PRINT */
+
+function printClaim(id){
+
+    showAlert(
+        "Preparing claim "+id+" for printing..."
+    );
+
+    setTimeout(()=>{
+
+        window.print();
+
+    },500);
+
+}
+
+
+function printClaims(){
+
+    showAlert(
+        "Preparing insurance claim report..."
+    );
+
+    setTimeout(()=>{
+
+        window.print();
+
+    },500);
+
+}
+
+
+/* DOCUMENTS */
+
+function uploadDocuments(id){
+
+    showAlert(
+        "Document upload module opened for "+id+"."
+    );
+
+}
+
+
+/* REPORT */
+
+function generateReport(type){
+
+    showAlert(
+        type+" generated successfully."
+    );
+
+}
+
+
+function generateInsuranceReport(){
+
+    showAlert(
+        "Insurance & TPA report generated successfully."
+    );
+
+}
+
+
+/* INSURANCE FORM */
+
+document
+.getElementById("insuranceForm")
+.addEventListener("submit",function(e){
+
+    e.preventDefault();
+
+    closeInsuranceModal();
+
+    showAlert(
+        "Patient insurance details saved successfully."
+    );
+
+    this.reset();
+
+});
+
+
+/* PRE AUTH FORM */
+
+document
+.getElementById("preAuthForm")
+.addEventListener("submit",function(e){
+
+    e.preventDefault();
+
+    const id=
+        "PA-"+Math.floor(
+            10000+
+            Math.random()*89999
+        );
+
+    closePreAuthModal();
+
+    showAlert(
+        "Pre-authorisation "+id+
+        " submitted successfully."
+    );
+
+    this.reset();
+
+});
+
+
+/* CLAIM FORM */
+
+document
+.getElementById("claimForm")
+.addEventListener("submit",function(e){
+
+    e.preventDefault();
+
+    const id=
+        "CLM-"+Math.floor(
+            10000+
+            Math.random()*89999
+        );
+
+    closeClaimModal();
+
+    showAlert(
+        "Insurance claim "+id+
+        " submitted successfully."
+    );
+
+    this.reset();
+
+});
+
+
+/* OUTSIDE CLICK */
+
+window.onclick=function(e){
+
+    if(
+        e.target===
+        document.getElementById("insuranceModal")
+    ){
+
+        closeInsuranceModal();
+
+    }
+
+    if(
+        e.target===
+        document.getElementById("preAuthModal")
+    ){
+
+        closePreAuthModal();
+
+    }
+
+    if(
+        e.target===
+        document.getElementById("claimModal")
+    ){
+
+        closeClaimModal();
+
+    }
+
+};
+
+
+/* ESCAPE */
+
+document.addEventListener(
+"keydown",
+function(e){
+
+    if(e.key==="Escape"){
+
+        closeInsuranceModal();
+
+        closePreAuthModal();
+
+        closeClaimModal();
+
+    }
+
+});
+
+</script>
+
+</body>
+</html>
